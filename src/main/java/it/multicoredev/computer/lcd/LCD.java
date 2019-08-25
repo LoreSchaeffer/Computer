@@ -1,4 +1,4 @@
-package it.multicoredev.cpu;
+package it.multicoredev.computer.lcd;
 
 /**
  * Copyright © 2019 by Lorenzo Magni
@@ -97,8 +97,6 @@ public class LCD {
     }
 
     public void digitalWrite(String s) {
-        if (s.length() != 8) throw new IllegalArgumentException("String must have 8 bits");
-
         char[] chars = s.toCharArray();
         b0 = chars[0] == '1';
         b1 = chars[1] == '1';
