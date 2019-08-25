@@ -1,5 +1,10 @@
 package it.multicoredev.computer.cpu;
 
+import it.multicoredev.computer.cpu.alu.ALU;
+import it.multicoredev.computer.util.components.Clock;
+import it.multicoredev.computer.util.components.DFlipFlop;
+import it.multicoredev.computer.util.listeners.ClockListener;
+
 /**
  * Copyright © 2019 by Lorenzo Magni
  * This file is part of Computer.
@@ -20,9 +25,21 @@ package it.multicoredev.computer.cpu;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class TestCPU {
+public class TestCPU implements ClockListener {
+    private static Clock clock = new Clock(500);
 
     public static void main(String[] args) {
+        registerListeners();
+        clock.start();
+    }
 
+    @Override
+    public void clock(boolean clock) {
+        System.out.println(clock ? "HIGH" : "LOW");
+
+    }
+
+    private static void registerListeners() {
+        clock.addListener(new TestCPU());
     }
 }

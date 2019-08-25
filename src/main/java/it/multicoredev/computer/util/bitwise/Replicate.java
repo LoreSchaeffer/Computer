@@ -1,4 +1,4 @@
-package it.multicoredev.computer.cpu.mux;
+package it.multicoredev.computer.util.bitwise;
 
 /**
  * Copyright © 2019 by Lorenzo Magni
@@ -20,43 +20,23 @@ package it.multicoredev.computer.cpu.mux;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class MUX {
-    private MUXBlock[] blocks;
+public class Replicate {
+    private final int size;
+    private byte a;
 
-    public MUX(int size) {
-        blocks = new MUXBlock[size];
-
-        for (int i = 0; i < size; i++) {
-            blocks[i] = new MUXBlock();
-        }
+    public Replicate(int size) {
+        this.size = size;
     }
 
-    public void setA(String a) {
-        char[] chars = a.toCharArray();
-        for (int i = 0; i < blocks.length; i++) {
-            blocks[i].setA(Byte.parseByte("" + chars[i]));
-        }
-    }
-
-    public void setB(String b) {
-        char[] chars = b.toCharArray();
-        for (int i = 0; i < blocks.length; i++) {
-            blocks[i].setB(Byte.parseByte("" + chars[i]));
-        }
-    }
-
-    public void setSel(boolean sel) {
-        for (MUXBlock block : blocks) {
-            block.setSel(sel);
-        }
+    public void setA(byte a) {
+        this.a = a;
     }
 
     public String getOut() {
         StringBuilder builder = new StringBuilder();
-        for (MUXBlock block : blocks) {
-            builder.append(block.getOut() ? "1" : "0");
+        for (int i = 0; i < size; i++) {
+            builder.append(a);
         }
-
         return builder.toString();
     }
 }

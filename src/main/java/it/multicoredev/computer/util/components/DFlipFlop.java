@@ -1,4 +1,6 @@
-package it.multicoredev.computer.cpu.mux;
+package it.multicoredev.computer.util.components;
+
+import it.multicoredev.computer.util.listeners.ClockListener;
 
 /**
  * Copyright © 2019 by Lorenzo Magni
@@ -20,43 +22,35 @@ package it.multicoredev.computer.cpu.mux;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class MUX {
-    private MUXBlock[] blocks;
+public class DFlipFlop implements ClockListener {
+    private byte d;
+    private byte q = 0;
+    private byte ce;
 
-    public MUX(int size) {
-        blocks = new MUXBlock[size];
-
-        for (int i = 0; i < size; i++) {
-            blocks[i] = new MUXBlock();
-        }
+    public void setD(byte d) {
+        this.d = d;
     }
 
-    public void setA(String a) {
-        char[] chars = a.toCharArray();
-        for (int i = 0; i < blocks.length; i++) {
-            blocks[i].setA(Byte.parseByte("" + chars[i]));
-        }
+    public void setCe(byte ce) {
+        this.ce = ce;
     }
 
-    public void setB(String b) {
-        char[] chars = b.toCharArray();
-        for (int i = 0; i < blocks.length; i++) {
-            blocks[i].setB(Byte.parseByte("" + chars[i]));
-        }
+    public void clear() {
+        ce = 0;
+        d = 0;
+        q = 0;
     }
 
-    public void setSel(boolean sel) {
-        for (MUXBlock block : blocks) {
-            block.setSel(sel);
-        }
+    public byte getOut() {
+        return q;
     }
 
-    public String getOut() {
-        StringBuilder builder = new StringBuilder();
-        for (MUXBlock block : blocks) {
-            builder.append(block.getOut() ? "1" : "0");
+    @Override
+    public void clock(boolean clock) {
+        if(clock) {
+            if(ce == 1) {
+                q = d;
+            }
         }
-
-        return builder.toString();
     }
 }
