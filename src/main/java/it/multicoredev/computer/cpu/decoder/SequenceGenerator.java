@@ -1,4 +1,4 @@
-package it.multicoredev.computer.util.components;
+package it.multicoredev.computer.cpu.decoder;
 
 import it.multicoredev.computer.util.listeners.ClockListener;
 
@@ -22,34 +22,42 @@ import it.multicoredev.computer.util.listeners.ClockListener;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class DFlipFlop implements ClockListener {
-    private byte d;
-    private byte q = 0;
+public class SequenceGenerator implements ClockListener {
+    private final String[] states = new String[]{"1000", "0100", "0010", "0001"};
+    private int state = 0;
     private byte ce;
-
-    public void setD(byte d) {
-        this.d = d;
-    }
 
     public void setCe(byte ce) {
         this.ce = ce;
     }
 
-    public void clr() {
-        ce = 0;
-        d = 0;
-        q = 0;
+    public byte fetch() {
+        if (state == 0) return 1;
+        return 0;
     }
 
-    public byte getOut() {
-        return q;
+    public byte decode() {
+        if (state == 1) return 1;
+        return 0;
+    }
+
+    public byte execute() {
+        if (state == 2) return 1;
+        return 0;
+    }
+
+    public byte increment() {
+        if (state == 3) return 1;
+        return 0;
     }
 
     @Override
     public void clock(boolean clock) {
-        if(clock) {
-            if(ce == 1) {
-                q = d;
+        if (ce == 1) {
+            state++;
+
+            if (state >= states.length) {
+                state = 0;
             }
         }
     }

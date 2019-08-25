@@ -1,4 +1,4 @@
-package it.multicoredev.computer.util.components;
+package it.multicoredev.computer.cpu.registers;
 
 import it.multicoredev.computer.util.listeners.ClockListener;
 
@@ -22,35 +22,32 @@ import it.multicoredev.computer.util.listeners.ClockListener;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class DFlipFlop implements ClockListener {
-    private byte d;
-    private byte q = 0;
-    private byte ce;
+public class Register16 implements ClockListener {
+    private Register8 reg0 = new Register8();
+    private Register8 reg1 = new Register8();
 
-    public void setD(byte d) {
-        this.d = d;
+    public void setD(String d) {
+        reg0.setD(d.substring(0, 7));
+        reg1.setD(d.substring(8, 15));
     }
 
     public void setCe(byte ce) {
-        this.ce = ce;
+        reg0.setCe(ce);
+        reg1.setCe(ce);
     }
 
     public void clr() {
-        ce = 0;
-        d = 0;
-        q = 0;
+        reg0.clr();
+        reg1.clr();
     }
 
-    public byte getOut() {
-        return q;
+    public String getOut() {
+        return reg0.getOut() + reg1.getOut();
     }
 
     @Override
     public void clock(boolean clock) {
-        if(clock) {
-            if(ce == 1) {
-                q = d;
-            }
-        }
+        reg0.clock(clock);
+        reg1.clock(clock);
     }
 }

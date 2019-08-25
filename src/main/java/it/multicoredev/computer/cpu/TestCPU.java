@@ -1,6 +1,7 @@
 package it.multicoredev.computer.cpu;
 
 import it.multicoredev.computer.cpu.alu.ALU;
+import it.multicoredev.computer.cpu.decoder.SequenceGenerator;
 import it.multicoredev.computer.util.components.Clock;
 import it.multicoredev.computer.util.components.DFlipFlop;
 import it.multicoredev.computer.util.listeners.ClockListener;
@@ -26,6 +27,8 @@ import it.multicoredev.computer.util.listeners.ClockListener;
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class TestCPU implements ClockListener {
+    //http://www.simplecpudesign.com/simple_cpu_v1/index.html
+
     private static Clock clock = new Clock(500);
 
     public static void main(String[] args) {
@@ -36,7 +39,6 @@ public class TestCPU implements ClockListener {
     @Override
     public void clock(boolean clock) {
         System.out.println(clock ? "HIGH" : "LOW");
-
     }
 
     private static void registerListeners() {

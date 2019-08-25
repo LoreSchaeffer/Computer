@@ -1,4 +1,4 @@
-package it.multicoredev.computer.util.components;
+package it.multicoredev.computer.cpu.registers;
 
 import it.multicoredev.computer.util.listeners.ClockListener;
 
@@ -22,35 +22,49 @@ import it.multicoredev.computer.util.listeners.ClockListener;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class DFlipFlop implements ClockListener {
-    private byte d;
-    private byte q = 0;
-    private byte ce;
+public class Register8 implements ClockListener {
+    private Register4 reg0 = new Register4();
+    private Register4 reg1 = new Register4();
 
-    public void setD(byte d) {
-        this.d = d;
+    public void setD(String d) {
+        char[] chars = d.toCharArray();
+        reg0.setD0(Byte.parseByte("" + chars[0]));
+        reg0.setD1(Byte.parseByte("" + chars[1]));
+        reg0.setD2(Byte.parseByte("" + chars[2]));
+        reg0.setD3(Byte.parseByte("" + chars[3]));
+        reg1.setD0(Byte.parseByte("" + chars[4]));
+        reg1.setD1(Byte.parseByte("" + chars[5]));
+        reg1.setD2(Byte.parseByte("" + chars[6]));
+        reg1.setD3(Byte.parseByte("" + chars[7]));
     }
 
     public void setCe(byte ce) {
-        this.ce = ce;
+        reg0.setCe(ce);
+        reg1.setCe(ce);
     }
 
     public void clr() {
-        ce = 0;
-        d = 0;
-        q = 0;
+        reg0.clr();
+        reg1.clr();
     }
 
-    public byte getOut() {
-        return q;
+    public String getOut() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(reg0.getOut0());
+        builder.append(reg0.getOut1());
+        builder.append(reg0.getOut2());
+        builder.append(reg0.getOut3());
+        builder.append(reg1.getOut0());
+        builder.append(reg1.getOut1());
+        builder.append(reg1.getOut2());
+        builder.append(reg1.getOut3());
+
+        return builder.toString();
     }
 
     @Override
     public void clock(boolean clock) {
-        if(clock) {
-            if(ce == 1) {
-                q = d;
-            }
-        }
+        reg0.clock(clock);
+        reg1.clock(clock);
     }
 }
