@@ -1,5 +1,6 @@
 package it.multicoredev.computer.cpu.decoder;
 
+import it.multicoredev.computer.cpu.registers.Register2;
 import it.multicoredev.computer.util.gates.And;
 import it.multicoredev.computer.util.gates.Or;
 import it.multicoredev.computer.util.listeners.ClockListener;
@@ -26,6 +27,7 @@ import it.multicoredev.computer.util.listeners.ClockListener;
  */
 public class Decoder implements ClockListener {
     private SequenceGenerator sg = new SequenceGenerator();
+    private Register2 rg2 = new Register2();
     private InstructionDecoder id = new InstructionDecoder();
 
     private String instruction;
@@ -42,10 +44,16 @@ public class Decoder implements ClockListener {
     private byte sub;
     private byte bitand;
 
+    public void decode(String instruction) {
+        this.instruction = instruction;
+    }
+
     @Override
     public void clock(boolean clock) {
+        sg.clock(clock);
+        rg2.clock(clock);
+
         if(clock) {
-            sg.clock(clock);
             id.decode(instruction);
 
             byte state = Or.getOut(sg.decode(), sg.execute());

@@ -1,8 +1,5 @@
-package it.multicoredev.computer.cpu;
+package it.multicoredev.computer.cpu.registers;
 
-import it.multicoredev.computer.cpu.alu.ALU;
-import it.multicoredev.computer.cpu.decoder.SequenceGenerator;
-import it.multicoredev.computer.util.components.Clock;
 import it.multicoredev.computer.util.components.DFlipFlop;
 import it.multicoredev.computer.util.listeners.ClockListener;
 
@@ -26,26 +23,38 @@ import it.multicoredev.computer.util.listeners.ClockListener;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class TestCPU implements ClockListener {
-    //http://www.simplecpudesign.com/simple_cpu_v1/index.html
-    private static Clock clock = new Clock(500);
+public class Register2 implements ClockListener {
+    private DFlipFlop ff0 = new DFlipFlop();
+    private DFlipFlop ff1 = new DFlipFlop();
 
-    private static CPU cpu = new CPU();
+    public void setD0(byte d) {
+        ff0.setD(d);
+    }
 
-    public static void main(String[] args) {
-        registerListeners();
-        cpu.getIR().addToRegister("0100000010101101");
-        clock.start();
+    public void setD1(byte d) {
+        ff1.setD(d);
+    }
+
+    public void setCe(byte ce) {
+        ff0.setCe(ce);
+        ff1.setCe(ce);
+    }
+
+    public void clr() {
+        ff0.clr();
+        ff1.clr();
+    }
+
+    public byte getOut0() {
+        return ff0.getOut();
+    }
+
+    public byte getOut1() {
+        return ff1.getOut();
     }
 
     @Override
     public void clock(boolean clock) {
-        System.out.println(clock ? "HIGH" : "LOW");
-        System.out.println(cpu.getIR().readRegister(0));
-    }
 
-    private static void registerListeners() {
-        clock.addListener(cpu);
-        clock.addListener(new TestCPU());
     }
 }

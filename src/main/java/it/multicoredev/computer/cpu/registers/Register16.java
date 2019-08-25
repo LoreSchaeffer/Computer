@@ -27,8 +27,8 @@ public class Register16 implements ClockListener {
     private Register8 reg1 = new Register8();
 
     public void setD(String d) {
-        reg0.setD(d.substring(0, 7));
-        reg1.setD(d.substring(8, 15));
+        reg0.setD(d.substring(0, 8));
+        reg1.setD(d.substring(8));
     }
 
     public void setCe(byte ce) {

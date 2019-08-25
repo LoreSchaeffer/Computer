@@ -1,10 +1,8 @@
-package it.multicoredev.computer.cpu;
+package it.multicoredev.computer.cpu.registers;
 
-import it.multicoredev.computer.cpu.alu.ALU;
-import it.multicoredev.computer.cpu.decoder.SequenceGenerator;
-import it.multicoredev.computer.util.components.Clock;
-import it.multicoredev.computer.util.components.DFlipFlop;
 import it.multicoredev.computer.util.listeners.ClockListener;
+
+import java.util.LinkedList;
 
 /**
  * Copyright © 2019 by Lorenzo Magni
@@ -26,26 +24,27 @@ import it.multicoredev.computer.util.listeners.ClockListener;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class TestCPU implements ClockListener {
-    //http://www.simplecpudesign.com/simple_cpu_v1/index.html
-    private static Clock clock = new Clock(500);
+public class InstructionRegister implements ClockListener {
+    private LinkedList<Register16> registers = new LinkedList<>();
 
-    private static CPU cpu = new CPU();
+    public void addToRegister(String instruction) {
+        Register16 register = new Register16();
+        register.setD(instruction);
+        register.setCe((byte) 1);
+        registers.add(register);
+    }
 
-    public static void main(String[] args) {
-        registerListeners();
-        cpu.getIR().addToRegister("0100000010101101");
-        clock.start();
+    public String readRegister(int i) {
+        return registers.get(i).getOut();
     }
 
     @Override
     public void clock(boolean clock) {
-        System.out.println(clock ? "HIGH" : "LOW");
-        System.out.println(cpu.getIR().readRegister(0));
-    }
-
-    private static void registerListeners() {
-        clock.addListener(cpu);
-        clock.addListener(new TestCPU());
+        if (clock) {
+            for (Register16 register : registers) {
+                register.clock(true);
+                register.setCe((byte) 0);
+            }
+        }
     }
 }
