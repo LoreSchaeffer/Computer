@@ -12,16 +12,18 @@ public class SegmentDisplay extends JPanel {
     private static final Color SEGMENT_ON = Color.RED;
     private static final Color SEGMENT_OFF = new Color(21, 21, 21);
 
-    private boolean[] segments = new boolean[8];
+
+    private boolean[] segments = new boolean[7];
+    private boolean minus = false;
+
     /*
-     * 0 -> MINUS
-     * 1 -> TOP
-     * 2 -> TOP-RIGHT
-     * 3 -> BOTTOM-RIGHT
-     * 4 -> BOTTOM
-     * 5 -> BOTTOM-LEFT
-     * 6 -> TOP-LEFT
-     * 7 -> MIDDLE
+     * 0 -> TOP
+     * 1 -> TOP-RIGHT
+     * 2 -> BOTTOM-RIGHT
+     * 3 -> BOTTOM
+     * 4 -> BOTTOM-LEFT
+     * 5 -> TOP-LEFT
+     * 6 -> MIDDLE
      */
 
     public SegmentDisplay() {
@@ -43,6 +45,18 @@ public class SegmentDisplay extends JPanel {
         repaint();
     }
 
+    public void setSegments(boolean[] segments) {
+        if (segments.length != this.segments.length) throw new IllegalArgumentException("Segments must be 7 bits long");
+
+        this.segments = segments;
+        repaint();
+    }
+
+    public void setMinus(boolean state) {
+        minus = state;
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -51,14 +65,14 @@ public class SegmentDisplay extends JPanel {
         int yCenter = getHeight() / 2;
         int halfSegmentWidth = SEGMENT_WIDTH / 2;
 
-        drawHSegment(g, segments[0] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth - MINUS_WIDTH - SEGMENT_HEIGHT / 2 - SEGMENT_DISTANCE, yCenter, MINUS_WIDTH, SEGMENT_HEIGHT); // MINUS
-        drawHSegment(g, segments[1] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE * 2, SEGMENT_WIDTH, SEGMENT_HEIGHT); // TOP
-        drawVSegment(g, segments[2] ? SEGMENT_ON : SEGMENT_OFF, xCenter + halfSegmentWidth + SEGMENT_DISTANCE, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // TOP RIGHT
-        drawVSegment(g, segments[3] ? SEGMENT_ON : SEGMENT_OFF, xCenter + halfSegmentWidth + SEGMENT_DISTANCE, yCenter + SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // BOTTOM RIGHT
-        drawHSegment(g, segments[4] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth, yCenter + SEGMENT_WIDTH + SEGMENT_DISTANCE * 2, SEGMENT_WIDTH, SEGMENT_HEIGHT); // BOTTOM
-        drawVSegment(g, segments[5] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth - SEGMENT_DISTANCE, yCenter + SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // BOTTOM LEFT
-        drawVSegment(g, segments[6] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth - SEGMENT_DISTANCE, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // TOP LEFT
-        drawHSegment(g, segments[7] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth, yCenter, SEGMENT_WIDTH, SEGMENT_HEIGHT); // MIDDLE
+        drawHSegment(g, minus ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth - MINUS_WIDTH - SEGMENT_HEIGHT / 2 - SEGMENT_DISTANCE, yCenter, MINUS_WIDTH, SEGMENT_HEIGHT); // MINUS
+        drawHSegment(g, segments[0] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE * 2, SEGMENT_WIDTH, SEGMENT_HEIGHT); // TOP
+        drawVSegment(g, segments[1] ? SEGMENT_ON : SEGMENT_OFF, xCenter + halfSegmentWidth + SEGMENT_DISTANCE, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // TOP RIGHT
+        drawVSegment(g, segments[2] ? SEGMENT_ON : SEGMENT_OFF, xCenter + halfSegmentWidth + SEGMENT_DISTANCE, yCenter + SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // BOTTOM RIGHT
+        drawHSegment(g, segments[3] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth, yCenter + SEGMENT_WIDTH + SEGMENT_DISTANCE * 2, SEGMENT_WIDTH, SEGMENT_HEIGHT); // BOTTOM
+        drawVSegment(g, segments[4] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth - SEGMENT_DISTANCE, yCenter + SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // BOTTOM LEFT
+        drawVSegment(g, segments[5] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth - SEGMENT_DISTANCE, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // TOP LEFT
+        drawHSegment(g, segments[6] ? SEGMENT_ON : SEGMENT_OFF, xCenter - halfSegmentWidth, yCenter, SEGMENT_WIDTH, SEGMENT_HEIGHT); // MIDDLE
     }
 
     private void drawHSegment(Graphics g, Color color, int x, int y, int width, int height) {

@@ -1,6 +1,7 @@
 package it.multicoredev.computer;
 
 import it.multicoredev.computer.components.display.SegmentDisplay;
+import it.multicoredev.computer.components.display.SegmentDisplayDriver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +16,16 @@ public class Main {
         SegmentDisplay display = new SegmentDisplay();
         frame.setSize(600, 600);
 
-        display.setSegment(1, true);
-        display.setSegment(2, true);
-        display.setSegment(3, true);
+        SegmentDisplayDriver driver = new SegmentDisplayDriver();
+        driver.in(new boolean[]{false, true, false, false});
+
+        boolean[] data = new boolean[8];
+        data[0] = false;
+        for (int i = 0; i < driver.out().length; i++) {
+            data[i + 1] = driver.out()[i];
+        }
+
+        display.setSegments(data);
 
         frame.add(display);
         frame.pack();
