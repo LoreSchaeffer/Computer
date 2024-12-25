@@ -17,7 +17,7 @@ public class Main {
         frame.setSize(600, 600);
 
         SegmentDisplayDriver driver = new SegmentDisplayDriver();
-        driver.in(new boolean[]{false, true, false, false});
+        driver.in(new boolean[]{false, true, false, true});
 
         boolean[] data = new boolean[8];
         data[0] = false;

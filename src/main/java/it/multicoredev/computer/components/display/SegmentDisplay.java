@@ -2,6 +2,7 @@ package it.multicoredev.computer.components.display;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class SegmentDisplay extends JPanel {
     private static final int SEGMENT_WIDTH = 70;
@@ -39,16 +40,17 @@ public class SegmentDisplay extends JPanel {
     }
 
     public void setSegment(int index, boolean state) {
-        if (index < 0 || index >= segments.length) throw new IllegalArgumentException("Index out of bounds");
+        if (index < 0 || index >= segments.length + 1) throw new IllegalArgumentException("Index out of bounds");
 
         segments[index] = state;
         repaint();
     }
 
     public void setSegments(boolean[] segments) {
-        if (segments.length != this.segments.length) throw new IllegalArgumentException("Segments must be 7 bits long");
+        if (segments.length != this.segments.length + 1) throw new IllegalArgumentException("Segments must be 7 bits long");
 
-        this.segments = segments;
+        this.segments = Arrays.copyOfRange(segments, 1, segments.length);
+        this.minus = segments[0];
         repaint();
     }
 
