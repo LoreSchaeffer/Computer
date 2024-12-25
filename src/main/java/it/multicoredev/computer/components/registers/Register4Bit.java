@@ -21,10 +21,10 @@ public class Register4Bit extends Component implements ClockListener {
         bit2.in(data[2], enable);
         bit3.in(data[3], enable);
 
-        bit0.tick(clock);
-        bit1.tick(clock);
-        bit2.tick(clock);
-        bit3.tick(clock);
+        bit0.clk(clock);
+        bit1.clk(clock);
+        bit2.clk(clock);
+        bit3.clk(clock);
 
         out[0] = bit0.out();
         out[1] = bit1.out();
@@ -60,7 +60,7 @@ public class Register4Bit extends Component implements ClockListener {
     }
 
     @Override
-    public void tick(boolean clock) {
+    public void clk(boolean clock) {
         this.clock = clock;
         run();
     }

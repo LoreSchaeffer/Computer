@@ -47,7 +47,7 @@ public class RegistersTest {
         register1Bit.in(false, false);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(true);
+        register1Bit.clk(true);
         assertFalse(register1Bit.out());
     }
 
@@ -58,7 +58,7 @@ public class RegistersTest {
         register1Bit.in(false, true);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(true);
+        register1Bit.clk(true);
         assertFalse(register1Bit.out());
     }
 
@@ -69,7 +69,7 @@ public class RegistersTest {
         register1Bit.in(true, false);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(true);
+        register1Bit.clk(true);
         assertFalse(register1Bit.out());
     }
 
@@ -80,7 +80,7 @@ public class RegistersTest {
         register1Bit.in(true, true);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(true);
+        register1Bit.clk(true);
         assertTrue(register1Bit.out());
     }
 
@@ -91,10 +91,10 @@ public class RegistersTest {
         register1Bit.in(false, false);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(true);
+        register1Bit.clk(true);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(false);
+        register1Bit.clk(false);
         assertFalse(register1Bit.out());
     }
 
@@ -105,10 +105,10 @@ public class RegistersTest {
         register1Bit.in(false, true);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(true);
+        register1Bit.clk(true);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(false);
+        register1Bit.clk(false);
         assertFalse(register1Bit.out());
     }
 
@@ -119,10 +119,10 @@ public class RegistersTest {
         register1Bit.in(true, false);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(true);
+        register1Bit.clk(true);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(false);
+        register1Bit.clk(false);
         assertFalse(register1Bit.out());
     }
 
@@ -133,10 +133,10 @@ public class RegistersTest {
         register1Bit.in(true, true);
         assertFalse(register1Bit.out());
 
-        register1Bit.tick(true);
+        register1Bit.clk(true);
         assertTrue(register1Bit.out());
 
-        register1Bit.tick(false);
+        register1Bit.clk(false);
         assertTrue(register1Bit.out());
     }
 
@@ -163,7 +163,7 @@ public class RegistersTest {
         register4Bit.in(new boolean[]{false, true, false, true}, false);
         assertArrayEquals(new boolean[]{false, false, false, false}, register4Bit.out());
 
-        register4Bit.tick(true);
+        register4Bit.clk(true);
         assertArrayEquals(new boolean[]{false, false, false, false}, register4Bit.out());
     }
 
@@ -174,7 +174,7 @@ public class RegistersTest {
         register4Bit.in(new boolean[]{false, true, false, true}, true);
         assertArrayEquals(new boolean[]{false, false, false, false }, register4Bit.out());
 
-        register4Bit.tick(true);
+        register4Bit.clk(true);
         assertArrayEquals(new boolean[]{false, true, false, true}, register4Bit.out());
     }
 
@@ -185,10 +185,10 @@ public class RegistersTest {
         register4Bit.in(new boolean[]{false, true, false, true}, false);
         assertArrayEquals(new boolean[]{false, false, false, false}, register4Bit.out());
 
-        register4Bit.tick(true);
+        register4Bit.clk(true);
         assertArrayEquals(new boolean[]{false, false, false, false}, register4Bit.out());
 
-        register4Bit.tick(false);
+        register4Bit.clk(false);
         assertArrayEquals(new boolean[]{false, false, false, false}, register4Bit.out());
     }
 
@@ -199,10 +199,10 @@ public class RegistersTest {
         register4Bit.in(new boolean[]{false, true, false, true}, true);
         assertArrayEquals(new boolean[]{false, false, false, false }, register4Bit.out());
 
-        register4Bit.tick(true);
+        register4Bit.clk(true);
         assertArrayEquals(new boolean[]{false, true, false, true}, register4Bit.out());
 
-        register4Bit.tick(false);
+        register4Bit.clk(false);
         assertArrayEquals(new boolean[]{false, true, false, true}, register4Bit.out());
     }
 }

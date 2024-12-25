@@ -42,7 +42,7 @@ public class Clock {
         @Override
         public void run() {
             status = !status;
-            for (ClockListener listener : listeners) listener.tick(status);
+            for (ClockListener listener : listeners) listener.clk(status);
         }
     }
 }

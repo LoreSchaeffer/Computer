@@ -2,7 +2,7 @@ package it.multicoredev.computer.components.adders;
 
 import it.multicoredev.computer.components.Component;
 
-// First elements of the arrays are the least significant bits
+// The First elements of the arrays are the least significant bits
 // Last elements of the arrays are the most significant bits
 public class Adder4Bit extends Component {
     private final Adder adder0 = new Adder();

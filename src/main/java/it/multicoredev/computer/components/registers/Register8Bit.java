@@ -17,8 +17,8 @@ public class Register8Bit extends Component implements ClockListener {
         lowBites.in(new boolean[]{data[0], data[1], data[2], data[3]}, enable);
         highBites.in(new boolean[]{data[4], data[5], data[6], data[7]}, enable);
 
-        lowBites.tick(clock);
-        highBites.tick(clock);
+        lowBites.clk(clock);
+        highBites.clk(clock);
 
         boolean[] low = lowBites.out();
         boolean[] high = highBites.out();
@@ -57,7 +57,7 @@ public class Register8Bit extends Component implements ClockListener {
     }
 
     @Override
-    public void tick(boolean clock) {
+    public void clk(boolean clock) {
         this.clock = clock;
         run();
     }

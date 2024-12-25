@@ -54,7 +54,7 @@ public class Register1Bit extends Component implements SingleOutputComponent, Cl
     }
 
     @Override
-    public void tick(boolean clock) {
+    public void clk(boolean clock) {
         this.clock = clock;
         run();
     }

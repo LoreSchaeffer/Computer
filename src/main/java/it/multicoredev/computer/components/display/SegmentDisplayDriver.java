@@ -1,10 +1,9 @@
 package it.multicoredev.computer.components.display;
 
-import it.multicoredev.computer.components.Component;
 import it.multicoredev.computer.components.gates.*;
 import it.multicoredev.computer.util.Utils;
 
-public class SegmentDisplayDriver extends Component {
+public class SegmentDisplayDriver extends DisplayComponent {
     private final Xor xor1 = new Xor();
     private final Not not = new Not();
 
@@ -51,6 +50,11 @@ public class SegmentDisplayDriver extends Component {
         and4.in(or4.out(), or1.out());
 
         displayData = new boolean[]{or2.out(), nand2.out(), or5.out(), and1.out(), and2.out(), and3.out(), and4.out()};
+
+        boolean[] toDisplay = new boolean[8];
+        toDisplay[0] = false;
+        System.arraycopy(displayData, 0, toDisplay, 1, displayData.length);
+        display.setSegments(toDisplay);
     }
 
     public SegmentDisplayDriver in(boolean[] data) {

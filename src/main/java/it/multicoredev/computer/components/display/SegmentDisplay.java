@@ -13,7 +13,6 @@ public class SegmentDisplay extends JPanel {
     private static final Color SEGMENT_ON = Color.RED;
     private static final Color SEGMENT_OFF = new Color(21, 21, 21);
 
-
     private boolean[] segments = new boolean[7];
     private boolean minus = false;
 
@@ -39,23 +38,11 @@ public class SegmentDisplay extends JPanel {
         setBackground(BACKGROUND);
     }
 
-    public void setSegment(int index, boolean state) {
-        if (index < 0 || index >= segments.length + 1) throw new IllegalArgumentException("Index out of bounds");
-
-        segments[index] = state;
-        repaint();
-    }
-
     public void setSegments(boolean[] segments) {
         if (segments.length != this.segments.length + 1) throw new IllegalArgumentException("Segments must be 7 bits long");
 
         this.segments = Arrays.copyOfRange(segments, 1, segments.length);
         this.minus = segments[0];
-        repaint();
-    }
-
-    public void setMinus(boolean state) {
-        minus = state;
         repaint();
     }
 

@@ -1,11 +1,10 @@
 package it.multicoredev.computer.components.display;
 
-import it.multicoredev.computer.components.Component;
 import it.multicoredev.computer.components.gates.And;
 import it.multicoredev.computer.components.gates.Not;
 import it.multicoredev.computer.components.gates.advanced.Or4;
 
-public class BlankingNegativeDriver extends Component {
+public class BlankingNegativeDriver extends DisplayComponent {
     private final Or4 or4 = new Or4();
     private final SegmentDisplayDriver driver = new SegmentDisplayDriver();
 
@@ -33,7 +32,7 @@ public class BlankingNegativeDriver extends Component {
     private boolean rippleNegativeIn = false;
     private boolean rippleBlankingIn = false;
 
-    private boolean[] out = new boolean[7];
+    private final boolean[] out = new boolean[7];
     private boolean outMinus = false;
     private boolean rippleNegativeOut = false;
     private boolean rippleBlankingOut = false;
@@ -75,6 +74,11 @@ public class BlankingNegativeDriver extends Component {
 
         rippleNegativeOut = and10.out();
         rippleBlankingOut = and1.out();
+
+        boolean[] toDisplay = new boolean[8];
+        toDisplay[0] = outMinus;
+        System.arraycopy(out, 0, toDisplay, 1, out.length);
+        display.setSegments(toDisplay);
     }
 
     public BlankingNegativeDriver in(boolean[] data, boolean rippleNegativeIn, boolean rippleBlankingIn) {
@@ -85,7 +89,7 @@ public class BlankingNegativeDriver extends Component {
         return this;
     }
 
-    public BlankingNegativeDriver inData(boolean[] data) {
+    public BlankingNegativeDriver in(boolean[] data) {
         this.data = data;
         run();
         return this;
