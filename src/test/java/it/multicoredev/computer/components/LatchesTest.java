@@ -1,6 +1,7 @@
 package it.multicoredev.computer.components;
 
-import it.multicoredev.computer.v2.components.latches.*;
+import it.multicoredev.computer.components.latches.DFlipFlop;
+import it.multicoredev.computer.components.latches.DLatch;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

@@ -1,8 +1,8 @@
 package it.multicoredev.computer.components;
 
-import it.multicoredev.computer.v2.components.adders.Adder;
-import it.multicoredev.computer.v2.components.adders.Adder4Bit;
-import it.multicoredev.computer.v2.components.adders.AdderSub8Bit;
+import it.multicoredev.computer.components.adders.Adder;
+import it.multicoredev.computer.components.adders.Adder4Bit;
+import it.multicoredev.computer.components.adders.AdderSub8Bit;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

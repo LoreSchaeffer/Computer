@@ -1,8 +1,8 @@
 package it.multicoredev.computer.components;
 
-import it.multicoredev.computer.v2.components.gates.*;
-import it.multicoredev.computer.v2.components.gates.compound.MultiAnd;
-import it.multicoredev.computer.v2.components.gates.compound.MultiOr;
+import it.multicoredev.computer.components.gates.*;
+import it.multicoredev.computer.components.gates.compound.MultiAnd;
+import it.multicoredev.computer.components.gates.compound.MultiOr;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

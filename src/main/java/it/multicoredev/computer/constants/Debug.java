@@ -1,12 +1,12 @@
 package it.multicoredev.computer.constants;
 
-import it.multicoredev.computer.v2.components.Component;
-import it.multicoredev.computer.v2.components.gates.*;
-import it.multicoredev.computer.v2.components.gates.compound.MultiAnd;
-import it.multicoredev.computer.v2.components.gates.compound.MultiOr;
-import it.multicoredev.computer.v2.components.latches.DFlipFlop;
-import it.multicoredev.computer.v2.components.latches.DLatch;
-import it.multicoredev.computer.v2.components.registers.Register1Bit;
+import it.multicoredev.computer.components.Component;
+import it.multicoredev.computer.components.gates.*;
+import it.multicoredev.computer.components.gates.compound.MultiAnd;
+import it.multicoredev.computer.components.gates.compound.MultiOr;
+import it.multicoredev.computer.components.latches.DFlipFlop;
+import it.multicoredev.computer.components.latches.DLatch;
+import it.multicoredev.computer.components.registers.Register1Bit;
 
 import java.util.List;
 
