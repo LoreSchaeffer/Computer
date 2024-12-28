@@ -1,91 +1,140 @@
 package it.multicoredev.computer.ui;
 
 import it.multicoredev.computer.constants.Colors;
-import it.multicoredev.computer.components.Component;
+import it.multicoredev.computer.elements.ChipComponent;
+import it.multicoredev.computer.elements.Component;
+import it.multicoredev.computer.util.ConnectionList;
+import it.multicoredev.computer.util.Direction;
+import it.multicoredev.computer.util.Text;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public class Chip extends JPanel {
-    private final Color color;
-    private final String name;
-    private boolean showLabels = false;
+    private static final int WIDTH = 80;
+    private static final int MIN_HEIGHT = 30;
+    private static final int PIN_SIZE = 18;
+    private static final int MIN_PIN_SPACING = PIN_SIZE / 2;
+    private static final int TEXT_PADDING = 16;
+    private static final int LABEL_PADDING = 4;
+
     private final Component component;
-    private final String[] inLabels;
-    private final String[] outLabels;
+    private final Pin[] inputPins;
+    private final Pin[] outputPins;
+    private final Color color;
+    private boolean showLabels = false;
+    private final Map<it.multicoredev.computer.elements.Pin, Label> labels = new HashMap<>();
+    private final int inputLabelWidth;
+    private final int outputLabelWidth;
 
-    public Chip(Color color, String name, Component component) {
-        this.color = color;
-        this.name = name;
+    public Chip(ChipComponent component, Color color) {
         this.component = component;
-        this.inLabels = new String[component.in().length];
-        this.outLabels = new String[component.out().length];
+        this.color = color;
 
-        for (int i = 0; i < component.in().length; i++) {
-            inLabels[i] = String.valueOf(i);
-        }
-
-        for (int i = 0; i < component.out().length; i++) {
-            outLabels[i] = String.valueOf(i);
-        }
-
-        setPreferredSize(new Dimension(150, Math.max(inLabels.length, outLabels.length) * 40 + 60));
+        setLayout(null);
         setOpaque(false);
         setBackground(new Color(0, 0, 0, 0));
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                handleMouseClick(e);
-            }
-        });
+        generateLabels(component.inputs());
+        generateLabels(component.outputs());
+
+        inputPins = new Pin[component.inputs().length];
+        outputPins = new Pin[component.outputs().length];
+
+        int maxPins = Math.max(inputPins.length, outputPins.length);
+        int longestInputLabel = labels.entrySet()
+                .stream()
+                .filter(e -> e.getKey().direction().equals(Direction.INPUT))
+                .max(Comparator.comparingInt(e -> e.getValue().getPreferredSize().width))
+                .map(e -> e.getValue().getPreferredSize().width)
+                .orElse(0);
+        int longestOutputLabel = labels.entrySet()
+                .stream()
+                .filter(e -> e.getKey().direction().equals(Direction.OUTPUT))
+                .max(Comparator.comparingInt(e -> e.getValue().getPreferredSize().width))
+                .map(e -> e.getValue().getPreferredSize().width)
+                .orElse(0);
+        inputLabelWidth = longestInputLabel > 0 ? longestInputLabel + LABEL_PADDING : 0;
+        outputLabelWidth = longestOutputLabel > 0 ? longestOutputLabel + LABEL_PADDING : 0;
+
+        setPreferredSize(new Dimension(
+                WIDTH + PIN_SIZE + inputLabelWidth + outputLabelWidth,
+                Math.max(
+                        MIN_HEIGHT,
+                        maxPins * PIN_SIZE + (maxPins + 2) * MIN_PIN_SPACING
+                )
+        ));
+
+        int inSpacing = Math.max(MIN_PIN_SPACING, getPreferredSize().height / (inputPins.length + 1));
+        for (int i = 0; i < inputPins.length; i++) {
+            int y = inSpacing * (i + 1);
+
+            Label label = labels.get(component.input(i));
+            label.setBounds(0, y - (label.getPreferredSize().height / 2), label.getPreferredSize().width, label.getPreferredSize().height);
+            label.setVisible(showLabels);
+            add(label);
+
+            Pin pin = new Pin(component.input(i), PIN_SIZE, label, this::handlePinEnter, this::handlePinExit);
+            inputPins[i] = pin;
+
+            pin.setBounds(inputLabelWidth, y - (PIN_SIZE / 2), PIN_SIZE, PIN_SIZE);
+            add(pin);
+        }
+
+        int outSpacing = Math.max(MIN_PIN_SPACING, getPreferredSize().height / (outputPins.length + 1));
+        for (int i = 0; i < component.outputs().length; i++) {
+            int y = outSpacing * (i + 1);
+
+            Label label = labels.get(component.output(i));
+            label.setBounds(getPreferredSize().width - label.getPreferredSize().width, y - (label.getPreferredSize().height / 2), label.getPreferredSize().width, label.getPreferredSize().height);
+            label.setVisible(showLabels);
+            add(label);
+
+            Pin pin = new Pin(component.output(i), PIN_SIZE, label, this::handlePinEnter, this::handlePinExit);
+            outputPins[i] = pin;
+
+            pin.setBounds(getPreferredSize().width - PIN_SIZE - outputLabelWidth, y - (PIN_SIZE / 2), PIN_SIZE, PIN_SIZE);
+            add(pin);
+        }
     }
 
-    public void setLabels(String[] inLabels, String[] outLabels) {
-        if (inLabels.length != this.inLabels.length) throw new IllegalArgumentException("Input labels must be " + this.inLabels.length + " long");
-        if (outLabels.length != this.outLabels.length) throw new IllegalArgumentException("Output labels must be " + this.outLabels.length + " long");
-
-        System.arraycopy(inLabels, 0, this.inLabels, 0, inLabels.length);
-        System.arraycopy(outLabels, 0, this.outLabels, 0, outLabels.length);
-    }
-
-    public void setInLabels(String[] inLabels) {
-        if (inLabels.length != this.inLabels.length) throw new IllegalArgumentException("Input labels must be " + this.inLabels.length + " long");
-
-        System.arraycopy(inLabels, 0, this.inLabels, 0, inLabels.length);
-    }
-
-    public void setOutLabels(String[] outLabels) {
-        if (outLabels.length != this.outLabels.length) throw new IllegalArgumentException("Output labels must be " + this.outLabels.length + " long");
-
-        System.arraycopy(outLabels, 0, this.outLabels, 0, outLabels.length);
+    public Chip(ChipComponent component) {
+        this(component, Colors.getRandom(component.getClass()));
     }
 
     public void showLabels(boolean showLabels) {
         this.showLabels = showLabels;
-        repaint();
+        labels.values().forEach(label -> label.setVisible(showLabels));
     }
 
-    private void handleMouseClick(MouseEvent e) {
-        int inSpacing = getHeight() / (component.in().length + 1);
+    public List<ConnectionList> getConnections() {
+        List<ConnectionList> connections = new ArrayList<>();
 
-        for (int i = 0; i < component.in().length; i++) {
-            int y = inSpacing * (i + 1);
-
-            Rectangle inputCircle = new Rectangle(0, y - 10, 20, 20);
-            if (inputCircle.contains(e.getPoint())) {
-                boolean[] in = component.in();
-                in[i] = !in[i];
-                component.in(in);
-
-                repaint();
-                break;
-            }
+        for (Pin pin : outputPins) {
+            connections.add(new ConnectionList(
+                    pin,
+                    pin.getPin().outboundConnections()
+            ));
         }
+
+        return connections;
+    }
+
+    private void generateLabels(it.multicoredev.computer.elements.Pin[] pins) {
+        for (it.multicoredev.computer.elements.Pin pin : pins) {
+            Label label = new Label(pin.name());
+            labels.put(pin, label);
+        }
+    }
+
+    private void handlePinEnter(it.multicoredev.computer.elements.Pin pin) {
+        if (!showLabels) labels.get(pin).setVisible(true);
+    }
+
+    private void handlePinExit(it.multicoredev.computer.elements.Pin pin) {
+        if (!showLabels) labels.get(pin).setVisible(false);
     }
 
     @Override
@@ -98,83 +147,37 @@ public class Chip extends JPanel {
         int xCenter = getWidth() / 2;
         int yCenter = getHeight() / 2;
 
-        g2.setColor(Color.BLACK);
-        g2.drawRect(10, 0, getWidth() - 20, getHeight() - 1);
         g2.setColor(color);
-        g2.fillRect(11, 1, getWidth() - 21, getHeight() - 2);
+        g2.fillRoundRect(PIN_SIZE / 2 + inputLabelWidth, 0, getWidth() - PIN_SIZE - inputLabelWidth - outputLabelWidth, getHeight() - 1, 10, 10);
 
         g2.setColor(Color.BLACK);
         g2.setFont(new Font("Arial", Font.BOLD, 16));
-        List<String> lines = splitTextIntoLines(name, g2, getWidth() - 58);
+        List<String> lines = Text.wrap(component.name(), g2, getWidth() - 58);
+
+        int largestWidth = 0;
+        for (String line : lines) {
+            int textWidth = g2.getFontMetrics().stringWidth(line);
+            if (textWidth > largestWidth) largestWidth = textWidth;
+        }
+
+        if (largestWidth > getWidth() - PIN_SIZE * 2) {
+            setPreferredSize(new Dimension(largestWidth + (PIN_SIZE + TEXT_PADDING) * 2, MIN_HEIGHT));
+            revalidate();
+            repaint();
+        }
 
         int textHeight = g2.getFontMetrics().getHeight();
-        int totalTextHeight = lines.size() * textHeight;
-        int startY = yCenter - totalTextHeight / 2 + textHeight;
+        int startY = yCenter + g2.getFontMetrics().getAscent() / 2;
 
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             int textWidth = g2.getFontMetrics().stringWidth(line);
             g2.drawString(line, xCenter - textWidth / 2, startY + i * textHeight);
         }
-
-        int inSpacing = getHeight() / (component.in().length + 1);
-        for (int i = 0; i < component.in().length; i++) {
-            int y = inSpacing * (i + 1);
-
-            g2.setColor(Color.BLACK);
-            g2.fillOval(0, y - 10, 20, 20);
-
-            g2.setColor(component.in()[i] ? Colors.GREEN : Colors.RED);
-            g2.fillOval(1, y - 9, 18, 18);
-
-            if (showLabels) {
-                g2.setFont(new Font("Arial", Font.PLAIN, 12));
-                g2.setColor(Color.BLACK);
-                g2.drawString(inLabels[i], 22, y + 4);
-            }
-        }
-
-        int outSpacing = getHeight() / (component.out().length + 1);
-        for (int i = 0; i < component.out().length; i++) {
-            int y = outSpacing * (i + 1);
-
-            g2.setColor(Color.BLACK);
-            g2.fillOval(getWidth() - 20, y - 10, 20, 20);
-
-            g2.setColor(component.out()[i] ? Colors.GREEN : Colors.RED);
-            g2.fillOval(getWidth() - 19, y - 9, 18, 18);
-
-            if (showLabels) {
-                String label = outLabels[i];
-
-                g2.setFont(new Font("Arial", Font.PLAIN, 12));
-                g2.setColor(Color.BLACK);
-
-                int textWidth = g2.getFontMetrics().stringWidth(label);
-                g2.drawString(label, getWidth() - 22 - textWidth, y + 4);
-            }
-        }
     }
 
-    private List<String> splitTextIntoLines(String text, Graphics2D g2, int maxWidth) {
-        List<String> lines = new ArrayList<>();
-        String[] words = text.split(" ");
-        StringBuilder currentLine = new StringBuilder();
-
-        for (String word : words) {
-            String testLine = currentLine.isEmpty() ? word : currentLine + " " + word;
-            if (g2.getFontMetrics().stringWidth(testLine) > maxWidth) {
-                lines.add(currentLine.toString());
-                currentLine = new StringBuilder(word);
-            } else {
-                currentLine.append(currentLine.isEmpty() ? word : " " + word);
-            }
-        }
-
-        if (!currentLine.isEmpty()) {
-            lines.add(currentLine.toString());
-        }
-
-        return lines;
-    }
+//    @Override
+//    public boolean contains(int x, int y) {
+//        return x >= PIN_SIZE / 2 + inputLabelWidth && x <= getWidth() - PIN_SIZE / 2 - outputLabelWidth && y >= 0 && y <= getHeight();
+//    }
 }

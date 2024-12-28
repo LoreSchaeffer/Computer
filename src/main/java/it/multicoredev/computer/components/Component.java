@@ -42,9 +42,9 @@ public abstract class Component {
     protected final void run() {
         UUID runId = UUID.randomUUID();
 
-        logStatus("BT", runId);
+        //logStatus("BT", runId);
         update();
-        logStatus("AT", runId);
+        //logStatus("AT", runId);
 
         outboundConnections.forEach((owner, consumer) -> consumer.accept(out));
     }

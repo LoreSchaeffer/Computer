@@ -56,14 +56,14 @@ public class SegmentDisplay extends JPanel {
         int yCenter = getHeight() / 2;
         int halfSegmentWidth = SEGMENT_WIDTH / 2;
 
-        drawHSegment(g, minus ? Colors.RED : Colors.ALMOST_BLACK, xCenter - halfSegmentWidth - MINUS_WIDTH - SEGMENT_HEIGHT / 2 - SEGMENT_DISTANCE, yCenter, MINUS_WIDTH, SEGMENT_HEIGHT); // MINUS
-        drawHSegment(g, segments[0] ? Colors.RED : Colors.ALMOST_BLACK, xCenter - halfSegmentWidth, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE * 2, SEGMENT_WIDTH, SEGMENT_HEIGHT); // TOP
-        drawVSegment(g, segments[1] ? Colors.RED : Colors.ALMOST_BLACK, xCenter + halfSegmentWidth + SEGMENT_DISTANCE, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // TOP RIGHT
-        drawVSegment(g, segments[2] ? Colors.RED : Colors.ALMOST_BLACK, xCenter + halfSegmentWidth + SEGMENT_DISTANCE, yCenter + SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // BOTTOM RIGHT
-        drawHSegment(g, segments[3] ? Colors.RED : Colors.ALMOST_BLACK, xCenter - halfSegmentWidth, yCenter + SEGMENT_WIDTH + SEGMENT_DISTANCE * 2, SEGMENT_WIDTH, SEGMENT_HEIGHT); // BOTTOM
-        drawVSegment(g, segments[4] ? Colors.RED : Colors.ALMOST_BLACK, xCenter - halfSegmentWidth - SEGMENT_DISTANCE, yCenter + SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // BOTTOM LEFT
-        drawVSegment(g, segments[5] ? Colors.RED : Colors.ALMOST_BLACK, xCenter - halfSegmentWidth - SEGMENT_DISTANCE, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // TOP LEFT
-        drawHSegment(g, segments[6] ? Colors.RED : Colors.ALMOST_BLACK, xCenter - halfSegmentWidth, yCenter, SEGMENT_WIDTH, SEGMENT_HEIGHT); // MIDDLE
+        drawHSegment(g, minus ? Colors.RED : Colors.NOT_BLACK, xCenter - halfSegmentWidth - MINUS_WIDTH - SEGMENT_HEIGHT / 2 - SEGMENT_DISTANCE, yCenter, MINUS_WIDTH, SEGMENT_HEIGHT); // MINUS
+        drawHSegment(g, segments[0] ? Colors.RED : Colors.NOT_BLACK, xCenter - halfSegmentWidth, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE * 2, SEGMENT_WIDTH, SEGMENT_HEIGHT); // TOP
+        drawVSegment(g, segments[1] ? Colors.RED : Colors.NOT_BLACK, xCenter + halfSegmentWidth + SEGMENT_DISTANCE, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // TOP RIGHT
+        drawVSegment(g, segments[2] ? Colors.RED : Colors.NOT_BLACK, xCenter + halfSegmentWidth + SEGMENT_DISTANCE, yCenter + SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // BOTTOM RIGHT
+        drawHSegment(g, segments[3] ? Colors.RED : Colors.NOT_BLACK, xCenter - halfSegmentWidth, yCenter + SEGMENT_WIDTH + SEGMENT_DISTANCE * 2, SEGMENT_WIDTH, SEGMENT_HEIGHT); // BOTTOM
+        drawVSegment(g, segments[4] ? Colors.RED : Colors.NOT_BLACK, xCenter - halfSegmentWidth - SEGMENT_DISTANCE, yCenter + SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // BOTTOM LEFT
+        drawVSegment(g, segments[5] ? Colors.RED : Colors.NOT_BLACK, xCenter - halfSegmentWidth - SEGMENT_DISTANCE, yCenter - SEGMENT_WIDTH - SEGMENT_DISTANCE, SEGMENT_HEIGHT, SEGMENT_WIDTH); // TOP LEFT
+        drawHSegment(g, segments[6] ? Colors.RED : Colors.NOT_BLACK, xCenter - halfSegmentWidth, yCenter, SEGMENT_WIDTH, SEGMENT_HEIGHT); // MIDDLE
     }
 
     private void drawHSegment(Graphics g, Color color, int x, int y, int width, int height) {
