@@ -32,9 +32,9 @@ public class DLatch extends ChipComponent {
 
     @Override
     public void run() {
-        not.in(input(0).state());
-        and0.in(not.out(), input(1).state());
-        and1.in(input(0).state(), input(1).state());
+        not.in(inputState(0));
+        and0.in(not.out(), inputState(1));
+        and1.in(inputState(0), inputState(1));
         nor0.in(and0.out(), nor1.out());
         nor1.in(and1.out(), nor0.out());
 

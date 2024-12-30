@@ -68,6 +68,6 @@ public class DisplayDriver extends ChipComponent {
     }
 
     public void connect(SegmentDisplay display) {
-        connect(display, display::setSegments);
+//        connect(display, display::setSegments);
     }
 }

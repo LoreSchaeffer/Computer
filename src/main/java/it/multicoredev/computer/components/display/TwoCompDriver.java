@@ -55,17 +55,17 @@ public class TwoCompDriver extends ChipComponent {
     }
 
     public void connect(SegmentDisplay display1, SegmentDisplay display2, SegmentDisplay display3) {
-        connect(display1, (out) -> {
-            display1.setSegments(Arrays.copyOfRange(out, 0, 7));
-            display1.setMinus(out[7]);
-        });
-        connect(display2, (out) -> {
-            display2.setSegments(Arrays.copyOfRange(out, 8, 15));
-            display2.setMinus(out[15]);
-        });
-        connect(display3, (out) -> {
-            display3.setSegments(Arrays.copyOfRange(out, 16, 23));
-            display3.setMinus(out[23]);
-        });
+//        connect(display1, (out) -> {
+//            display1.setSegments(Arrays.copyOfRange(out, 0, 7));
+//            display1.setMinus(out[7]);
+//        });
+//        connect(display2, (out) -> {
+//            display2.setSegments(Arrays.copyOfRange(out, 8, 15));
+//            display2.setMinus(out[15]);
+//        });
+//        connect(display3, (out) -> {
+//            display3.setSegments(Arrays.copyOfRange(out, 16, 23));
+//            display3.setMinus(out[23]);
+//        });
     }
 }

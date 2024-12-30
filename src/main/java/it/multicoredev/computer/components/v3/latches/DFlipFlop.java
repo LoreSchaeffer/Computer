@@ -28,9 +28,9 @@ public class DFlipFlop extends ChipComponent {
 
     @Override
     public void run() {
-        not.in(input(1).state());
-        latch0.in(input(0).state(), not.out());
-        latch1.in(latch0.pinQ().state(), input(1).state());
+        not.in(inputState(1));
+        latch0.in(inputState(0), not.out());
+        latch1.in(latch0.pinQ().state(), inputState(1));
 
         output(0).state(latch1.pinQ().state());
         output(1).state(latch1.pinQn().state());

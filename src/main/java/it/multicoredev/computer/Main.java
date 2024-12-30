@@ -1,10 +1,10 @@
 package it.multicoredev.computer;
 
-import it.multicoredev.computer.components.v3.gates.multi.MultiAnd;
-import it.multicoredev.computer.components.v3.gates.multi.MultiOr;
-import it.multicoredev.computer.components.v3.latches.DFlipFlop;
-import it.multicoredev.computer.components.v3.latches.DLatch;
+import it.multicoredev.computer.components.v3.display.Dabble;
+import it.multicoredev.computer.components.v3.display.DoubleDabble;
+import it.multicoredev.computer.components.v3.display.SegDisplayDriver;
 import it.multicoredev.computer.constants.Colors;
+import it.multicoredev.computer.ui.SegmentDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +15,7 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger("Computer");
 
     // TODO DLatch and DFlipFlop could not work as expected
+    // TODO Send state when connecting pins
 
     public static void main(String[] args) {
         LOG.info("Starting Computer");
@@ -28,8 +29,14 @@ public class Main {
         frame.setMinimumSize(new Dimension(1280, 720));
         frame.getContentPane().setBackground(Colors.ALMOST_BLACK);
 
-        DFlipFlop flipFlop = new DFlipFlop();
-        frame.add(flipFlop.getChip());
+        SegDisplayDriver driver = new SegDisplayDriver();
+        driver.showLabels(true);
+        frame.add(driver.getChip());
+
+        SegmentDisplay display = new SegmentDisplay();
+        frame.add(display);
+
+        driver.connect(display.segmentPins());
 
         frame.pack();
         frame.setVisible(true);

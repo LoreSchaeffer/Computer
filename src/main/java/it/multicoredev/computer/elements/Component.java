@@ -1,5 +1,7 @@
 package it.multicoredev.computer.elements;
 
+import it.multicoredev.computer.util.State;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,14 @@ public abstract class Component {
         return outputs[index];
     }
 
+    public State inputState(int index) {
+        return inputs[index].state();
+    }
+
+    public State outputState(int index) {
+        return outputs[index].state();
+    }
+
     public List<Pin> getConnections() {
         List<Pin> connections = new ArrayList<>();
         for (Pin pin : outputs) {
@@ -57,5 +67,24 @@ public abstract class Component {
         }
 
         return connections;
+    }
+
+    public Component connect(int index, Pin pin) {
+        outputs[index].connect(pin);
+        return this;
+    }
+
+    public Component connect(Pin... pins) {
+        for (int i = 0; i < pins.length; i++) {
+            outputs[i].connect(pins[i]);
+        }
+
+        return this;
+    }
+
+    protected void setOutputs(int startIndex, State... states) {
+        for (int i = 0; i < states.length; i++) {
+            outputs[startIndex + i].state(states[i]);
+        }
     }
 }

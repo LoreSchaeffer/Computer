@@ -146,13 +146,14 @@ public class Chip extends JPanel {
 
         int xCenter = getWidth() / 2;
         int yCenter = getHeight() / 2;
+        int chipWidth = getWidth() - PIN_SIZE - inputLabelWidth - outputLabelWidth;
 
         g2.setColor(color);
-        g2.fillRoundRect(PIN_SIZE / 2 + inputLabelWidth, 0, getWidth() - PIN_SIZE - inputLabelWidth - outputLabelWidth, getHeight() - 1, 10, 10);
+        g2.fillRoundRect(PIN_SIZE / 2 + inputLabelWidth, 0, chipWidth, getHeight() - 1, 10, 10);
 
         g2.setColor(Color.BLACK);
         g2.setFont(new Font("Arial", Font.BOLD, 16));
-        List<String> lines = Text.wrap(component.name(), g2, getWidth() - 58);
+        List<String> lines = Text.wrap(component.name(), g2, chipWidth - PIN_SIZE);
 
         int largestWidth = 0;
         for (String line : lines) {
@@ -160,10 +161,14 @@ public class Chip extends JPanel {
             if (textWidth > largestWidth) largestWidth = textWidth;
         }
 
-        if (largestWidth > getWidth() - PIN_SIZE * 2) {
-            setPreferredSize(new Dimension(largestWidth + (PIN_SIZE + TEXT_PADDING) * 2, MIN_HEIGHT));
+        if (largestWidth > chipWidth - PIN_SIZE) {
+            setPreferredSize(new Dimension(largestWidth + TEXT_PADDING * 2 + PIN_SIZE + inputLabelWidth + outputLabelWidth, getHeight()));
             revalidate();
             repaint();
+
+            for (Pin pin : outputPins) {
+                pin.setBounds(getPreferredSize().width - PIN_SIZE - outputLabelWidth, pin.getY(), PIN_SIZE, PIN_SIZE);
+            }
         }
 
         int textHeight = g2.getFontMetrics().getHeight();

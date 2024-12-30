@@ -24,7 +24,7 @@ public class Nand extends ChipComponent {
 
     @Override
     public void run() {
-        and.in(input(0).state(), input(1).state());
+        and.in(inputState(0), inputState(1));
         not.in(and.out());
 
         outputs[0].state(not.out());

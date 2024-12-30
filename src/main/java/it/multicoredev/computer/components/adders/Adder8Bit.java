@@ -14,8 +14,12 @@ public class Adder8Bit extends ChipComponent {
                 9,
                 "Adder 8B",
                 new String[]{
-                        "A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7",
-                        "B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7",
+                        "A0", "A1", "A2", "A3",
+                        "A4", "A5", "A6", "A7",
+
+                        "B0", "B1", "B2", "B3",
+                        "B4", "B5", "B6", "B7",
+
                         "Cin"
                 },
                 new String[]{"S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "Cout"}

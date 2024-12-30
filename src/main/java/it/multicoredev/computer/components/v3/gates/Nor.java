@@ -25,7 +25,7 @@ public class Nor extends ChipComponent {
 
     @Override
     public void run() {
-        or.in(input(0).state(), input(1).state());
+        or.in(inputState(0), inputState(1));
         not.in(or.out());
 
         outputs[0].state(not.out());

@@ -22,7 +22,7 @@ public class Not extends ChipComponent {
 
     @Override
     public void run() {
-        outputs[0].state(input(0).state().toggle());
+        outputs[0].state(inputState(0).toggle());
     }
 
     public Pin pinIn() {

@@ -26,8 +26,8 @@ public class Xor extends ChipComponent {
 
     @Override
     public void run() {
-        or.in(input(0).state(), input(1).state());
-        nand.in(input(0).state(), input(1).state());
+        or.in(inputState(0), inputState(1));
+        nand.in(inputState(0), inputState(1));
         and.in(or.out(), nand.out());
 
         output(0).state(and.out());

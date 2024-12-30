@@ -25,8 +25,8 @@ public class Or extends ChipComponent {
 
     @Override
     public void run() {
-        not0.in(input(0).state());
-        not1.in(input(1).state());
+        not0.in(inputState(0));
+        not1.in(inputState(1));
         nand.in(not0.out(), not1.out());
 
         outputs[0].state(nand.out());

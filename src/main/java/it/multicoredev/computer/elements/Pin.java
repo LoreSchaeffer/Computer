@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pin {
-    private String name;
-    private final Direction direction;
-    private State state;
-    private Component component;
-    private final List<Pin> outboundConnections = new ArrayList<>();
+    protected String name;
+    protected final Direction direction;
+    protected State state;
+    protected Component component;
+    protected final List<Pin> outboundConnections = new ArrayList<>();
 
     public Pin(String name, Direction direction, State state) {
         this.name = name;

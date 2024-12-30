@@ -98,8 +98,8 @@ public class BlankingNegDriver extends ChipComponent {
 
     public void connect(SegmentDisplay display) {
         connect(display, (out) -> {
-            display.setSegments(Arrays.copyOfRange(out, 0, 7));
-            display.setMinus(out[9]);
+//            display.setSegments(Arrays.copyOfRange(out, 0, 7));
+//            display.setMinus(out[9]);
         });
     }
 }

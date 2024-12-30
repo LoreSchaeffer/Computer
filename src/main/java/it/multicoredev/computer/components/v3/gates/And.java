@@ -23,7 +23,7 @@ public class And extends ChipComponent {
 
     @Override
     public void run() {
-        outputs[0].state(input(0).state().equals(input(1).state()) && input(0).state().equals(State.HIGH) ? State.HIGH : State.LOW);
+        outputs[0].state(inputState(0).equals(inputState(1)) && inputState(0).equals(State.HIGH) ? State.HIGH : State.LOW);
     }
 
     public Pin pinA() {
