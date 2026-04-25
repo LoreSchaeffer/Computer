@@ -1,0 +1,41 @@
+package it.multicoredev.cpu.hardware;
+
+public final class AndGate implements Gate {
+    private final String name;
+    private final Wire inputA;
+    private final Wire inputB;
+    private final Wire output;
+
+    private final Wire[] inputsArray;
+    private final Wire[] outputsArray;
+
+    public AndGate(String name, Wire inputA, Wire inputB, Wire output) {
+        this.name = name;
+        this.inputA = inputA;
+        this.inputB = inputB;
+        this.output = output;
+
+        this.inputsArray = new Wire[]{this.inputA, this.inputB};
+        this.outputsArray = new Wire[]{this.output};
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public Wire[] getInputs() {
+        return this.inputsArray;
+    }
+
+    @Override
+    public Wire[] getOutputs() {
+        return this.outputsArray;
+    }
+
+    @Override
+    public void update() {
+        this.output.setState(this.inputA.getState() & this.inputB.getState());
+    }
+}

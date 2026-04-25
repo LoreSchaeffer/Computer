@@ -1,0 +1,94 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-family: var(--font-family-base);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    user-select: none;
+    outline: none;
+}
+
+.button:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-bg-primary), 0 0 0 4px var(--color-border-focus);
+}
+
+.primary {
+    background-color: var(--color-primary);
+    color: var(--color-text-accent);
+}
+
+.primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+}
+
+.primary:active:not(:disabled) {
+    background-color: var(--color-primary-active);
+}
+
+.secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-text-accent);
+    border-color: var(--color-border);
+}
+
+.secondary:hover:not(:disabled) {
+    background-color: var(--color-secondary-hover);
+}
+
+.secondary:active:not(:disabled) {
+    background-color: var(--color-secondary-active);
+}
+
+.success {
+    background-color: var(--color-success);
+    color: var(--color-text-accent);
+}
+
+.success:hover:not(:disabled) {
+    background-color: var(--color-success-hover);
+}
+
+.success:active:not(:disabled) {
+    background-color: var(--color-success-active);
+}
+
+.warning {
+    background-color: var(--color-warning);
+    color: var(--color-text-inverse);
+}
+
+.warning:hover:not(:disabled) {
+    background-color: var(--color-warning-hover);
+}
+
+.warning:active:not(:disabled) {
+    background-color: var(--color-warning-active);
+}
+
+.error {
+    background-color: var(--color-error);
+    color: var(--color-text-accent);
+}
+
+.error:hover:not(:disabled) {
+    background-color: var(--color-error-hover);
+}
+
+.error:active:not(:disabled) {
+    background-color: var(--color-error-active);
+}
+
+.button:disabled {
+    background-color: var(--color-disabled-bg);
+    color: var(--color-disabled-text);
+    cursor: not-allowed;
+    border-color: transparent;
+    opacity: 0.7;
+}

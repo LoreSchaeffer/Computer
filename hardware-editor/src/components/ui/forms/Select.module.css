@@ -1,0 +1,133 @@
+.selectContainer {
+    width: 100%;
+    position: relative;
+    user-select: none;
+    font-family: var(--font-family-base);
+}
+
+.trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+}
+
+.primary {
+    background-color: var(--color-bg-primary);
+}
+
+.secondary {
+    background-color: var(--color-bg-secondary);
+}
+
+.tertiary {
+    background-color: var(--color-bg-tertiary);
+}
+
+.leftContent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.leftIcon {
+    color: var(--color-text-secondary);
+    display: flex;
+}
+
+.valueText {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.placeholder {
+    color: var(--color-text-secondary);
+}
+
+.trigger:hover {
+    border-color: var(--color-primary);
+}
+
+.trigger.open {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.trigger.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.chevron {
+    color: var(--color-text-secondary);
+    transition: transform 0.2s ease;
+    font-size: 0.75rem;
+}
+
+.trigger.open .chevron {
+    transform: rotate(180deg);
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    padding: 4px;
+}
+
+.dropdownMenu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdownMenu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dropdownMenu::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+}
+
+.option {
+    padding: 6px 8px;
+    border-radius: 4px;
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.option:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-accent);
+}
+
+.option.selected {
+    background-color: var(--color-border);
+    font-weight: bold;
+}
+
+.emptyMessage {
+    padding: 8px;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+}

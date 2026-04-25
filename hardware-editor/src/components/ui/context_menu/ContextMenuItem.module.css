@@ -1,0 +1,121 @@
+.item {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: var(--border-radius-sm);
+    margin: 2px 6px;
+    transition: background-color var(--transition-fast);
+}
+
+.item span {
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    line-height: 0.875rem;
+}
+
+.item svg {
+    fill: var(--color-text-primary);
+}
+
+.item:hover:not(.disabled):not(.separator) {
+    background-color: var(--color-primary);
+}
+
+.item:hover:not(.disabled):not(.separator) span {
+    color: var(--color-text-accent);
+}
+
+.item:hover:not(.disabled):not(.separator) svg {
+    fill: var(--color-text-accent);
+}
+
+.separator {
+    border-top: 1px solid var(--color-border);
+    padding: 0;
+    margin: 4px 0;
+    cursor: default;
+    border-radius: 0;
+}
+
+.disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.primary span {
+    color: var(--color-primary);
+}
+
+.primary svg {
+    fill: var(--color-primary);
+}
+
+.primary:hover:not(.disabled):not(.separator) {
+    background-color: var(--color-primary);
+}
+
+.secondary span {
+    color: var(--color-text-secondary);
+}
+
+.secondary svg {
+    fill: var(--color-text-secondary);
+}
+
+.secondary:hover:not(.disabled):not(.separator) {
+    background-color: var(--color-secondary);
+}
+
+.success span {
+    color: var(--color-success);
+}
+
+.success svg {
+    fill: var(--color-success);
+}
+
+.success:hover:not(.disabled):not(.separator) {
+    background-color: var(--color-success);
+}
+
+.warning span {
+    color: var(--color-warning);
+}
+
+.warning svg {
+    fill: var(--color-warning);
+}
+
+.warning:hover:not(.disabled):not(.separator) {
+    background-color: var(--color-warning);
+}
+
+.danger span {
+    color: var(--color-error);
+}
+
+.danger svg {
+    fill: var(--color-error);
+}
+
+.danger:hover:not(.disabled):not(.separator) {
+    background-color: var(--color-error);
+}
+
+.primary:hover:not(.disabled):not(.separator) span,
+.primary:hover:not(.disabled):not(.separator) svg,
+.secondary:hover:not(.disabled):not(.separator) span,
+.secondary:hover:not(.disabled):not(.separator) svg,
+.success:hover:not(.disabled):not(.separator) span,
+.success:hover:not(.disabled):not(.separator) svg,
+.warning:hover:not(.disabled):not(.separator) span,
+.warning:hover:not(.disabled):not(.separator) svg,
+.danger:hover:not(.disabled):not(.separator) span,
+.danger:hover:not(.disabled):not(.separator) svg {
+    color: var(--color-text-accent);
+    fill: var(--color-text-accent);
+}
