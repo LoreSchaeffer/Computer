@@ -4,13 +4,13 @@ import {OUTPUT_COLOR} from "../../utils/consts.ts";
 
 export function OutputPinNode(props: NodeProps) {
     const nodeData = props.data as unknown as GenericNodeData;
-    const isActive = nodeData.values?.['in'] === true;
+    const isActive = nodeData.values?.['In'] === true;
 
     const dataWithConfig: GenericNodeData = {
         ...(props.data as unknown as GenericNodeData),
         typeLabel: 'OUTPUT',
         headerColor: OUTPUT_COLOR,
-        inputs: ['in'],
+        inputs: ['In'],
         outputs: [],
         customControl: (
             <div

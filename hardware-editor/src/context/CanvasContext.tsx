@@ -3,13 +3,27 @@ import {addEdge, applyEdgeChanges, applyNodeChanges, type Connection, type Edge,
 import {v4 as uuidv4} from 'uuid';
 import {STORAGE_KEY_STATE} from "../utils/consts.ts";
 
-const GATE_LOGIC: Record<string, (inputs: boolean[]) => boolean> = {
+const GATE_LOGIC: Record<string, (inputs: boolean[], previousState?: boolean) => boolean> = {
     'AndGate': (ins) => ins.length > 0 && ins.every(v => v),
     'OrGate': (ins) => ins.some(v => v),
     'NotGate': (ins) => !ins[0],
     'NandGate': (ins) => !(ins.length > 0 && ins.every(v => v)),
     'NorGate': (ins) => !ins.some(v => v),
     'XorGate': (ins) => ins.filter(v => v).length % 2 !== 0,
+};
+
+const SEQUENTIAL_LOGIC: Record<string, (inputs: boolean[], currentState: any) => Record<string, boolean>> = {
+    'DLatch': (ins, currentState) => {
+        const data = ins[0];
+        const enable = ins[1];
+
+        const latchedValue = enable ? data : (currentState?.values?.['Q'] || false);
+
+        return {
+            'Q': latchedValue,
+            '!Q': !latchedValue
+        };
+    }
 };
 
 interface CanvasContextType {
@@ -104,7 +118,7 @@ export function CanvasProvider({children}: PropsWithChildren) {
                     const nodeData = node.data as any;
                     const newValues = {...(nodeData.values || {})};
 
-                    const inputPins = node.type === 'outputPin' ? ['in'] : (nodeData.inputs || []);
+                    const inputPins = node.type === 'outputPin' ? ['In'] : (nodeData.inputs || []);
 
                     const inputValues: boolean[] = inputPins.map((pinId: string) => {
                         const connection = edgeMap.find(e => e.target === node.id && e.targetHandle === pinId);
@@ -112,7 +126,10 @@ export function CanvasProvider({children}: PropsWithChildren) {
 
                         const sourceNode = currentNodes.find(n => n.id === connection.source);
                         const sourceNodeData = sourceNode?.data as any;
-                        return sourceNodeData?.values?.[connection.sourceHandle || 'out'] || false;
+
+                        const handleName = connection.sourceHandle || (sourceNodeData.outputs && sourceNodeData.outputs[0]) || 'Out';
+
+                        return sourceNodeData?.values?.[handleName] || false;
                     });
 
                     inputPins.forEach((pinId: string, index: number) => {
@@ -122,10 +139,16 @@ export function CanvasProvider({children}: PropsWithChildren) {
                     if (node.type === 'logicGate') {
                         const logicFunc = GATE_LOGIC[nodeData.typeLabel];
                         if (logicFunc) {
-                            newValues['OUT'] = logicFunc(inputValues);
+                            newValues['Out'] = logicFunc(inputValues);
+                        }
+                    } else if (node.type === 'latch') {
+                        const seqFunc = SEQUENTIAL_LOGIC[nodeData.typeLabel];
+                        if (seqFunc) {
+                            const results = seqFunc(inputValues, nodeData);
+                            Object.assign(newValues, results);
                         }
                     } else if (node.type === 'outputPin') {
-                        newValues['in'] = inputValues[0] || false;
+                        newValues['In'] = inputValues[0] || false;
                     }
 
                     if (JSON.stringify(nodeData.values) !== JSON.stringify(newValues)) {
@@ -143,12 +166,12 @@ export function CanvasProvider({children}: PropsWithChildren) {
         setNodes(nds => nds.map(node => {
             if (node.id === nodeId) {
                 const nodeData = node.data as any;
-                const currentVal = nodeData.values?.['out'] || false;
+                const currentVal = nodeData.values?.['Out'] || false;
                 return {
                     ...node,
                     data: {
                         ...nodeData,
-                        values: {...(nodeData.values || {}), 'out': !currentVal}
+                        values: {...(nodeData.values || {}), 'Out': !currentVal}
                     }
                 };
             }

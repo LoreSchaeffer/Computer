@@ -7,6 +7,7 @@ export const DEF_CHIP_GROUP = 'Custom Chips';
 export const LOGIC_GATE_COLOR = '#d0230a';
 export const INPUT_COLOR = '#0a76d0';
 export const OUTPUT_COLOR = '#c96515';
+export const LATCH_COLOR = '#14b8a6';
 
 export const PRESET_COLORS = [
     LOGIC_GATE_COLOR,
@@ -18,7 +19,7 @@ export const PRESET_COLORS = [
     '#6366f1',
     INPUT_COLOR,
     '#06b6d4',
-    '#14b8a6',
+    LATCH_COLOR,
     DEF_CHIP_COLOR,
     '#84cc16',
     '#eab308',

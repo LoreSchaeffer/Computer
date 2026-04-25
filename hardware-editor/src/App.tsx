@@ -21,14 +21,16 @@ import {v4 as uuidv4} from 'uuid';
 import {FaClone, FaCopy, FaCut, FaPaste, FaTrash} from "react-icons/fa";
 import {useContextMenu} from "./context/ContextMenuContext.tsx";
 import {useModal} from "./context/ModalContext.tsx";
-import {INPUT_COLOR, LOGIC_GATE_COLOR, OUTPUT_COLOR} from "./utils/consts.ts";
+import {INPUT_COLOR, LATCH_COLOR, LOGIC_GATE_COLOR, OUTPUT_COLOR} from "./utils/consts.ts";
 import type {GenericNodeData} from "./components/hw/GenericNode.tsx";
 import {useCanvasContext} from "./context/CanvasContext.tsx";
+import {LatchNode} from "./components/hw/LatchNode.tsx";
 
 const nodeTypes: NodeTypes = {
     logicGate: LogicGateNode,
     inputPin: InputPinNode,
-    outputPin: OutputPinNode
+    outputPin: OutputPinNode,
+    latch: LatchNode,
 };
 
 export default function App() {
@@ -252,7 +254,7 @@ export default function App() {
                                 title="Clear Canvas"
                                 aria-label="Clear Canvas"
                             >
-                                <FaTrash style={{color: 'var(--color-text-secondary)'}}/>
+                                <FaTrash style={{color: 'white'}}/>
                             </ControlButton>
                         </Controls>
 
@@ -262,6 +264,7 @@ export default function App() {
                                 if (node.type === 'inputPin') return INPUT_COLOR;
                                 if (node.type === 'outputPin') return OUTPUT_COLOR;
                                 if (node.type === 'logicGate') return LOGIC_GATE_COLOR;
+                                if (node.type === 'latch') return LATCH_COLOR;
 
                                 return '#3e3e42';
                             }}

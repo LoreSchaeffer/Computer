@@ -7,14 +7,14 @@ export function InputPinNode(props: NodeProps) {
     const {toggleInput} = useCanvasContext();
 
     const nodeData = props.data as unknown as GenericNodeData;
-    const isActive = nodeData.values?.['out'] === true;
+    const isActive = nodeData.values?.['Out'] === true;
 
     const dataWithConfig: GenericNodeData = {
         ...(props.data as unknown as GenericNodeData),
         typeLabel: 'INPUT',
         headerColor: INPUT_COLOR,
         inputs: [],
-        outputs: ['out'],
+        outputs: ['Out'],
         customControl: (
             <button
                 className="nodrag"

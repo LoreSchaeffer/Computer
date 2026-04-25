@@ -4,17 +4,18 @@ import {loadDirectoryHandle, saveDirectoryHandle} from "../utils/IndexedDB.ts";
 import {DEF_CHIP_COLOR, DEF_CHIP_GROUP, DEF_CHIP_NAME, STORAGE_KEY_STATE} from "../utils/consts.ts";
 
 const IO_NODES: HardwareTemplate[] = [
-    {type: 'inputPin', data: {typeLabel: 'INPUT', label: 'IN', group: 'I/O Nodes', inputs: [], outputs: ['out']}},
-    {type: 'outputPin', data: {typeLabel: 'OUTPUT', label: 'OUT', group: 'I/O Nodes', inputs: ['in'], outputs: []}}
+    {type: 'inputPin', data: {typeLabel: 'INPUT', label: 'IN', group: 'I/O Nodes', inputs: [], outputs: ['Out']}},
+    {type: 'outputPin', data: {typeLabel: 'OUTPUT', label: 'OUT', group: 'I/O Nodes', inputs: ['In'], outputs: []}}
 ];
 
 const GATE_NODES: HardwareTemplate[] = [
-    {type: 'logicGate', data: {typeLabel: 'AndGate', label: 'AND', inputs: ['A', 'B'], outputs: ['OUT'], group: 'Logic Gates'}},
-    {type: 'logicGate', data: {typeLabel: 'NandGate', label: 'NAND', inputs: ['A', 'B'], outputs: ['OUT'], group: 'Logic Gates'}},
-    {type: 'logicGate', data: {typeLabel: 'OrGate', label: 'OR', inputs: ['A', 'B'], outputs: ['OUT'], group: 'Logic Gates'}},
-    {type: 'logicGate', data: {typeLabel: 'NorGate', label: 'NOR', inputs: ['A', 'B'], outputs: ['OUT'], group: 'Logic Gates'}},
-    {type: 'logicGate', data: {typeLabel: 'XorGate', label: 'XOR', inputs: ['A', 'B'], outputs: ['OUT'], group: 'Logic Gates'}},
-    {type: 'logicGate', data: {typeLabel: 'NotGate', label: 'NOT', inputs: ['IN'], outputs: ['OUT'], group: 'Logic Gates'}},
+    {type: 'logicGate', data: {typeLabel: 'AndGate', label: 'AND', inputs: ['A', 'B'], outputs: ['Out'], group: 'Primitives'}},
+    {type: 'logicGate', data: {typeLabel: 'NandGate', label: 'NAND', inputs: ['A', 'B'], outputs: ['Out'], group: 'Primitives'}},
+    {type: 'logicGate', data: {typeLabel: 'OrGate', label: 'OR', inputs: ['A', 'B'], outputs: ['Out'], group: 'Primitives'}},
+    {type: 'logicGate', data: {typeLabel: 'NorGate', label: 'NOR', inputs: ['A', 'B'], outputs: ['Out'], group: 'Primitives'}},
+    {type: 'logicGate', data: {typeLabel: 'XorGate', label: 'XOR', inputs: ['A', 'B'], outputs: ['Out'], group: 'Primitives'}},
+    {type: 'logicGate', data: {typeLabel: 'NotGate', label: 'NOT', inputs: ['In'], outputs: ['Out'], group: 'Primitives'}},
+    {type: 'latch', data: {typeLabel: 'DLatch', label: 'D-Latch', inputs: ['D', 'En'], outputs: ['Q', '!Q'], group: 'Primitives'}}
 ];
 
 interface WorkspaceContextType {
@@ -84,7 +85,7 @@ export function WorkspaceProvider({children}: PropsWithChildren) {
                         const groupName = json.group || 'Custom Chips';
                         foundGroups.add(groupName);
                         loadedChips.push({
-                            type: 'logicGate',
+                            type: 'gate',
                             data: {
                                 typeLabel: json.chipName, label: json.chipName,
                                 inputs: json.pins?.inputs || [], outputs: json.pins?.outputs || [],

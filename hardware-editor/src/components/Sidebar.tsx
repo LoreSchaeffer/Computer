@@ -6,6 +6,7 @@ import {FaFolder, FaFolderOpen} from "react-icons/fa6";
 import {FaSearch} from "react-icons/fa";
 import Input from "./ui/forms/Input.tsx";
 import {useWorkspaceContext} from "../context/WorkspaceContext.tsx";
+import {INPUT_COLOR, LATCH_COLOR, LOGIC_GATE_COLOR, OUTPUT_COLOR} from "../utils/consts.ts";
 
 export default function Sidebar() {
     const {library, isWorkspaceConnected, connectWorkspace} = useWorkspaceContext();
@@ -73,7 +74,16 @@ export default function Sidebar() {
                         <h3 className={styles.sectionTitle}>{groupName}</h3>
                         <div className={styles.componentGrid}>
                             {items.map((comp) => {
-                                const color = comp.data.headerColor || 'var(--color-primary)';
+                                const getColor = (comp: HardwareTemplate) => {
+                                    if (comp.data?.headerColor) return comp.data.headerColor as string;
+                                    if (comp.type === 'inputPin') return INPUT_COLOR;
+                                    if (comp.type === 'outputPin') return OUTPUT_COLOR;
+                                    if (comp.type === 'logicGate') return LOGIC_GATE_COLOR;
+                                    if (comp.type === 'latch') return LATCH_COLOR;
+                                    return 'var(--color-primary)'
+                                }
+
+                                const color = getColor(comp);
 
                                 return (
                                     <div

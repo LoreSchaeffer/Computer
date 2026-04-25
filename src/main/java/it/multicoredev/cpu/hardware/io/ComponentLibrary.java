@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public final class ComponentLibrary {
-    private static final List<String> PRIMITIVES = List.of("AndGate", "NandGate", "NotGate", "OrGate", "NorGate", "XorGate", "XnorGate");
+    private static final List<String> PRIMITIVES = List.of("AndGate", "NandGate", "NotGate", "OrGate", "NorGate", "XorGate", "XnorGate", "DLatch");
     private static final Gson GSON = new Gson();
     private final Map<String, ChipDefinition> registry = new HashMap<>();
 
@@ -125,6 +125,7 @@ public final class ComponentLibrary {
             case "OrGate" -> new OrGate(name, inputs[0], inputs[1], outputs[0]);
             case "NorGate" -> new NorGate(name, inputs[0], inputs[1], outputs[0]);
             case "XnorGate" -> new XnorGate(name, inputs[0], inputs[1], outputs[0]);
+            case "DLatch" -> new DLatch(name, inputs[0], inputs[1], outputs[0], outputs[1]);
             default -> throw new IllegalArgumentException("Unsupported primitive: " + type);
         };
     }
