@@ -1,26 +1,18 @@
 import styles from './Header.module.css';
 import {Button} from "./ui/forms/Button.tsx";
 import {FaFolderOpen, FaPen, FaSave} from "react-icons/fa";
-import {useEditorContext} from "../context/EditorContext.tsx";
 import {type KeyboardEvent, useEffect, useState} from "react";
 import {FaFile, FaFolderTree} from "react-icons/fa6";
 import Input from "./ui/forms/Input.tsx";
 import clsx from "clsx";
 import {useModal} from "../context/ModalContext.tsx";
-
-const PRESET_COLORS = [
-    '#1e3799',
-    '#0a76d0',
-    '#c96515',
-    '#218c74',
-    '#b33939',
-    '#8c7ae6',
-    '#e1b12c',
-    '#3d3d3d'
-];
+import {useWorkspaceContext} from "../context/WorkspaceContext.tsx";
+import {useProjectManager} from "./hooks/useProjectManager.ts";
+import {PRESET_COLORS} from "../utils/consts.ts";
 
 export default function Header() {
-    const {chipName, setChipName, chipGroup, setChipGroup, chipColor, setChipColor, groups, newChip, openChip, saveChip} = useEditorContext();
+    const {chipName, setChipName, chipGroup, setChipGroup, chipColor, setChipColor, groups} = useWorkspaceContext();
+    const {newChip, openChip, saveChip} = useProjectManager();
     const {showModal} = useModal();
 
     const [isEditingName, setIsEditingName] = useState<boolean>(false);

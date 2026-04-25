@@ -33,7 +33,7 @@
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--color-text-accent);
-    cursor: text;
+    cursor: pointer;
     white-space: nowrap;
     padding: 2px;
     line-height: 1;
@@ -98,6 +98,20 @@
     box-shadow: 0 0 0 2px var(--color-primary), 0 4px 12px rgba(0, 122, 204, 0.4) !important;
 }
 
+.customControlContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: -2px;
+    margin-bottom: 4px;
+}
+
+.handleActive {
+    background-color: var(--color-success) !important;
+    border-color: white !important;
+}
+
 .nodeWrapper :global(.react-flow__handle) {
     width: 10px;
     height: 10px;
@@ -110,4 +124,10 @@
     background-color: var(--color-primary);
     width: 12px;
     height: 12px;
+}
+
+:global(.react-flow__edge-path.active) {
+    stroke: var(--color-success) !important;
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 4px var(--color-success));
 }

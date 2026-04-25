@@ -1,9 +1,9 @@
 import styles from './GenericNode.module.css';
-import type {KeyboardEvent} from 'react';
+import type {KeyboardEvent, ReactNode} from 'react';
 import {useState} from 'react';
 import {Handle, type NodeProps, Position} from '@xyflow/react';
 import clsx from 'clsx';
-import {useEditorContext} from "../../context/EditorContext.tsx";
+import {useCanvasContext} from "../../context/CanvasContext.tsx";
 
 export interface GenericNodeData extends Record<string, unknown> {
     label: string;
@@ -11,11 +11,13 @@ export interface GenericNodeData extends Record<string, unknown> {
     inputs?: string[];
     outputs?: string[];
     headerColor?: string;
+    values?: Record<string, boolean>;
+    customControl?: ReactNode;
 }
 
 export function GenericNode({id, data, selected}: NodeProps) {
     const nodeData = data as unknown as GenericNodeData;
-    const {updateCustomNodeData} = useEditorContext();
+    const {updateCustomNodeData} = useCanvasContext();
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editValue, setEditValue] = useState<string>(nodeData.label);
@@ -66,11 +68,23 @@ export function GenericNode({id, data, selected}: NodeProps) {
             </div>
 
             <div className={styles.body}>
+                {nodeData.customControl && (
+                    <div className={styles.customControlContainer}>
+                        {nodeData.customControl}
+                    </div>
+                )}
+
                 {nodeData.inputs && nodeData.inputs.map((pinId, index) => {
                     const topPercent = ((index + 1) / (nodeData.inputs!.length + 1)) * 100;
                     return (
                         <div key={`in-${pinId}`}>
-                            <Handle type="target" position={Position.Left} id={pinId} style={{top: `${topPercent}%`}}/>
+                            <Handle
+                                className={nodeData.values?.[pinId] ? styles.handleActive : ''}
+                                type="target"
+                                position={Position.Left}
+                                id={pinId}
+                                style={{top: `${topPercent}%`}}
+                            />
                             <span className={clsx(styles.pinLabel, styles.pinLabelLeft)} style={{top: `${topPercent}%`}}>
                                 {pinId}
                             </span>
@@ -82,7 +96,13 @@ export function GenericNode({id, data, selected}: NodeProps) {
                     const topPercent = ((index + 1) / (nodeData.outputs!.length + 1)) * 100;
                     return (
                         <div key={`out-${pinId}`}>
-                            <Handle type="source" position={Position.Right} id={pinId} style={{top: `${topPercent}%`}}/>
+                            <Handle
+                                className={nodeData.values?.[pinId] ? styles.handleActive : ''}
+                                type="source"
+                                position={Position.Right}
+                                id={pinId}
+                                style={{top: `${topPercent}%`}}
+                            />
                             <span className={clsx(styles.pinLabel, styles.pinLabelRight)} style={{top: `${topPercent}%`}}>
                                 {pinId}
                             </span>

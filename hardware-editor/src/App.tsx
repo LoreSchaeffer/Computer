@@ -15,13 +15,15 @@ import Header from "./components/Header.tsx";
 import Sidebar from "./components/Sidebar.tsx";
 import {LogicGateNode} from "./components/hw/LogicGateNode.tsx";
 import {InputPinNode} from "./components/hw/InputPinNode.tsx";
-import {useEditorContext} from "./context/EditorContext.tsx";
 import {OutputPinNode} from "./components/hw/OutputPinNode.tsx";
-import {type DragEvent, type MouseEvent as ReactMouseEvent, useCallback, useEffect, useRef} from "react";
+import {type DragEvent, type MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef} from "react";
 import {v4 as uuidv4} from 'uuid';
 import {FaClone, FaCopy, FaCut, FaPaste, FaTrash} from "react-icons/fa";
 import {useContextMenu} from "./context/ContextMenuContext.tsx";
 import {useModal} from "./context/ModalContext.tsx";
+import {INPUT_COLOR, LOGIC_GATE_COLOR, OUTPUT_COLOR} from "./utils/consts.ts";
+import type {GenericNodeData} from "./components/hw/GenericNode.tsx";
+import {useCanvasContext} from "./context/CanvasContext.tsx";
 
 const nodeTypes: NodeTypes = {
     logicGate: LogicGateNode,
@@ -30,7 +32,7 @@ const nodeTypes: NodeTypes = {
 };
 
 export default function App() {
-    const {nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode, clipboard, setClipboard, cloneNodes, clearNodes} = useEditorContext();
+    const {nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode, clipboard, setClipboard, cloneNodes, clearNodes} = useCanvasContext();
     const {screenToFlowPosition, getNodes, getEdges, deleteElements, setNodes} = useReactFlow();
     const {showContextMenu} = useContextMenu();
     const {showModal} = useModal();
@@ -38,6 +40,27 @@ export default function App() {
     const currentMousePos = useRef<{ x: number, y: number } | null>(null);
     const isCanvasHovered = useRef(false);
     const menuOpenPos = useRef<{ x: number, y: number } | null>(null);
+
+    const defaultEdgeOptions = {
+        style: {strokeWidth: 2, transition: 'stroke 0.2s'},
+    };
+
+    const getStyledEdges = useMemo(() => {
+        return edges.map(edge => {
+            const sourceNode = nodes.find(n => n.id === edge.source);
+            const sourceNodeData = sourceNode?.data as unknown as GenericNodeData;
+            const isActive = sourceNodeData?.values?.[edge.sourceHandle || 'out'] === true;
+
+            return {
+                ...edge,
+                style: {
+                    stroke: isActive ? 'var(--color-success)' : 'var(--color-border)',
+                    strokeWidth: isActive ? 3 : 2,
+                    transition: 'stroke 0.2s, stroke-width 0.2s'
+                }
+            };
+        });
+    }, [edges, nodes]);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -193,6 +216,7 @@ export default function App() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleCopy, handleCut, handlePaste, handleDuplicate, handleDelete]);
 
+
     return (
         <div className={styles.appContainer}>
             <Header/>
@@ -203,7 +227,8 @@ export default function App() {
                 <section className={styles.canvasContainer}>
                     <ReactFlow
                         nodes={nodes}
-                        edges={edges}
+                        edges={getStyledEdges}
+                        defaultEdgeOptions={defaultEdgeOptions}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
                         onConnect={onConnect}
@@ -234,9 +259,9 @@ export default function App() {
                         <MiniMap
                             nodeColor={(node) => {
                                 if (node.data?.headerColor) return node.data.headerColor as string;
-                                if (node.type === 'inputPin') return '#0a76d0';
-                                if (node.type === 'outputPin') return '#c96515';
-                                if (node.type === 'logicGate') return '#1e3799';
+                                if (node.type === 'inputPin') return INPUT_COLOR;
+                                if (node.type === 'outputPin') return OUTPUT_COLOR;
+                                if (node.type === 'logicGate') return LOGIC_GATE_COLOR;
 
                                 return '#3e3e42';
                             }}

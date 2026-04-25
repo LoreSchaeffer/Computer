@@ -1,14 +1,14 @@
 import styles from "./Sidebar.module.css";
 import {type CSSProperties, type DragEvent, useMemo, useState} from 'react';
-import {useEditorContext} from "../context/EditorContext.tsx";
 import type {HardwareTemplate} from "../types/HardwareTypes.ts";
 import {Button} from "./ui/forms/Button.tsx";
 import {FaFolder, FaFolderOpen} from "react-icons/fa6";
 import {FaSearch} from "react-icons/fa";
 import Input from "./ui/forms/Input.tsx";
+import {useWorkspaceContext} from "../context/WorkspaceContext.tsx";
 
 export default function Sidebar() {
-    const {library, isWorkspaceConnected, connectWorkspace} = useEditorContext();
+    const {library, isWorkspaceConnected, connectWorkspace} = useWorkspaceContext();
     const [searchTerm, setSearchTerm] = useState('');
 
     const onDragStart = (event: DragEvent<HTMLDivElement>, template: HardwareTemplate) => {
