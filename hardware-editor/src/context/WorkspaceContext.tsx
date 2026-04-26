@@ -5,7 +5,9 @@ import {DEF_CHIP_COLOR, DEF_CHIP_GROUP, DEF_CHIP_NAME, STORAGE_KEY_STATE} from "
 
 const IO_NODES: HardwareTemplate[] = [
     {type: 'inputPin', data: {typeLabel: 'INPUT', label: 'IN', group: 'I/O Nodes', inputs: [], outputs: ['Out']}},
-    {type: 'outputPin', data: {typeLabel: 'OUTPUT', label: 'OUT', group: 'I/O Nodes', inputs: ['In'], outputs: []}}
+    {type: 'outputPin', data: {typeLabel: 'OUTPUT', label: 'OUT', group: 'I/O Nodes', inputs: ['In'], outputs: []}},
+    {type: 'logicGate', data: {typeLabel: 'VCC', label: 'VCC', group: 'I/O Nodes', inputs: [], outputs: ['Out']}},
+    {type: 'logicGate', data: {typeLabel: 'GND', label: 'GND', group: 'I/O Nodes', inputs: [], outputs: ['Out']}},
 ];
 
 const GATE_NODES: HardwareTemplate[] = [

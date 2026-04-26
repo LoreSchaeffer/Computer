@@ -53,12 +53,21 @@ export function useProjectManager() {
         // Validation
         for (const node of nodes) {
             if (node.type === 'logicGate' || node.type === 'latch' || node.type === 'customChip') {
+                const isSource = node.data.typeLabel === 'VCC' || node.data.typeLabel === 'GND';
                 const hasInput = edges.some(e => e.target === node.id);
                 const hasOutput = edges.some(e => e.source === node.id);
-                if (!hasInput || !hasOutput) return {
-                    success: false,
-                    error: `The component "${node.data.label}" must have at least one input and one output connected.`
-                };
+
+                if (isSource) {
+                    if (!hasOutput) return {
+                        success: false,
+                        error: `The constant source "${node.data.label}" must be connected to something.`
+                    };
+                } else {
+                    if (!hasInput || !hasOutput) return {
+                        success: false,
+                        error: `The component "${node.data.label}" must have at least one input and one output connected.`
+                    };
+                }
             } else if (node.type === 'inputPin') {
                 if (!edges.some(e => e.source === node.id)) return {
                     success: false,

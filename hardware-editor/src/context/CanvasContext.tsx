@@ -12,6 +12,8 @@ const GATE_LOGIC: Record<string, (inputs: boolean[], previousState?: boolean) =>
     'NandGate': (ins) => !(ins.length > 0 && ins.every(v => v)),
     'NorGate': (ins) => !ins.some(v => v),
     'XorGate': (ins) => ins.filter(v => v).length % 2 !== 0,
+    'VCC': () => true,
+    'GND': () => false,
 };
 
 const SEQUENTIAL_LOGIC: Record<string, (inputs: boolean[], currentState: any) => Record<string, boolean>> = {
