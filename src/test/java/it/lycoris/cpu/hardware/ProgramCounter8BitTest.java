@@ -1,0 +1,99 @@
+package it.lycoris.cpu.hardware;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class ProgramCounter8BitTest extends HardwareTestBase {
+
+    @BeforeEach
+    void setup() {
+        load("ProgramCounter8Bit");
+    }
+
+    @Test
+    void testInitialStateIsZero() {
+        update();
+        assertEquals(0, getBus("Q"), "The Program Counter should initialize at address 0x00.");
+    }
+
+    @Test
+    void testSequentialIncrement() {
+        // Enable the counting mode
+        setPin("IncPC", true);
+        setPin("LoadPC", false);
+
+        // Tick 1
+        pulseClock("Clk");
+        assertEquals(1, getBus("Q"), "PC should increment to 1.");
+
+        // Tick 2
+        pulseClock("Clk");
+        assertEquals(2, getBus("Q"), "PC should increment to 2.");
+
+        // Tick 3
+        pulseClock("Clk");
+        assertEquals(3, getBus("Q"), "PC should increment to 3.");
+    }
+
+    @Test
+    void testAbsoluteJumpLoad() {
+        // We want to simulate a jump to address 0x80 (128)
+        setBus("D", 128);
+
+        // Enable Load mode, disable Increment
+        setPin("LoadPC", true);
+        setPin("IncPC", false);
+
+        // The output shouldn't change before the clock
+        update();
+        assertEquals(0, getBus("Q"), "PC should not change before the clock pulse.");
+
+        pulseClock("Clk");
+
+        assertEquals(128, getBus("Q"), "PC failed to load the jump address 0x80.");
+    }
+
+    @Test
+    void testHoldState() {
+        // 1. Advance to address 5
+        setPin("IncPC", true);
+        setPin("LoadPC", false);
+        for (int i = 0; i < 5; i++) {
+            pulseClock("Clk");
+        }
+        assertEquals(5, getBus("Q"));
+
+        // 2. Disable both Load and Increment (Hold Mode)
+        setPin("IncPC", false);
+        setPin("LoadPC", false);
+
+        // 3. Pulse the clock. The PC should stay frozen at 5.
+        pulseClock("Clk");
+        pulseClock("Clk");
+
+        assertEquals(5, getBus("Q"), "PC did not hold its value when both control pins were false.");
+    }
+
+    @Test
+    void testWrapAroundZero() {
+        // 1. Load the maximum 8-bit address (0xFF / 255)
+        setBus("D", 255);
+        setPin("LoadPC", true);
+        setPin("IncPC", false);
+        pulseClock("Clk");
+        assertEquals(255, getBus("Q"));
+
+        // 2. Increment
+        setPin("LoadPC", false);
+        setPin("IncPC", true);
+        pulseClock("Clk");
+
+        // 255 + 1 = 0 in 8-bit space
+        assertEquals(0, getBus("Q"), "PC should wrap around from 255 to 0.");
+
+        // Optional: If your 8-bit PC exposes a CarryOut for cascading to the High byte, test it here:
+        // assertTrue(getPin("COut"), "Carry out should be active to cascade to the High Byte.");
+    }
+}
