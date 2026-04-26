@@ -25,17 +25,20 @@ import {INPUT_COLOR, LATCH_COLOR, LOGIC_GATE_COLOR, OUTPUT_COLOR} from "./utils/
 import type {GenericNodeData} from "./components/hw/GenericNode.tsx";
 import {useCanvasContext} from "./context/CanvasContext.tsx";
 import {LatchNode} from "./components/hw/LatchNode.tsx";
+import {CustomChipNode} from "./components/hw/CustomChipNode.tsx";
 
 const nodeTypes: NodeTypes = {
     logicGate: LogicGateNode,
     inputPin: InputPinNode,
     outputPin: OutputPinNode,
     latch: LatchNode,
+    customChip: CustomChipNode,
 };
 
 export default function App() {
     const {nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode, clipboard, setClipboard, cloneNodes, clearNodes} = useCanvasContext();
     const {screenToFlowPosition, getNodes, getEdges, deleteElements, setNodes} = useReactFlow();
+    const {runSimulation} = useCanvasContext();
     const {showContextMenu} = useContextMenu();
     const {showModal} = useModal();
 
@@ -98,6 +101,7 @@ export default function App() {
         };
 
         addNode(newNode);
+        runSimulation();
     }, [screenToFlowPosition, addNode]);
 
 
@@ -245,6 +249,7 @@ export default function App() {
                         multiSelectionKeyCode="Control"
                         fitView
                         colorMode="dark"
+                        snapToGrid={true}
                     >
                         <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="var(--color-border)"/>
 

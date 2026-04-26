@@ -28,5 +28,6 @@ export interface HardwareTemplate {
         outputs?: string[];
         headerColor?: string;
         group?: string;
+        internalComponents?: any[];
     };
 }

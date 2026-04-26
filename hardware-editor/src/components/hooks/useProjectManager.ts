@@ -7,7 +7,7 @@ import {useToast} from "../../context/ToastContext.tsx";
 
 export function useProjectManager() {
     const {nodes, edges, clearNodes, restoreCanvas} = useCanvasContext();
-    const {chipName, chipColor, chipGroup, setChipName, setChipColor, setChipGroup, workspaceHandle} = useWorkspaceContext();
+    const {chipName, chipColor, chipGroup, setChipName, setChipColor, setChipGroup, workspaceHandle, connectWorkspace} = useWorkspaceContext();
     const {showToast} = useToast();
 
     useEffect(() => {
@@ -52,7 +52,7 @@ export function useProjectManager() {
     const saveChip = useCallback(async (): Promise<{ success: boolean, error?: string }> => {
         // Validation
         for (const node of nodes) {
-            if (node.type === 'logicGate') {
+            if (node.type === 'logicGate' || node.type === 'latch' || node.type === 'customChip') {
                 const hasInput = edges.some(e => e.target === node.id);
                 const hasOutput = edges.some(e => e.source === node.id);
                 if (!hasInput || !hasOutput) return {
@@ -94,7 +94,8 @@ export function useProjectManager() {
                 } else {
                     const cleanSourceName = String(sourceNode?.data.label).toLowerCase().replace(/[^a-z0-9_]/g, '');
                     const handleName = edge.sourceHandle ? `_${edge.sourceHandle.toLowerCase()}` : '';
-                    const wireName = `wire_${cleanSourceName}${handleName}`;
+                    const uniqueHash = sourceNode?.id.replace('node_', '').substring(0, 6) || 'unk';
+                    const wireName = `wire_${cleanSourceName}_${uniqueHash}${handleName}`;
                     nets.set(sourceKey, wireName);
                     if (!internalWires.includes(wireName)) internalWires.push(wireName);
                 }
@@ -102,7 +103,8 @@ export function useProjectManager() {
         });
 
         const components: any[] = [];
-        nodes.filter(n => n.type === 'logicGate').forEach(node => {
+
+        nodes.filter(n => n.type === 'logicGate' || n.type === 'latch' || n.type === 'customChip').forEach(node => {
             const compInputs = ((node.data.inputs as string[]) || []).map(pinName => {
                 const incomingEdge = edges.find(e => e.target === node.id && e.targetHandle === pinName);
                 return incomingEdge ? (nets.get(`${incomingEdge.source}_${incomingEdge.sourceHandle || 'out'}`) || 'UNCONNECTED') : 'UNCONNECTED';
@@ -130,6 +132,7 @@ export function useProjectManager() {
                 await writable.close();
 
                 showToast('success', 'Chip Saved!', `Saved successfully to your workspace.`);
+                await connectWorkspace();
                 return {success: true};
             } catch (err) {
                 console.error("Failed to write to workspace.", err);
@@ -148,6 +151,7 @@ export function useProjectManager() {
         URL.revokeObjectURL(url);
 
         showToast('success', 'Chip Exported', `Downloaded ${fileName} to your computer.`);
+        await connectWorkspace();
         return {success: true};
     }, [nodes, edges, chipName, chipColor, chipGroup, workspaceHandle]);
 

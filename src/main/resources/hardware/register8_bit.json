@@ -1,0 +1,1086 @@
+{
+  "chipName": "Register8Bit",
+  "chipColor": "#f43f5e",
+  "chipGroup": "Registers",
+  "group": "Registers",
+  "pins": {
+    "inputs": [
+      "D0",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "En"
+    ],
+    "outputs": [
+      "Q0",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "Q5",
+      "Q6",
+      "Q7"
+    ]
+  },
+  "internalWires": [],
+  "components": [],
+  "layout": {
+    "nodes": [
+      {
+        "id": "node_d759499f-cb8c-4ef2-b6da-8a7f53f943da",
+        "type": "latch",
+        "position": {
+          "x": 520,
+          "y": -110.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DLatch",
+          "label": "D-Latch",
+          "inputs": [
+            "D",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives",
+          "values": {
+            "D": false,
+            "En": false,
+            "Q": false,
+            "!Q": true
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_bb15b8f2-7425-4c67-9ccc-5e0482c93376",
+        "type": "latch",
+        "position": {
+          "x": 520,
+          "y": 69.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DLatch",
+          "label": "D-Latch",
+          "inputs": [
+            "D",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives",
+          "values": {
+            "D": false,
+            "En": false,
+            "Q": false,
+            "!Q": true
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_0dcbfe4a-5365-481c-b3ec-74a6cb669335",
+        "type": "latch",
+        "position": {
+          "x": 520,
+          "y": 339.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DLatch",
+          "label": "D-Latch",
+          "inputs": [
+            "D",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives",
+          "values": {
+            "D": false,
+            "En": false,
+            "Q": false,
+            "!Q": true
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_58970b12-fa65-4e05-a89d-eb738b99a119",
+        "type": "latch",
+        "position": {
+          "x": 520,
+          "y": -200.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DLatch",
+          "label": "D-Latch",
+          "inputs": [
+            "D",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives",
+          "values": {
+            "D": false,
+            "En": false,
+            "Q": false,
+            "!Q": true
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_48ad002b-71b8-42aa-ba07-3a0dcc19d05b",
+        "type": "latch",
+        "position": {
+          "x": 520,
+          "y": -20.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DLatch",
+          "label": "D-Latch",
+          "inputs": [
+            "D",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives",
+          "values": {
+            "D": false,
+            "En": false,
+            "Q": false,
+            "!Q": true
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36",
+        "type": "latch",
+        "position": {
+          "x": 520,
+          "y": 159.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DLatch",
+          "label": "D-Latch",
+          "inputs": [
+            "D",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives",
+          "values": {
+            "D": false,
+            "En": false,
+            "Q": false,
+            "!Q": true
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95",
+        "type": "latch",
+        "position": {
+          "x": 520,
+          "y": 429.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DLatch",
+          "label": "D-Latch",
+          "inputs": [
+            "D",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives",
+          "values": {
+            "D": false,
+            "En": false,
+            "Q": false,
+            "!Q": true
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_9c2666a8-07b1-4d3e-a95e-55763efa32dd",
+        "type": "latch",
+        "position": {
+          "x": 520,
+          "y": 249.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DLatch",
+          "label": "D-Latch",
+          "inputs": [
+            "D",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives",
+          "values": {
+            "D": false,
+            "En": false,
+            "Q": false,
+            "!Q": true
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_c5e40ac1-466d-4144-8782-8dfaaa13f79f",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": -199.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "D0",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ]
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_2fb6ad67-404d-47a4-b165-6980202e02d0",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": -109.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "D1",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ]
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_99c2cd84-6e10-47bf-af4c-bc2a7f9b424e",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": -19.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "D2",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ]
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_4c684f5b-424b-4a7d-9800-b6505ae990d8",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": 70.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "D3",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ]
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_17c0426d-6ef8-4f4a-a76e-30d3adc5746b",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": 160.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "D4",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ]
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_3a708f14-93a5-487c-9d07-a387a07143f7",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": 250.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "D5",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ]
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_687561c5-0893-4d2b-b01c-e365d4dabf19",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": 340.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "D6",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ]
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_7d6d399b-9694-4a62-a683-3134af836580",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": 430.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "D7",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "values": {
+            "Out": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "type": "inputPin",
+        "position": {
+          "x": 175,
+          "y": 535.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": true,
+        "data": {
+          "typeLabel": "INPUT",
+          "label": "En",
+          "group": "I/O Nodes",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "values": {
+            "Out": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_d8ba43d8-d7fe-455d-9df9-5522bc851388",
+        "type": "outputPin",
+        "position": {
+          "x": 775,
+          "y": -200.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OUTPUT",
+          "label": "Q0",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "values": {
+            "In": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_ae7c2d9d-8565-4c41-8e16-ad2084521da8",
+        "type": "outputPin",
+        "position": {
+          "x": 775,
+          "y": -110.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OUTPUT",
+          "label": "Q1",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "values": {
+            "In": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_297c81ff-1c39-4682-aa8f-c6a0cbafceb3",
+        "type": "outputPin",
+        "position": {
+          "x": 775,
+          "y": -20.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OUTPUT",
+          "label": "Q2",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "values": {
+            "In": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_0bf72f36-2476-4b7a-b724-dafdf9345291",
+        "type": "outputPin",
+        "position": {
+          "x": 775,
+          "y": 69.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OUTPUT",
+          "label": "Q3",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "values": {
+            "In": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_e2035414-3c6c-461d-8159-fbfa22e93a7c",
+        "type": "outputPin",
+        "position": {
+          "x": 775,
+          "y": 159.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OUTPUT",
+          "label": "Q4",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "values": {
+            "In": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_7b516a1f-c3e4-482e-af5c-49614c18162a",
+        "type": "outputPin",
+        "position": {
+          "x": 775,
+          "y": 249.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OUTPUT",
+          "label": "Q5",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "values": {
+            "In": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_6a148999-b499-4d28-957a-c0f84f21dbc1",
+        "type": "outputPin",
+        "position": {
+          "x": 775,
+          "y": 339.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OUTPUT",
+          "label": "Q6",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "values": {
+            "In": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_4fcf4db0-bc1b-417e-8079-b529ce819dfe",
+        "type": "outputPin",
+        "position": {
+          "x": 775,
+          "y": 429.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OUTPUT",
+          "label": "Q7",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "values": {
+            "In": false
+          }
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      }
+    ],
+    "edges": [
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_c5e40ac1-466d-4144-8782-8dfaaa13f79f",
+        "sourceHandle": "Out",
+        "target": "node_58970b12-fa65-4e05-a89d-eb738b99a119",
+        "targetHandle": "D",
+        "id": "xy-edge__node_c5e40ac1-466d-4144-8782-8dfaaa13f79fOut-node_58970b12-fa65-4e05-a89d-eb738b99a119D"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_2fb6ad67-404d-47a4-b165-6980202e02d0",
+        "sourceHandle": "Out",
+        "target": "node_d759499f-cb8c-4ef2-b6da-8a7f53f943da",
+        "targetHandle": "D",
+        "id": "xy-edge__node_2fb6ad67-404d-47a4-b165-6980202e02d0Out-node_d759499f-cb8c-4ef2-b6da-8a7f53f943daD"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_99c2cd84-6e10-47bf-af4c-bc2a7f9b424e",
+        "sourceHandle": "Out",
+        "target": "node_48ad002b-71b8-42aa-ba07-3a0dcc19d05b",
+        "targetHandle": "D",
+        "id": "xy-edge__node_99c2cd84-6e10-47bf-af4c-bc2a7f9b424eOut-node_48ad002b-71b8-42aa-ba07-3a0dcc19d05bD"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_4c684f5b-424b-4a7d-9800-b6505ae990d8",
+        "sourceHandle": "Out",
+        "target": "node_bb15b8f2-7425-4c67-9ccc-5e0482c93376",
+        "targetHandle": "D",
+        "id": "xy-edge__node_4c684f5b-424b-4a7d-9800-b6505ae990d8Out-node_bb15b8f2-7425-4c67-9ccc-5e0482c93376D"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_17c0426d-6ef8-4f4a-a76e-30d3adc5746b",
+        "sourceHandle": "Out",
+        "target": "node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36",
+        "targetHandle": "D",
+        "id": "xy-edge__node_17c0426d-6ef8-4f4a-a76e-30d3adc5746bOut-node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36D"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_3a708f14-93a5-487c-9d07-a387a07143f7",
+        "sourceHandle": "Out",
+        "target": "node_9c2666a8-07b1-4d3e-a95e-55763efa32dd",
+        "targetHandle": "D",
+        "id": "xy-edge__node_3a708f14-93a5-487c-9d07-a387a07143f7Out-node_9c2666a8-07b1-4d3e-a95e-55763efa32ddD"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_687561c5-0893-4d2b-b01c-e365d4dabf19",
+        "sourceHandle": "Out",
+        "target": "node_0dcbfe4a-5365-481c-b3ec-74a6cb669335",
+        "targetHandle": "D",
+        "id": "xy-edge__node_687561c5-0893-4d2b-b01c-e365d4dabf19Out-node_0dcbfe4a-5365-481c-b3ec-74a6cb669335D"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_7d6d399b-9694-4a62-a683-3134af836580",
+        "sourceHandle": "Out",
+        "target": "node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95",
+        "targetHandle": "D",
+        "id": "xy-edge__node_7d6d399b-9694-4a62-a683-3134af836580Out-node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95D"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "sourceHandle": "Out",
+        "target": "node_58970b12-fa65-4e05-a89d-eb738b99a119",
+        "targetHandle": "En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_58970b12-fa65-4e05-a89d-eb738b99a119En"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "sourceHandle": "Out",
+        "target": "node_d759499f-cb8c-4ef2-b6da-8a7f53f943da",
+        "targetHandle": "En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_d759499f-cb8c-4ef2-b6da-8a7f53f943daEn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "sourceHandle": "Out",
+        "target": "node_48ad002b-71b8-42aa-ba07-3a0dcc19d05b",
+        "targetHandle": "En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_48ad002b-71b8-42aa-ba07-3a0dcc19d05bEn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "sourceHandle": "Out",
+        "target": "node_bb15b8f2-7425-4c67-9ccc-5e0482c93376",
+        "targetHandle": "En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_bb15b8f2-7425-4c67-9ccc-5e0482c93376En"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "sourceHandle": "Out",
+        "target": "node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36",
+        "targetHandle": "En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36En"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "sourceHandle": "Out",
+        "target": "node_9c2666a8-07b1-4d3e-a95e-55763efa32dd",
+        "targetHandle": "En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_9c2666a8-07b1-4d3e-a95e-55763efa32ddEn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "sourceHandle": "Out",
+        "target": "node_0dcbfe4a-5365-481c-b3ec-74a6cb669335",
+        "targetHandle": "En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_0dcbfe4a-5365-481c-b3ec-74a6cb669335En"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
+        "sourceHandle": "Out",
+        "target": "node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95",
+        "targetHandle": "En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95En"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_58970b12-fa65-4e05-a89d-eb738b99a119",
+        "sourceHandle": "Q",
+        "target": "node_d8ba43d8-d7fe-455d-9df9-5522bc851388",
+        "targetHandle": "In",
+        "id": "xy-edge__node_58970b12-fa65-4e05-a89d-eb738b99a119Q-node_d8ba43d8-d7fe-455d-9df9-5522bc851388In"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_d759499f-cb8c-4ef2-b6da-8a7f53f943da",
+        "sourceHandle": "Q",
+        "target": "node_ae7c2d9d-8565-4c41-8e16-ad2084521da8",
+        "targetHandle": "In",
+        "id": "xy-edge__node_d759499f-cb8c-4ef2-b6da-8a7f53f943daQ-node_ae7c2d9d-8565-4c41-8e16-ad2084521da8In"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_48ad002b-71b8-42aa-ba07-3a0dcc19d05b",
+        "sourceHandle": "Q",
+        "target": "node_297c81ff-1c39-4682-aa8f-c6a0cbafceb3",
+        "targetHandle": "In",
+        "id": "xy-edge__node_48ad002b-71b8-42aa-ba07-3a0dcc19d05bQ-node_297c81ff-1c39-4682-aa8f-c6a0cbafceb3In"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_bb15b8f2-7425-4c67-9ccc-5e0482c93376",
+        "sourceHandle": "Q",
+        "target": "node_0bf72f36-2476-4b7a-b724-dafdf9345291",
+        "targetHandle": "In",
+        "id": "xy-edge__node_bb15b8f2-7425-4c67-9ccc-5e0482c93376Q-node_0bf72f36-2476-4b7a-b724-dafdf9345291In"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36",
+        "sourceHandle": "Q",
+        "target": "node_e2035414-3c6c-461d-8159-fbfa22e93a7c",
+        "targetHandle": "In",
+        "id": "xy-edge__node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36Q-node_e2035414-3c6c-461d-8159-fbfa22e93a7cIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_9c2666a8-07b1-4d3e-a95e-55763efa32dd",
+        "sourceHandle": "Q",
+        "target": "node_7b516a1f-c3e4-482e-af5c-49614c18162a",
+        "targetHandle": "In",
+        "id": "xy-edge__node_9c2666a8-07b1-4d3e-a95e-55763efa32ddQ-node_7b516a1f-c3e4-482e-af5c-49614c18162aIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_0dcbfe4a-5365-481c-b3ec-74a6cb669335",
+        "sourceHandle": "Q",
+        "target": "node_6a148999-b499-4d28-957a-c0f84f21dbc1",
+        "targetHandle": "In",
+        "id": "xy-edge__node_0dcbfe4a-5365-481c-b3ec-74a6cb669335Q-node_6a148999-b499-4d28-957a-c0f84f21dbc1In"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95",
+        "sourceHandle": "Q",
+        "target": "node_4fcf4db0-bc1b-417e-8079-b529ce819dfe",
+        "targetHandle": "In",
+        "id": "xy-edge__node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95Q-node_4fcf4db0-bc1b-417e-8079-b529ce819dfeIn"
+      }
+    ]
+  }
+}

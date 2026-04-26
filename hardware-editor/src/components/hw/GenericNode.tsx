@@ -1,5 +1,5 @@
 import styles from './GenericNode.module.css';
-import type {KeyboardEvent, ReactNode} from 'react';
+import {type KeyboardEvent, type ReactNode, useEffect, useRef} from 'react';
 import {useState} from 'react';
 import {Handle, type NodeProps, Position} from '@xyflow/react';
 import clsx from 'clsx';
@@ -13,6 +13,7 @@ export interface GenericNodeData extends Record<string, unknown> {
     headerColor?: string;
     values?: Record<string, boolean>;
     customControl?: ReactNode;
+    internalComponents?: any[];
 }
 
 export function GenericNode({id, data, selected}: NodeProps) {
@@ -21,6 +22,15 @@ export function GenericNode({id, data, selected}: NodeProps) {
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editValue, setEditValue] = useState<string>(nodeData.label);
+
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (isEditing) {
+            inputRef.current?.focus();
+            inputRef.current?.select();
+        }
+    }, [isEditing]);
 
     const handleDoubleClick = () => setIsEditing(true);
 
@@ -39,6 +49,9 @@ export function GenericNode({id, data, selected}: NodeProps) {
         }
     };
 
+    const maxPins = Math.max(nodeData.inputs?.length || 0, nodeData.outputs?.length || 0);
+    const dynamicMinHeight = Math.max(40, maxPins * 20 + 20);
+
     return (
         <div className={clsx(styles.nodeWrapper, selected && styles.selected)}>
             <div
@@ -53,6 +66,7 @@ export function GenericNode({id, data, selected}: NodeProps) {
 
                     {isEditing && (
                         <input
+                            ref={inputRef}
                             autoFocus
                             size={1}
                             className={styles.titleInput}
@@ -67,7 +81,7 @@ export function GenericNode({id, data, selected}: NodeProps) {
                 <div className={styles.subtitle}>{nodeData.typeLabel}</div>
             </div>
 
-            <div className={styles.body}>
+            <div className={styles.body} style={{minHeight: `${dynamicMinHeight}px`}}>
                 {nodeData.customControl && (
                     <div className={styles.customControlContainer}>
                         {nodeData.customControl}

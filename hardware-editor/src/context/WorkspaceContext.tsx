@@ -85,11 +85,12 @@ export function WorkspaceProvider({children}: PropsWithChildren) {
                         const groupName = json.group || 'Custom Chips';
                         foundGroups.add(groupName);
                         loadedChips.push({
-                            type: 'gate',
+                            type: 'customChip',
                             data: {
                                 typeLabel: json.chipName, label: json.chipName,
                                 inputs: json.pins?.inputs || [], outputs: json.pins?.outputs || [],
-                                headerColor: json.chipColor || '#1e3799', group: groupName
+                                headerColor: json.chipColor || '#1e3799', group: groupName,
+                                internalComponents: json.components || []
                             }
                         });
                     } catch (err) {
