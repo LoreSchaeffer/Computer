@@ -2,7 +2,6 @@
   "chipName": "ALU8Bit",
   "chipColor": "#a855f7",
   "chipGroup": "Arithmetic",
-  "group": "Arithmetic",
   "pins": {
     "inputs": [
       "A0",
@@ -43,325 +42,388 @@
     ]
   },
   "internalWires": [
-    "wire_alu1bit_a624e7_cout",
-    "wire_alu1bit_0a3051_cout",
-    "wire_alu1bit_9ac170_cout",
-    "wire_alu1bit_21a046_cout",
-    "wire_alu1bit_4042f7_cout",
-    "wire_alu1bit_fe8640_cout",
-    "wire_alu1bit_1d27ef_cout",
-    "wire_or_1bb651_out",
-    "wire_or_44df77_out",
-    "wire_or_85cbee_out",
-    "wire_or_6812c6_out",
-    "wire_or_3382db_out",
-    "wire_or_ada66b_out",
-    "wire_and_7678de_out",
-    "wire_not_cc684f_out",
-    "wire_not_fcfc8e_out",
-    "wire_not_f6c133_out",
-    "wire_and_29811d_out",
-    "wire_and_9ff770_out",
-    "wire_and_7c42ce_out"
+    "wire_alu1bit_1ec4_COut",
+    "wire_alu1bit_74c5_COut",
+    "wire_alu1bit_ea3c_COut",
+    "wire_alu1bit_e862_COut",
+    "wire_alu1bit_cbe1_COut",
+    "wire_alu1bit_d76b_COut",
+    "wire_alu1bit_10fc_COut",
+    "wire_or_2365_Out",
+    "wire_or_67e5_Out",
+    "wire_or_ea32_Out",
+    "wire_or_6b9a_Out",
+    "wire_or_bad0_Out",
+    "wire_or_5039_Out",
+    "wire_and_8c74_Out",
+    "wire_not_e28b_Out",
+    "wire_not_a956_Out",
+    "wire_not_6f0d_Out",
+    "wire_and_af1d_Out",
+    "wire_and_d8f2_Out",
+    "wire_and_a314_Out"
   ],
   "components": [
     {
       "type": "ALU1Bit",
       "name": "ALU1Bit",
-      "inputs": [
-        "A0",
-        "B0",
-        "CIn",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "Res0",
-        "wire_alu1bit_a624e7_cout"
-      ]
+      "inputs": {
+        "A": "A0",
+        "B": "B0",
+        "CIn": "CIn",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res": [
+          "Res0"
+        ],
+        "COut": [
+          "wire_alu1bit_1ec4_COut"
+        ]
+      }
     },
     {
       "type": "ALU1Bit",
       "name": "ALU1Bit",
-      "inputs": [
-        "A1",
-        "B1",
-        "wire_alu1bit_a624e7_cout",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "Res1",
-        "wire_alu1bit_0a3051_cout"
-      ]
+      "inputs": {
+        "A": "A1",
+        "B": "B1",
+        "CIn": "wire_alu1bit_1ec4_COut",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res": [
+          "Res1"
+        ],
+        "COut": [
+          "wire_alu1bit_74c5_COut"
+        ]
+      }
     },
     {
       "type": "ALU1Bit",
       "name": "ALU1Bit",
-      "inputs": [
-        "A2",
-        "B2",
-        "wire_alu1bit_0a3051_cout",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "Res2",
-        "wire_alu1bit_9ac170_cout"
-      ]
+      "inputs": {
+        "A": "A2",
+        "B": "B2",
+        "CIn": "wire_alu1bit_74c5_COut",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res": [
+          "Res2"
+        ],
+        "COut": [
+          "wire_alu1bit_ea3c_COut"
+        ]
+      }
     },
     {
       "type": "ALU1Bit",
       "name": "ALU1Bit",
-      "inputs": [
-        "A3",
-        "B3",
-        "wire_alu1bit_9ac170_cout",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "Res3",
-        "wire_alu1bit_21a046_cout"
-      ]
+      "inputs": {
+        "A": "A3",
+        "B": "B3",
+        "CIn": "wire_alu1bit_ea3c_COut",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res": [
+          "Res3"
+        ],
+        "COut": [
+          "wire_alu1bit_e862_COut"
+        ]
+      }
     },
     {
       "type": "ALU1Bit",
       "name": "ALU1Bit",
-      "inputs": [
-        "A4",
-        "B4",
-        "wire_alu1bit_21a046_cout",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "Res4",
-        "wire_alu1bit_4042f7_cout"
-      ]
+      "inputs": {
+        "A": "A4",
+        "B": "B4",
+        "CIn": "wire_alu1bit_e862_COut",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res": [
+          "Res4"
+        ],
+        "COut": [
+          "wire_alu1bit_cbe1_COut"
+        ]
+      }
     },
     {
       "type": "ALU1Bit",
       "name": "ALU1Bit",
-      "inputs": [
-        "A5",
-        "B5",
-        "wire_alu1bit_4042f7_cout",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "Res5",
-        "wire_alu1bit_fe8640_cout"
-      ]
+      "inputs": {
+        "A": "A5",
+        "B": "B5",
+        "CIn": "wire_alu1bit_cbe1_COut",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res": [
+          "Res5"
+        ],
+        "COut": [
+          "wire_alu1bit_d76b_COut"
+        ]
+      }
     },
     {
       "type": "ALU1Bit",
       "name": "ALU1Bit",
-      "inputs": [
-        "A6",
-        "B6",
-        "wire_alu1bit_fe8640_cout",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "Res6",
-        "wire_alu1bit_1d27ef_cout"
-      ]
+      "inputs": {
+        "A": "A6",
+        "B": "B6",
+        "CIn": "wire_alu1bit_d76b_COut",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res": [
+          "Res6"
+        ],
+        "COut": [
+          "wire_alu1bit_10fc_COut"
+        ]
+      }
     },
     {
       "type": "ALU1Bit",
       "name": "ALU1Bit",
-      "inputs": [
-        "A7",
-        "B7",
-        "wire_alu1bit_1d27ef_cout",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "Res7",
-        "COut"
-      ]
+      "inputs": {
+        "A": "A7",
+        "B": "B7",
+        "CIn": "wire_alu1bit_10fc_COut",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res": [
+          "Res7",
+          "FlagN"
+        ],
+        "COut": [
+          "COut"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "Res0",
-        "Res1"
-      ],
-      "outputs": [
-        "wire_or_1bb651_out"
-      ]
+      "inputs": {
+        "A": "Res0",
+        "B": "Res1"
+      },
+      "outputs": {
+        "Out": [
+          "wire_or_2365_Out"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "Res2",
-        "Res3"
-      ],
-      "outputs": [
-        "wire_or_44df77_out"
-      ]
+      "inputs": {
+        "A": "Res2",
+        "B": "Res3"
+      },
+      "outputs": {
+        "Out": [
+          "wire_or_67e5_Out"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "Res4",
-        "Res5"
-      ],
-      "outputs": [
-        "wire_or_85cbee_out"
-      ]
+      "inputs": {
+        "A": "Res4",
+        "B": "Res5"
+      },
+      "outputs": {
+        "Out": [
+          "wire_or_ea32_Out"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "Res6",
-        "Res7"
-      ],
-      "outputs": [
-        "wire_or_6812c6_out"
-      ]
+      "inputs": {
+        "A": "Res6",
+        "B": "Res7"
+      },
+      "outputs": {
+        "Out": [
+          "wire_or_6b9a_Out"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "wire_or_1bb651_out",
-        "wire_or_44df77_out"
-      ],
-      "outputs": [
-        "wire_or_3382db_out"
-      ]
+      "inputs": {
+        "A": "wire_or_2365_Out",
+        "B": "wire_or_67e5_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_or_bad0_Out"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "wire_or_85cbee_out",
-        "wire_or_6812c6_out"
-      ],
-      "outputs": [
-        "wire_or_ada66b_out"
-      ]
+      "inputs": {
+        "A": "wire_or_ea32_Out",
+        "B": "wire_or_6b9a_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_or_5039_Out"
+        ]
+      }
     },
     {
       "type": "NorGate",
       "name": "NOR",
-      "inputs": [
-        "wire_or_3382db_out",
-        "wire_or_ada66b_out"
-      ],
-      "outputs": [
-        "FlagZ"
-      ]
+      "inputs": {
+        "A": "wire_or_bad0_Out",
+        "B": "wire_or_5039_Out"
+      },
+      "outputs": {
+        "Out": [
+          "FlagZ"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A7",
-        "B7"
-      ],
-      "outputs": [
-        "wire_and_7678de_out"
-      ]
+      "inputs": {
+        "A": "A7",
+        "B": "B7"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_8c74_Out"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "wire_and_7678de_out",
-        "wire_not_cc684f_out"
-      ],
-      "outputs": [
-        "wire_and_7c42ce_out"
-      ]
+      "inputs": {
+        "A": "wire_and_8c74_Out",
+        "B": "wire_not_e28b_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_a314_Out"
+        ]
+      }
     },
     {
       "type": "NotGate",
       "name": "NOT",
-      "inputs": [
-        "Res7"
-      ],
-      "outputs": [
-        "wire_not_cc684f_out"
-      ]
+      "inputs": {
+        "In": "Res7"
+      },
+      "outputs": {
+        "Out": [
+          "wire_not_e28b_Out"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "wire_and_7c42ce_out",
-        "wire_and_9ff770_out"
-      ],
-      "outputs": [
-        "FlagV"
-      ]
+      "inputs": {
+        "A": "wire_and_a314_Out",
+        "B": "wire_and_d8f2_Out"
+      },
+      "outputs": {
+        "Out": [
+          "FlagV"
+        ]
+      }
     },
     {
       "type": "NotGate",
       "name": "NOT",
-      "inputs": [
-        "A7"
-      ],
-      "outputs": [
-        "wire_not_fcfc8e_out"
-      ]
+      "inputs": {
+        "In": "A7"
+      },
+      "outputs": {
+        "Out": [
+          "wire_not_a956_Out"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "wire_not_fcfc8e_out",
-        "wire_not_f6c133_out"
-      ],
-      "outputs": [
-        "wire_and_29811d_out"
-      ]
+      "inputs": {
+        "A": "wire_not_a956_Out",
+        "B": "wire_not_6f0d_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_af1d_Out"
+        ]
+      }
     },
     {
       "type": "NotGate",
       "name": "NOT",
-      "inputs": [
-        "B7"
-      ],
-      "outputs": [
-        "wire_not_f6c133_out"
-      ]
+      "inputs": {
+        "In": "B7"
+      },
+      "outputs": {
+        "Out": [
+          "wire_not_6f0d_Out"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "Res7",
-        "wire_and_29811d_out"
-      ],
-      "outputs": [
-        "wire_and_9ff770_out"
-      ]
+      "inputs": {
+        "A": "Res7",
+        "B": "wire_and_af1d_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_d8f2_Out"
+        ]
+      }
     }
   ],
   "layout": {
@@ -379,13 +441,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -406,13 +468,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -433,13 +495,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A2",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -460,13 +522,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A3",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -487,13 +549,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A4",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -514,13 +576,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A5",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -541,13 +603,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A6",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -568,13 +630,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A7",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -595,13 +657,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "B0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -622,13 +684,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "B1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -649,13 +711,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "B2",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -676,13 +738,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "B3",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -703,13 +765,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "B4",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -730,13 +792,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "B5",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -757,16 +819,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "B6",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -787,13 +846,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "B7",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -814,13 +873,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "CIn",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -841,16 +900,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "OpADD",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -871,16 +927,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "OpAND",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -901,16 +954,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "OpOR",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -931,16 +981,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "OpXOR",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -961,16 +1008,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Res0",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -991,16 +1035,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Res1",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1021,16 +1062,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Res2",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1051,16 +1089,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Res3",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1081,16 +1116,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Res4",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1111,16 +1143,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Res5",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1141,16 +1170,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Res6",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1171,16 +1197,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Res7",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1201,16 +1224,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "COut",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1231,8 +1251,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "ALU1Bit",
           "label": "ALU1Bit",
+          "typeLabel": "ALU1Bit",
           "inputs": [
             "A",
             "B",
@@ -1247,154 +1267,7 @@
             "COut"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "FullAdder",
-              "name": "FullAdder",
-              "inputs": [
-                "A",
-                "B",
-                "CIn"
-              ],
-              "outputs": [
-                "wire_fulladder_b3c01e_sum",
-                "wire_fulladder_b3c01e_cout"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_and_8703cb_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_or_ed3328_out"
-              ]
-            },
-            {
-              "type": "XorGate",
-              "name": "XOR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_xor_9608c1_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_A",
-              "inputs": [
-                "wire_and_20f523_out",
-                "wire_and_c70f75_out"
-              ],
-              "outputs": [
-                "wire_or_a_f6b096_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_B",
-              "inputs": [
-                "wire_and_ebebf9_out",
-                "wire_and_b61eed_out"
-              ],
-              "outputs": [
-                "wire_or_b_d5e9ee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_C",
-              "inputs": [
-                "wire_or_a_f6b096_out",
-                "wire_or_b_d5e9ee_out"
-              ],
-              "outputs": [
-                "Res"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND_A",
-              "inputs": [
-                "wire_fulladder_b3c01e_cout",
-                "OpADD"
-              ],
-              "outputs": [
-                "COut"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_fulladder_b3c01e_sum",
-                "OpADD"
-              ],
-              "outputs": [
-                "wire_and_20f523_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_and_8703cb_out",
-                "OpAND"
-              ],
-              "outputs": [
-                "wire_and_c70f75_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_or_ed3328_out",
-                "OpOR"
-              ],
-              "outputs": [
-                "wire_and_ebebf9_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_xor_9608c1_out",
-                "OpXOR"
-              ],
-              "outputs": [
-                "wire_and_b61eed_out"
-              ]
-            }
-          ],
-          "values": {
-            "A": false,
-            "B": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res": false,
-            "COut": false
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,
@@ -1415,8 +1288,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "ALU1Bit",
           "label": "ALU1Bit",
+          "typeLabel": "ALU1Bit",
           "inputs": [
             "A",
             "B",
@@ -1431,154 +1304,7 @@
             "COut"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "FullAdder",
-              "name": "FullAdder",
-              "inputs": [
-                "A",
-                "B",
-                "CIn"
-              ],
-              "outputs": [
-                "wire_fulladder_b3c01e_sum",
-                "wire_fulladder_b3c01e_cout"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_and_8703cb_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_or_ed3328_out"
-              ]
-            },
-            {
-              "type": "XorGate",
-              "name": "XOR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_xor_9608c1_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_A",
-              "inputs": [
-                "wire_and_20f523_out",
-                "wire_and_c70f75_out"
-              ],
-              "outputs": [
-                "wire_or_a_f6b096_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_B",
-              "inputs": [
-                "wire_and_ebebf9_out",
-                "wire_and_b61eed_out"
-              ],
-              "outputs": [
-                "wire_or_b_d5e9ee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_C",
-              "inputs": [
-                "wire_or_a_f6b096_out",
-                "wire_or_b_d5e9ee_out"
-              ],
-              "outputs": [
-                "Res"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND_A",
-              "inputs": [
-                "wire_fulladder_b3c01e_cout",
-                "OpADD"
-              ],
-              "outputs": [
-                "COut"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_fulladder_b3c01e_sum",
-                "OpADD"
-              ],
-              "outputs": [
-                "wire_and_20f523_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_and_8703cb_out",
-                "OpAND"
-              ],
-              "outputs": [
-                "wire_and_c70f75_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_or_ed3328_out",
-                "OpOR"
-              ],
-              "outputs": [
-                "wire_and_ebebf9_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_xor_9608c1_out",
-                "OpXOR"
-              ],
-              "outputs": [
-                "wire_and_b61eed_out"
-              ]
-            }
-          ],
-          "values": {
-            "A": false,
-            "B": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res": false,
-            "COut": false
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,
@@ -1599,8 +1325,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "ALU1Bit",
           "label": "ALU1Bit",
+          "typeLabel": "ALU1Bit",
           "inputs": [
             "A",
             "B",
@@ -1615,154 +1341,7 @@
             "COut"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "FullAdder",
-              "name": "FullAdder",
-              "inputs": [
-                "A",
-                "B",
-                "CIn"
-              ],
-              "outputs": [
-                "wire_fulladder_b3c01e_sum",
-                "wire_fulladder_b3c01e_cout"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_and_8703cb_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_or_ed3328_out"
-              ]
-            },
-            {
-              "type": "XorGate",
-              "name": "XOR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_xor_9608c1_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_A",
-              "inputs": [
-                "wire_and_20f523_out",
-                "wire_and_c70f75_out"
-              ],
-              "outputs": [
-                "wire_or_a_f6b096_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_B",
-              "inputs": [
-                "wire_and_ebebf9_out",
-                "wire_and_b61eed_out"
-              ],
-              "outputs": [
-                "wire_or_b_d5e9ee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_C",
-              "inputs": [
-                "wire_or_a_f6b096_out",
-                "wire_or_b_d5e9ee_out"
-              ],
-              "outputs": [
-                "Res"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND_A",
-              "inputs": [
-                "wire_fulladder_b3c01e_cout",
-                "OpADD"
-              ],
-              "outputs": [
-                "COut"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_fulladder_b3c01e_sum",
-                "OpADD"
-              ],
-              "outputs": [
-                "wire_and_20f523_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_and_8703cb_out",
-                "OpAND"
-              ],
-              "outputs": [
-                "wire_and_c70f75_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_or_ed3328_out",
-                "OpOR"
-              ],
-              "outputs": [
-                "wire_and_ebebf9_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_xor_9608c1_out",
-                "OpXOR"
-              ],
-              "outputs": [
-                "wire_and_b61eed_out"
-              ]
-            }
-          ],
-          "values": {
-            "A": false,
-            "B": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res": false,
-            "COut": false
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,
@@ -1783,8 +1362,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "ALU1Bit",
           "label": "ALU1Bit",
+          "typeLabel": "ALU1Bit",
           "inputs": [
             "A",
             "B",
@@ -1799,154 +1378,7 @@
             "COut"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "FullAdder",
-              "name": "FullAdder",
-              "inputs": [
-                "A",
-                "B",
-                "CIn"
-              ],
-              "outputs": [
-                "wire_fulladder_b3c01e_sum",
-                "wire_fulladder_b3c01e_cout"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_and_8703cb_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_or_ed3328_out"
-              ]
-            },
-            {
-              "type": "XorGate",
-              "name": "XOR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_xor_9608c1_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_A",
-              "inputs": [
-                "wire_and_20f523_out",
-                "wire_and_c70f75_out"
-              ],
-              "outputs": [
-                "wire_or_a_f6b096_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_B",
-              "inputs": [
-                "wire_and_ebebf9_out",
-                "wire_and_b61eed_out"
-              ],
-              "outputs": [
-                "wire_or_b_d5e9ee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_C",
-              "inputs": [
-                "wire_or_a_f6b096_out",
-                "wire_or_b_d5e9ee_out"
-              ],
-              "outputs": [
-                "Res"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND_A",
-              "inputs": [
-                "wire_fulladder_b3c01e_cout",
-                "OpADD"
-              ],
-              "outputs": [
-                "COut"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_fulladder_b3c01e_sum",
-                "OpADD"
-              ],
-              "outputs": [
-                "wire_and_20f523_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_and_8703cb_out",
-                "OpAND"
-              ],
-              "outputs": [
-                "wire_and_c70f75_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_or_ed3328_out",
-                "OpOR"
-              ],
-              "outputs": [
-                "wire_and_ebebf9_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_xor_9608c1_out",
-                "OpXOR"
-              ],
-              "outputs": [
-                "wire_and_b61eed_out"
-              ]
-            }
-          ],
-          "values": {
-            "A": false,
-            "B": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res": false,
-            "COut": false
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,
@@ -1967,8 +1399,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "ALU1Bit",
           "label": "ALU1Bit",
+          "typeLabel": "ALU1Bit",
           "inputs": [
             "A",
             "B",
@@ -1983,154 +1415,7 @@
             "COut"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "FullAdder",
-              "name": "FullAdder",
-              "inputs": [
-                "A",
-                "B",
-                "CIn"
-              ],
-              "outputs": [
-                "wire_fulladder_b3c01e_sum",
-                "wire_fulladder_b3c01e_cout"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_and_8703cb_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_or_ed3328_out"
-              ]
-            },
-            {
-              "type": "XorGate",
-              "name": "XOR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_xor_9608c1_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_A",
-              "inputs": [
-                "wire_and_20f523_out",
-                "wire_and_c70f75_out"
-              ],
-              "outputs": [
-                "wire_or_a_f6b096_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_B",
-              "inputs": [
-                "wire_and_ebebf9_out",
-                "wire_and_b61eed_out"
-              ],
-              "outputs": [
-                "wire_or_b_d5e9ee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_C",
-              "inputs": [
-                "wire_or_a_f6b096_out",
-                "wire_or_b_d5e9ee_out"
-              ],
-              "outputs": [
-                "Res"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND_A",
-              "inputs": [
-                "wire_fulladder_b3c01e_cout",
-                "OpADD"
-              ],
-              "outputs": [
-                "COut"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_fulladder_b3c01e_sum",
-                "OpADD"
-              ],
-              "outputs": [
-                "wire_and_20f523_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_and_8703cb_out",
-                "OpAND"
-              ],
-              "outputs": [
-                "wire_and_c70f75_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_or_ed3328_out",
-                "OpOR"
-              ],
-              "outputs": [
-                "wire_and_ebebf9_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_xor_9608c1_out",
-                "OpXOR"
-              ],
-              "outputs": [
-                "wire_and_b61eed_out"
-              ]
-            }
-          ],
-          "values": {
-            "A": false,
-            "B": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res": false,
-            "COut": false
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,
@@ -2151,8 +1436,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "ALU1Bit",
           "label": "ALU1Bit",
+          "typeLabel": "ALU1Bit",
           "inputs": [
             "A",
             "B",
@@ -2167,154 +1452,7 @@
             "COut"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "FullAdder",
-              "name": "FullAdder",
-              "inputs": [
-                "A",
-                "B",
-                "CIn"
-              ],
-              "outputs": [
-                "wire_fulladder_b3c01e_sum",
-                "wire_fulladder_b3c01e_cout"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_and_8703cb_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_or_ed3328_out"
-              ]
-            },
-            {
-              "type": "XorGate",
-              "name": "XOR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_xor_9608c1_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_A",
-              "inputs": [
-                "wire_and_20f523_out",
-                "wire_and_c70f75_out"
-              ],
-              "outputs": [
-                "wire_or_a_f6b096_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_B",
-              "inputs": [
-                "wire_and_ebebf9_out",
-                "wire_and_b61eed_out"
-              ],
-              "outputs": [
-                "wire_or_b_d5e9ee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_C",
-              "inputs": [
-                "wire_or_a_f6b096_out",
-                "wire_or_b_d5e9ee_out"
-              ],
-              "outputs": [
-                "Res"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND_A",
-              "inputs": [
-                "wire_fulladder_b3c01e_cout",
-                "OpADD"
-              ],
-              "outputs": [
-                "COut"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_fulladder_b3c01e_sum",
-                "OpADD"
-              ],
-              "outputs": [
-                "wire_and_20f523_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_and_8703cb_out",
-                "OpAND"
-              ],
-              "outputs": [
-                "wire_and_c70f75_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_or_ed3328_out",
-                "OpOR"
-              ],
-              "outputs": [
-                "wire_and_ebebf9_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_xor_9608c1_out",
-                "OpXOR"
-              ],
-              "outputs": [
-                "wire_and_b61eed_out"
-              ]
-            }
-          ],
-          "values": {
-            "A": false,
-            "B": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res": false,
-            "COut": false
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,
@@ -2335,8 +1473,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "ALU1Bit",
           "label": "ALU1Bit",
+          "typeLabel": "ALU1Bit",
           "inputs": [
             "A",
             "B",
@@ -2351,154 +1489,7 @@
             "COut"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "FullAdder",
-              "name": "FullAdder",
-              "inputs": [
-                "A",
-                "B",
-                "CIn"
-              ],
-              "outputs": [
-                "wire_fulladder_b3c01e_sum",
-                "wire_fulladder_b3c01e_cout"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_and_8703cb_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_or_ed3328_out"
-              ]
-            },
-            {
-              "type": "XorGate",
-              "name": "XOR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_xor_9608c1_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_A",
-              "inputs": [
-                "wire_and_20f523_out",
-                "wire_and_c70f75_out"
-              ],
-              "outputs": [
-                "wire_or_a_f6b096_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_B",
-              "inputs": [
-                "wire_and_ebebf9_out",
-                "wire_and_b61eed_out"
-              ],
-              "outputs": [
-                "wire_or_b_d5e9ee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_C",
-              "inputs": [
-                "wire_or_a_f6b096_out",
-                "wire_or_b_d5e9ee_out"
-              ],
-              "outputs": [
-                "Res"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND_A",
-              "inputs": [
-                "wire_fulladder_b3c01e_cout",
-                "OpADD"
-              ],
-              "outputs": [
-                "COut"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_fulladder_b3c01e_sum",
-                "OpADD"
-              ],
-              "outputs": [
-                "wire_and_20f523_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_and_8703cb_out",
-                "OpAND"
-              ],
-              "outputs": [
-                "wire_and_c70f75_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_or_ed3328_out",
-                "OpOR"
-              ],
-              "outputs": [
-                "wire_and_ebebf9_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_xor_9608c1_out",
-                "OpXOR"
-              ],
-              "outputs": [
-                "wire_and_b61eed_out"
-              ]
-            }
-          ],
-          "values": {
-            "A": false,
-            "B": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res": false,
-            "COut": false
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,
@@ -2519,8 +1510,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "ALU1Bit",
           "label": "ALU1Bit",
+          "typeLabel": "ALU1Bit",
           "inputs": [
             "A",
             "B",
@@ -2535,154 +1526,7 @@
             "COut"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "FullAdder",
-              "name": "FullAdder",
-              "inputs": [
-                "A",
-                "B",
-                "CIn"
-              ],
-              "outputs": [
-                "wire_fulladder_b3c01e_sum",
-                "wire_fulladder_b3c01e_cout"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_and_8703cb_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_or_ed3328_out"
-              ]
-            },
-            {
-              "type": "XorGate",
-              "name": "XOR",
-              "inputs": [
-                "A",
-                "B"
-              ],
-              "outputs": [
-                "wire_xor_9608c1_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_A",
-              "inputs": [
-                "wire_and_20f523_out",
-                "wire_and_c70f75_out"
-              ],
-              "outputs": [
-                "wire_or_a_f6b096_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_B",
-              "inputs": [
-                "wire_and_ebebf9_out",
-                "wire_and_b61eed_out"
-              ],
-              "outputs": [
-                "wire_or_b_d5e9ee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR_C",
-              "inputs": [
-                "wire_or_a_f6b096_out",
-                "wire_or_b_d5e9ee_out"
-              ],
-              "outputs": [
-                "Res"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND_A",
-              "inputs": [
-                "wire_fulladder_b3c01e_cout",
-                "OpADD"
-              ],
-              "outputs": [
-                "COut"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_fulladder_b3c01e_sum",
-                "OpADD"
-              ],
-              "outputs": [
-                "wire_and_20f523_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_and_8703cb_out",
-                "OpAND"
-              ],
-              "outputs": [
-                "wire_and_c70f75_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_or_ed3328_out",
-                "OpOR"
-              ],
-              "outputs": [
-                "wire_and_ebebf9_out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "wire_xor_9608c1_out",
-                "OpXOR"
-              ],
-              "outputs": [
-                "wire_and_b61eed_out"
-              ]
-            }
-          ],
-          "values": {
-            "A": false,
-            "B": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res": false,
-            "COut": false
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,
@@ -2703,16 +1547,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "FlagN",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -2733,16 +1574,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "FlagZ",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": true
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -2763,8 +1601,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -2772,12 +1610,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -2798,8 +1631,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -2807,12 +1640,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -2833,8 +1661,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -2842,12 +1670,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -2868,8 +1691,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -2877,12 +1700,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -2903,8 +1721,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -2912,12 +1730,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -2938,8 +1751,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -2947,12 +1760,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -2973,8 +1781,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "NorGate",
           "label": "NOR",
+          "typeLabel": "NorGate",
           "inputs": [
             "A",
             "B"
@@ -2982,12 +1790,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -3008,16 +1811,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "FlagV",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -3038,8 +1838,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -3047,12 +1847,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -3073,8 +1868,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -3082,12 +1877,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": true,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -3108,19 +1898,15 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "NotGate",
           "label": "NOT",
+          "typeLabel": "NotGate",
           "inputs": [
             "In"
           ],
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "In": false,
-            "Out": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -3141,8 +1927,8 @@
         ],
         "selected": true,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -3150,12 +1936,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -3176,19 +1957,15 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "NotGate",
           "label": "NOT",
+          "typeLabel": "NotGate",
           "inputs": [
             "In"
           ],
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "In": false,
-            "Out": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -3209,8 +1986,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -3218,12 +1995,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": true,
-            "B": true,
-            "Out": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -3244,19 +2016,15 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "NotGate",
           "label": "NOT",
+          "typeLabel": "NotGate",
           "inputs": [
             "In"
           ],
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "In": false,
-            "Out": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -3277,8 +2045,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -3286,12 +2054,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": true,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,

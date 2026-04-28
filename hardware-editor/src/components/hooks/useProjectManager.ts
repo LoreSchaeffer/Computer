@@ -91,15 +91,41 @@ export function useProjectManager() {
             }
         });
 
-        const components = nodes.filter(n => ['logicGate', 'latch', 'customChip'].includes(n.type!)).map(node => ({
-            type: node.data.typeLabel,
-            name: node.data.label,
-            inputs: ((node.data.inputs as string[]) || []).map(p => {
-                const edge = edges.find(e => e.target === node.id && e.targetHandle === p);
-                return edge ? nets.get(`${edge.source}_${edge.sourceHandle || 'Out'}`) : 'NC';
-            }),
-            outputs: ((node.data.outputs as string[]) || []).map(p => nets.get(`${node.id}_${p}`)).filter(Boolean)
-        }));
+        const components = nodes.filter(n => ['logicGate', 'latch', 'customChip'].includes(n.type!)).map(node => {
+            const inputsRecord: Record<string, string> = {};
+            const outputsRecord: Record<string, string[]> = {};
+
+            ((node.data.inputs as string[]) || []).forEach(pinName => {
+                const edge = edges.find(e => e.target === node.id && e.targetHandle === pinName);
+                inputsRecord[pinName] = edge ? (nets.get(`${edge.source}_${edge.sourceHandle || 'Out'}`) || 'NC') : 'NC';
+            });
+
+            ((node.data.outputs as string[]) || []).forEach(pinName => {
+                const outgoingEdges = edges.filter(e => e.source === node.id && e.sourceHandle === pinName);
+
+                if (outgoingEdges.length > 0) {
+                    const targetNames = outgoingEdges.map(edge => {
+                        const targetNode = nodes.find(n => n.id === edge.target);
+                        if (targetNode?.type === 'outputPin') {
+                            return targetNode.data.label as string;
+                        }
+
+                        return nets.get(`${edge.source}_${edge.sourceHandle || 'Out'}`) || 'UNKNOWN_WIRE';
+                    });
+
+                    outputsRecord[pinName] = Array.from(new Set(targetNames));
+                } else {
+                    outputsRecord[pinName] = [];
+                }
+            });
+
+            return {
+                type: node.data.typeLabel as string,
+                name: node.data.label as string,
+                inputs: inputsRecord,
+                outputs: outputsRecord
+            };
+        });
 
         const simplifiedNodes = nodes.map(node => {
             const {

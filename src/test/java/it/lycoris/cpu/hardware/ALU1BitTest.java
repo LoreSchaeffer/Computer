@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class Alu1BitTest extends HardwareTestBase {
+public class ALU1BitTest extends HardwareTestBase {
 
     @BeforeEach
     void setup() {

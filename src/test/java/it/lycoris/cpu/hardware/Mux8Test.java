@@ -10,7 +10,7 @@ public class Mux8Test extends HardwareTestBase {
 
     @BeforeEach
     void setup() {
-        load("mux8");
+        load("Mux8");
     }
 
     @Test

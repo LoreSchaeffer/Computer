@@ -77,8 +77,9 @@ export function WorkspaceProvider({children}: PropsWithChildren) {
             }
             setWorkspaceHandle(handle);
 
-            const loadedChips: HardwareTemplate[] = [];
-            const foundGroups = new Set<string>(['Primitives']);
+            const foundGroups = new Set<string>([...IO_NODES, ...GATE_NODES].map(n => n.data.group!));
+
+            const rawJSONs: { json: ChipDefinition, groupName: string, fileHandle: any }[] = [];
 
             for await (const entry of (handle as any).values()) {
                 if (entry.kind === 'file' && entry.name.endsWith('.json')) {
@@ -88,26 +89,88 @@ export function WorkspaceProvider({children}: PropsWithChildren) {
                         const json = JSON.parse(text) as ChipDefinition;
                         const groupName = json.chipGroup || 'Custom Chips';
                         foundGroups.add(groupName);
-                        loadedChips.push({
-                            type: 'customChip',
-                            data: {
-                                typeLabel: json.chipName, label: json.chipName,
-                                inputs: json.pins?.inputs || [], outputs: json.pins?.outputs || [],
-                                headerColor: json.chipColor || '#1e3799', group: groupName,
-                                internalComponents: json.components || []
-                            }
-                        });
+                        rawJSONs.push({json, groupName, fileHandle: entry});
                     } catch (err) {
                         console.warn("Failed to parse JSON:", entry.name);
                     }
                 }
             }
+
+            const tempTemplateMap = new Map<string, any>();
+            [...IO_NODES, ...GATE_NODES].forEach(n => tempTemplateMap.set(n.data.typeLabel, n.data));
+            rawJSONs.forEach(({json}) => {
+                tempTemplateMap.set(json.chipName, {inputs: json.pins?.inputs || [], outputs: json.pins?.outputs || []});
+            });
+
+            const loadedChips: HardwareTemplate[] = [];
+
+            for (const {json, groupName, fileHandle} of rawJSONs) {
+                let needsMigration = false;
+
+                const migratedComponents = (json.components || []).map((comp: any) => {
+                    const templateDef = tempTemplateMap.get(comp.type);
+                    const expectedIns = templateDef?.inputs || [];
+                    const expectedOuts = templateDef?.outputs || [];
+
+                    const newInputs: Record<string, string> = {};
+                    const newOutputs: Record<string, string[]> = {};
+
+                    if (Array.isArray(comp.inputs)) {
+                        needsMigration = true;
+                        comp.inputs.forEach((wire: string, i: number) => {
+                            newInputs[expectedIns[i] || `unk_${i}`] = wire;
+                        });
+                    } else {
+                        Object.assign(newInputs, comp.inputs);
+                    }
+
+                    if (Array.isArray(comp.outputs)) {
+                        needsMigration = true;
+                        comp.outputs.forEach((wire: string, i: number) => {
+                            newOutputs[expectedOuts[i] || `unk_${i}`] = [wire];
+                        });
+                    } else {
+                        Object.entries(comp.outputs || {}).forEach(([k, v]) => {
+                            if (typeof v === 'string') {
+                                needsMigration = true;
+                                newOutputs[k] = [v];
+                            } else {
+                                newOutputs[k] = v as string[];
+                            }
+                        });
+                    }
+
+                    return {...comp, inputs: newInputs, outputs: newOutputs};
+                });
+
+                if (needsMigration) {
+                    console.log(`Aggiornamento automatico su disco eseguito per il chip: ${json.chipName}.json`);
+                    json.components = migratedComponents;
+                    try {
+                        const writable = await fileHandle.createWritable();
+                        await writable.write(JSON.stringify(json, null, 2));
+                        await writable.close();
+                    } catch (e) {
+                        console.error("Errore durante l'auto-salvataggio della migrazione:", e);
+                    }
+                }
+
+                loadedChips.push({
+                    type: 'customChip',
+                    data: {
+                        typeLabel: json.chipName,
+                        label: json.chipName,
+                        inputs: json.pins?.inputs || [],
+                        outputs: json.pins?.outputs || [],
+                        headerColor: json.chipColor || '#1e3799',
+                        group: groupName,
+                        internalComponents: migratedComponents
+                    }
+                });
+            }
+
             setGroups(Array.from(foundGroups).sort());
-            setLibrary([
-                ...IO_NODES,
-                ...GATE_NODES,
-                ...loadedChips.sort((a, b) => a.data.label.localeCompare(b.data.label))
-            ]);
+            setLibrary([...IO_NODES, ...GATE_NODES, ...loadedChips.sort((a, b) => a.data.label.localeCompare(b.data.label))]);
             setIsWorkspaceConnected(true);
         } catch (error) {
             console.error("Workspace connection failed:", error);

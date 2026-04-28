@@ -26,25 +26,13 @@ public class HardwareTestBase {
 
     protected void load(String chipName) {
         ChipDefinition def = lib.getDefinition(chipName);
-        Assertions.assertNotNull(def, "ChipDefinition not found: " + chipName);
-
         inputWires = new HashMap<>();
         outputWires = new HashMap<>();
 
-        Wire[] inputs = new Wire[def.pins().inputs().size()];
-        for (int i = 0; i < inputs.length; i++) {
-            inputs[i] = new Wire();
-            inputWires.put(def.pins().inputs().get(i), inputs[i]);
-        }
+        def.pins().inputs().forEach(name -> inputWires.put(name, new Wire()));
+        def.pins().outputs().forEach(name -> outputWires.put(name, new Wire()));
 
-        Wire[] outputs = new Wire[def.pins().outputs().size()];
-        for (int i = 0; i < outputs.length; i++) {
-            outputs[i] = new Wire();
-            outputWires.put(def.pins().outputs().get(i), outputs[i]);
-        }
-
-        this.chip = lib.build(chipName, "TestInstance_" + chipName, inputs, outputs);
-        Assertions.assertNotNull(this.chip, "Failed to build chip: " + chipName);
+        this.chip = lib.build(chipName, "Test_" + chipName, inputWires, outputWires);
     }
 
     protected void setPin(String name, boolean state) {
@@ -86,6 +74,7 @@ public class HardwareTestBase {
     }
 
     protected void pulseClock(String clockPin) {
+        update();
         setPin(clockPin, true);
         update();
         setPin(clockPin, false);

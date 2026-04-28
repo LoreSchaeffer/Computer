@@ -2,7 +2,6 @@
   "chipName": "StatusRegister",
   "chipColor": "#f43f5e",
   "chipGroup": "Registers",
-  "group": "Registers",
   "pins": {
     "inputs": [
       "Bus0",
@@ -55,132 +54,150 @@
     ]
   },
   "internalWires": [
-    "wire_vcc_73d85b_out"
+    "wire_vcc_bd98_Out"
   ],
   "components": [
     {
       "type": "StatusRegisterBit",
       "name": "StatusRegisterBit",
-      "inputs": [
-        "AluC",
-        "Bus0",
-        "ManC",
-        "SelC0",
-        "SelC1",
-        "Clk"
-      ],
-      "outputs": [
-        "P0"
-      ]
+      "inputs": {
+        "AluIn": "AluC",
+        "BusIn": "Bus0",
+        "ManIn": "ManC",
+        "Sel0": "SelC0",
+        "Sel1": "SelC1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P0"
+        ]
+      }
     },
     {
       "type": "StatusRegisterBit",
       "name": "StatusRegisterBit",
-      "inputs": [
-        "AluZ",
-        "Bus1",
-        "ManZ",
-        "SelZ0",
-        "SelZ1",
-        "Clk"
-      ],
-      "outputs": [
-        "P1"
-      ]
+      "inputs": {
+        "AluIn": "AluZ",
+        "BusIn": "Bus1",
+        "ManIn": "ManZ",
+        "Sel0": "SelZ0",
+        "Sel1": "SelZ1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P1"
+        ]
+      }
     },
     {
       "type": "StatusRegisterBit",
       "name": "StatusRegisterBit",
-      "inputs": [
-        "InI",
-        "Bus2",
-        "ManI",
-        "SelI0",
-        "SelI1",
-        "Clk"
-      ],
-      "outputs": [
-        "P2"
-      ]
+      "inputs": {
+        "AluIn": "InI",
+        "BusIn": "Bus2",
+        "ManIn": "ManI",
+        "Sel0": "SelI0",
+        "Sel1": "SelI1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P2"
+        ]
+      }
     },
     {
       "type": "StatusRegisterBit",
       "name": "StatusRegisterBit",
-      "inputs": [
-        "InD",
-        "Bus3",
-        "ManD",
-        "SelD0",
-        "SelD1",
-        "Clk"
-      ],
-      "outputs": [
-        "P3"
-      ]
+      "inputs": {
+        "AluIn": "InD",
+        "BusIn": "Bus3",
+        "ManIn": "ManD",
+        "Sel0": "SelD0",
+        "Sel1": "SelD1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P3"
+        ]
+      }
     },
     {
       "type": "StatusRegisterBit",
       "name": "StatusRegisterBit",
-      "inputs": [
-        "InB",
-        "Bus4",
-        "ManB",
-        "SelB0",
-        "SelB1",
-        "Clk"
-      ],
-      "outputs": [
-        "P4"
-      ]
+      "inputs": {
+        "AluIn": "InB",
+        "BusIn": "Bus4",
+        "ManIn": "ManB",
+        "Sel0": "SelB0",
+        "Sel1": "SelB1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P4"
+        ]
+      }
     },
     {
       "type": "StatusRegisterBit",
       "name": "StatusRegisterBit",
-      "inputs": [
-        "AluV",
-        "Bus6",
-        "ManV",
-        "SelV0",
-        "SelV1",
-        "Clk"
-      ],
-      "outputs": [
-        "P6"
-      ]
+      "inputs": {
+        "AluIn": "AluV",
+        "BusIn": "Bus6",
+        "ManIn": "ManV",
+        "Sel0": "SelV0",
+        "Sel1": "SelV1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P6"
+        ]
+      }
     },
     {
       "type": "StatusRegisterBit",
       "name": "StatusRegisterBit",
-      "inputs": [
-        "AluN",
-        "Bus7",
-        "ManN",
-        "SelN0",
-        "SelN1",
-        "Clk"
-      ],
-      "outputs": [
-        "P7"
-      ]
+      "inputs": {
+        "AluIn": "AluN",
+        "BusIn": "Bus7",
+        "ManIn": "ManN",
+        "Sel0": "SelN0",
+        "Sel1": "SelN1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P7"
+        ]
+      }
     },
     {
       "type": "VCC",
       "name": "VCC",
-      "inputs": [],
-      "outputs": [
-        "wire_vcc_73d85b_out"
-      ]
+      "inputs": {},
+      "outputs": {
+        "Out": [
+          "wire_vcc_bd98_Out"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "wire_vcc_73d85b_out",
-        "Bus5"
-      ],
-      "outputs": [
-        "P5"
-      ]
+      "inputs": {
+        "A": "wire_vcc_bd98_Out",
+        "B": "Bus5"
+      },
+      "outputs": {
+        "Out": [
+          "P5"
+        ]
+      }
     }
   ],
   "layout": {
@@ -198,13 +215,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Bus0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -225,13 +242,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Bus1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -252,13 +269,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Bus2",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -279,13 +296,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Bus3",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -306,13 +323,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Bus4",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -333,13 +350,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Bus5",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -360,13 +377,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Bus6",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -387,13 +404,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Bus7",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -414,13 +431,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "AluN",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -441,13 +458,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "AluV",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -468,13 +485,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "AluZ",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -495,13 +512,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "AluC",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -522,13 +539,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelC0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -549,13 +566,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelC1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -576,13 +593,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "ManC",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -603,13 +620,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelZ0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -630,13 +647,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelZ1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -657,13 +674,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "ManZ",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -684,13 +701,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelI0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -711,13 +728,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelI1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -738,13 +755,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "ManI",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -765,13 +782,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelD0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -792,13 +809,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelD1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -819,13 +836,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "ManD",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -846,13 +863,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelB0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -873,13 +890,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelB1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -900,13 +917,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "ManB",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -927,13 +944,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelV0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -954,13 +971,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelV1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -981,13 +998,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "ManV",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1008,13 +1025,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelN0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1035,13 +1052,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "SelN1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1062,13 +1079,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "ManN",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1089,13 +1106,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Clk",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1116,16 +1133,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "P0",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1146,16 +1160,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "P1",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1176,16 +1187,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "P2",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1206,16 +1214,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "P3",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1236,16 +1241,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "P4",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1266,16 +1268,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "P5",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": true
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1296,16 +1295,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "P6",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1326,16 +1322,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "P7",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1356,8 +1349,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "StatusRegisterBit",
           "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
           "inputs": [
             "AluIn",
             "BusIn",
@@ -1370,44 +1363,7 @@
             "Q"
           ],
           "headerColor": "#f43f5e",
-          "group": "Registers",
-          "internalComponents": [
-            {
-              "type": "Mux4",
-              "name": "Mux4",
-              "inputs": [
-                "Q",
-                "AluIn",
-                "BusIn",
-                "ManIn",
-                "Sel0",
-                "Sel1"
-              ],
-              "outputs": [
-                "wire_mux4_2235de_out"
-              ]
-            },
-            {
-              "type": "DLatch",
-              "name": "D-Latch",
-              "inputs": [
-                "wire_mux4_2235de_out",
-                "Clk"
-              ],
-              "outputs": [
-                "Q"
-              ]
-            }
-          ],
-          "values": {
-            "AluIn": false,
-            "BusIn": false,
-            "ManIn": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Clk": false,
-            "Q": false
-          }
+          "group": "Registers"
         },
         "measured": {
           "width": 150,
@@ -1428,8 +1384,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "StatusRegisterBit",
           "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
           "inputs": [
             "AluIn",
             "BusIn",
@@ -1442,44 +1398,7 @@
             "Q"
           ],
           "headerColor": "#f43f5e",
-          "group": "Registers",
-          "internalComponents": [
-            {
-              "type": "Mux4",
-              "name": "Mux4",
-              "inputs": [
-                "Q",
-                "AluIn",
-                "BusIn",
-                "ManIn",
-                "Sel0",
-                "Sel1"
-              ],
-              "outputs": [
-                "wire_mux4_2235de_out"
-              ]
-            },
-            {
-              "type": "DLatch",
-              "name": "D-Latch",
-              "inputs": [
-                "wire_mux4_2235de_out",
-                "Clk"
-              ],
-              "outputs": [
-                "Q"
-              ]
-            }
-          ],
-          "values": {
-            "AluIn": false,
-            "BusIn": false,
-            "ManIn": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Clk": false,
-            "Q": false
-          }
+          "group": "Registers"
         },
         "measured": {
           "width": 150,
@@ -1500,8 +1419,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "StatusRegisterBit",
           "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
           "inputs": [
             "AluIn",
             "BusIn",
@@ -1514,44 +1433,7 @@
             "Q"
           ],
           "headerColor": "#f43f5e",
-          "group": "Registers",
-          "internalComponents": [
-            {
-              "type": "Mux4",
-              "name": "Mux4",
-              "inputs": [
-                "Q",
-                "AluIn",
-                "BusIn",
-                "ManIn",
-                "Sel0",
-                "Sel1"
-              ],
-              "outputs": [
-                "wire_mux4_2235de_out"
-              ]
-            },
-            {
-              "type": "DLatch",
-              "name": "D-Latch",
-              "inputs": [
-                "wire_mux4_2235de_out",
-                "Clk"
-              ],
-              "outputs": [
-                "Q"
-              ]
-            }
-          ],
-          "values": {
-            "AluIn": false,
-            "BusIn": false,
-            "ManIn": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Clk": false,
-            "Q": false
-          }
+          "group": "Registers"
         },
         "measured": {
           "width": 150,
@@ -1572,8 +1454,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "StatusRegisterBit",
           "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
           "inputs": [
             "AluIn",
             "BusIn",
@@ -1586,44 +1468,7 @@
             "Q"
           ],
           "headerColor": "#f43f5e",
-          "group": "Registers",
-          "internalComponents": [
-            {
-              "type": "Mux4",
-              "name": "Mux4",
-              "inputs": [
-                "Q",
-                "AluIn",
-                "BusIn",
-                "ManIn",
-                "Sel0",
-                "Sel1"
-              ],
-              "outputs": [
-                "wire_mux4_2235de_out"
-              ]
-            },
-            {
-              "type": "DLatch",
-              "name": "D-Latch",
-              "inputs": [
-                "wire_mux4_2235de_out",
-                "Clk"
-              ],
-              "outputs": [
-                "Q"
-              ]
-            }
-          ],
-          "values": {
-            "AluIn": false,
-            "BusIn": false,
-            "ManIn": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Clk": false,
-            "Q": false
-          }
+          "group": "Registers"
         },
         "measured": {
           "width": 150,
@@ -1644,8 +1489,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "StatusRegisterBit",
           "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
           "inputs": [
             "AluIn",
             "BusIn",
@@ -1658,44 +1503,7 @@
             "Q"
           ],
           "headerColor": "#f43f5e",
-          "group": "Registers",
-          "internalComponents": [
-            {
-              "type": "Mux4",
-              "name": "Mux4",
-              "inputs": [
-                "Q",
-                "AluIn",
-                "BusIn",
-                "ManIn",
-                "Sel0",
-                "Sel1"
-              ],
-              "outputs": [
-                "wire_mux4_2235de_out"
-              ]
-            },
-            {
-              "type": "DLatch",
-              "name": "D-Latch",
-              "inputs": [
-                "wire_mux4_2235de_out",
-                "Clk"
-              ],
-              "outputs": [
-                "Q"
-              ]
-            }
-          ],
-          "values": {
-            "AluIn": false,
-            "BusIn": false,
-            "ManIn": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Clk": false,
-            "Q": false
-          }
+          "group": "Registers"
         },
         "measured": {
           "width": 150,
@@ -1716,8 +1524,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "StatusRegisterBit",
           "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
           "inputs": [
             "AluIn",
             "BusIn",
@@ -1730,44 +1538,7 @@
             "Q"
           ],
           "headerColor": "#f43f5e",
-          "group": "Registers",
-          "internalComponents": [
-            {
-              "type": "Mux4",
-              "name": "Mux4",
-              "inputs": [
-                "Q",
-                "AluIn",
-                "BusIn",
-                "ManIn",
-                "Sel0",
-                "Sel1"
-              ],
-              "outputs": [
-                "wire_mux4_2235de_out"
-              ]
-            },
-            {
-              "type": "DLatch",
-              "name": "D-Latch",
-              "inputs": [
-                "wire_mux4_2235de_out",
-                "Clk"
-              ],
-              "outputs": [
-                "Q"
-              ]
-            }
-          ],
-          "values": {
-            "AluIn": false,
-            "BusIn": false,
-            "ManIn": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Clk": false,
-            "Q": false
-          }
+          "group": "Registers"
         },
         "measured": {
           "width": 150,
@@ -1788,8 +1559,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "StatusRegisterBit",
           "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
           "inputs": [
             "AluIn",
             "BusIn",
@@ -1802,44 +1573,7 @@
             "Q"
           ],
           "headerColor": "#f43f5e",
-          "group": "Registers",
-          "internalComponents": [
-            {
-              "type": "Mux4",
-              "name": "Mux4",
-              "inputs": [
-                "Q",
-                "AluIn",
-                "BusIn",
-                "ManIn",
-                "Sel0",
-                "Sel1"
-              ],
-              "outputs": [
-                "wire_mux4_2235de_out"
-              ]
-            },
-            {
-              "type": "DLatch",
-              "name": "D-Latch",
-              "inputs": [
-                "wire_mux4_2235de_out",
-                "Clk"
-              ],
-              "outputs": [
-                "Q"
-              ]
-            }
-          ],
-          "values": {
-            "AluIn": false,
-            "BusIn": false,
-            "ManIn": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Clk": false,
-            "Q": false
-          }
+          "group": "Registers"
         },
         "measured": {
           "width": 150,
@@ -1860,13 +1594,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "InI",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1887,13 +1621,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "InD",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1914,13 +1648,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "InB",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1941,16 +1675,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "VCC",
           "label": "VCC",
-          "group": "I/O Nodes",
+          "typeLabel": "VCC",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": true
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -1971,8 +1702,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -1980,12 +1711,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": true,
-            "B": false,
-            "Out": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,

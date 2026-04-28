@@ -2,7 +2,6 @@
   "chipName": "Register8Bit",
   "chipColor": "#f43f5e",
   "chipGroup": "Registers",
-  "group": "Registers",
   "pins": {
     "inputs": [
       "D0",
@@ -27,7 +26,112 @@
     ]
   },
   "internalWires": [],
-  "components": [],
+  "components": [
+    {
+      "type": "DLatch",
+      "name": "D-Latch",
+      "inputs": {
+        "D": "D1",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q1"
+        ]
+      }
+    },
+    {
+      "type": "DLatch",
+      "name": "D-Latch",
+      "inputs": {
+        "D": "D3",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q3"
+        ]
+      }
+    },
+    {
+      "type": "DLatch",
+      "name": "D-Latch",
+      "inputs": {
+        "D": "D6",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q6"
+        ]
+      }
+    },
+    {
+      "type": "DLatch",
+      "name": "D-Latch",
+      "inputs": {
+        "D": "D0",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q0"
+        ]
+      }
+    },
+    {
+      "type": "DLatch",
+      "name": "D-Latch",
+      "inputs": {
+        "D": "D2",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q2"
+        ]
+      }
+    },
+    {
+      "type": "DLatch",
+      "name": "D-Latch",
+      "inputs": {
+        "D": "D4",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q4"
+        ]
+      }
+    },
+    {
+      "type": "DLatch",
+      "name": "D-Latch",
+      "inputs": {
+        "D": "D7",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q7"
+        ]
+      }
+    },
+    {
+      "type": "DLatch",
+      "name": "D-Latch",
+      "inputs": {
+        "D": "D5",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q5"
+        ]
+      }
+    }
+  ],
   "layout": {
     "nodes": [
       {
@@ -43,8 +147,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "DLatch",
           "label": "D-Latch",
+          "typeLabel": "DLatch",
           "inputs": [
             "D",
             "En"
@@ -53,17 +157,11 @@
             "Q",
             "!Q"
           ],
-          "group": "Primitives",
-          "values": {
-            "D": false,
-            "En": false,
-            "Q": false,
-            "!Q": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -80,8 +178,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "DLatch",
           "label": "D-Latch",
+          "typeLabel": "DLatch",
           "inputs": [
             "D",
             "En"
@@ -90,17 +188,11 @@
             "Q",
             "!Q"
           ],
-          "group": "Primitives",
-          "values": {
-            "D": false,
-            "En": false,
-            "Q": false,
-            "!Q": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -117,8 +209,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "DLatch",
           "label": "D-Latch",
+          "typeLabel": "DLatch",
           "inputs": [
             "D",
             "En"
@@ -127,17 +219,11 @@
             "Q",
             "!Q"
           ],
-          "group": "Primitives",
-          "values": {
-            "D": false,
-            "En": false,
-            "Q": false,
-            "!Q": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -154,8 +240,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "DLatch",
           "label": "D-Latch",
+          "typeLabel": "DLatch",
           "inputs": [
             "D",
             "En"
@@ -164,17 +250,11 @@
             "Q",
             "!Q"
           ],
-          "group": "Primitives",
-          "values": {
-            "D": false,
-            "En": false,
-            "Q": false,
-            "!Q": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -191,8 +271,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "DLatch",
           "label": "D-Latch",
+          "typeLabel": "DLatch",
           "inputs": [
             "D",
             "En"
@@ -201,17 +281,11 @@
             "Q",
             "!Q"
           ],
-          "group": "Primitives",
-          "values": {
-            "D": false,
-            "En": false,
-            "Q": false,
-            "!Q": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -228,8 +302,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "DLatch",
           "label": "D-Latch",
+          "typeLabel": "DLatch",
           "inputs": [
             "D",
             "En"
@@ -238,17 +312,11 @@
             "Q",
             "!Q"
           ],
-          "group": "Primitives",
-          "values": {
-            "D": false,
-            "En": false,
-            "Q": false,
-            "!Q": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -265,8 +333,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "DLatch",
           "label": "D-Latch",
+          "typeLabel": "DLatch",
           "inputs": [
             "D",
             "En"
@@ -275,17 +343,11 @@
             "Q",
             "!Q"
           ],
-          "group": "Primitives",
-          "values": {
-            "D": false,
-            "En": false,
-            "Q": false,
-            "!Q": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -302,8 +364,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "DLatch",
           "label": "D-Latch",
+          "typeLabel": "DLatch",
           "inputs": [
             "D",
             "En"
@@ -312,17 +374,11 @@
             "Q",
             "!Q"
           ],
-          "group": "Primitives",
-          "values": {
-            "D": false,
-            "En": false,
-            "Q": false,
-            "!Q": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -339,13 +395,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "D0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -366,13 +422,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "D1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -393,13 +449,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "D2",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -420,13 +476,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "D3",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -447,13 +503,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "D4",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -474,13 +530,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "D5",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -501,13 +557,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "D6",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -528,16 +584,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "D7",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -558,16 +611,13 @@
         ],
         "selected": true,
         "data": {
-          "typeLabel": "INPUT",
           "label": "En",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -588,16 +638,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Q0",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -618,16 +665,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Q1",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -648,16 +692,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Q2",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -678,16 +719,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Q3",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -708,16 +746,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Q4",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -738,16 +773,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Q5",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -768,16 +800,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Q6",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -798,16 +827,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Q7",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,

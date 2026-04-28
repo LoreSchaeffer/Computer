@@ -10,7 +10,7 @@ public class FullAdderTest extends HardwareTestBase {
 
     @BeforeEach
     void setup() {
-        load("full_adder");
+        load("FullAdder");
     }
 
     @Test

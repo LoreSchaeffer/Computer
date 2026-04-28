@@ -138,7 +138,14 @@ export function CanvasProvider({children}: PropsWithChildren) {
 
                     for (let step = 0; step < 5; step++) {
                         chipDef.data.internalComponents.forEach((comp: any) => {
-                            const compIns = (comp.inputs || []).map((wire: string) => nets[wire] || false);
+
+                            const expectedInPins = library.find(c => c.data.typeLabel === comp.type)?.data.inputs || [];
+                            const expectedOutPins = getExpectedOutputs(comp.type, library);
+
+                            const compIns = expectedInPins.map(pinName => {
+                                const wireName = comp.inputs[pinName];
+                                return nets[wireName] || false;
+                            });
 
                             const subOuts = evaluateComponent(
                                 comp.type,
@@ -149,10 +156,14 @@ export function CanvasProvider({children}: PropsWithChildren) {
                                 [...typePath, targetType]
                             );
 
-                            const expectedOutPins = getExpectedOutputs(comp.type, library);
-                            (comp.outputs || []).forEach((wire: string, i: number) => {
-                                const pinName = expectedOutPins[i];
-                                if (pinName) nets[wire] = subOuts[pinName] || false;
+                            expectedOutPins.forEach(pinName => {
+                                const targetWires = comp.outputs[pinName];
+
+                                if (Array.isArray(targetWires)) {
+                                    targetWires.forEach(wireName => nets[wireName] = subOuts[pinName] || false);
+                                } else if (typeof targetWires === 'string') {
+                                    nets[targetWires] = subOuts[pinName] || false;
+                                }
                             });
                         });
                     }
@@ -233,6 +244,65 @@ export function CanvasProvider({children}: PropsWithChildren) {
     useEffect(() => {
         runSimulation();
     }, [edges, runSimulation]);
+
+    useEffect(() => {
+        if (!isWorkspaceReady || library.length === 0 || nodes.length === 0) return;
+
+        let changed = false;
+        const updatedNodes = nodes.map(node => {
+            if (node.type === 'inputPin' || node.type === 'outputPin') return node;
+
+            const template = library.find(t => t.data.typeLabel === node.data.typeLabel);
+            if (!template) return node;
+
+            const tInputs = template.data.inputs || [];
+            const tOutputs = template.data.outputs || [];
+            const currentInputs = (node.data.inputs as string[]) || [];
+            const currentOutputs = (node.data.outputs as string[]) || [];
+
+            if (JSON.stringify(tInputs) !== JSON.stringify(currentInputs) ||
+                JSON.stringify(tOutputs) !== JSON.stringify(currentOutputs)) {
+                changed = true;
+                return {...node, data: {...node.data, inputs: tInputs, outputs: tOutputs}};
+            }
+            return node;
+        });
+
+        if (changed) setNodes(updatedNodes);
+    }, [library, isWorkspaceReady, nodes.length]);
+
+    useEffect(() => {
+        if (nodes.length === 0 || edges.length === 0) return;
+
+        let changed = false;
+        const updatedEdges = edges.map(edge => {
+            const sourceNode = nodes.find(n => n.id === edge.source);
+            const targetNode = nodes.find(n => n.id === edge.target);
+
+            let isOrphan = false;
+            if (sourceNode && sourceNode.type !== 'inputPin') {
+                const outputs = (sourceNode.data.outputs as string[]) || [];
+                if (!outputs.includes(edge.sourceHandle || 'Out')) isOrphan = true;
+            }
+            if (targetNode && targetNode.type !== 'outputPin') {
+                const inputs = (targetNode.data.inputs as string[]) || [];
+                if (!inputs.includes(edge.targetHandle || 'In')) isOrphan = true;
+            }
+
+            const currentStyleStr = JSON.stringify(edge.style);
+            const targetStyle = isOrphan
+                ? {stroke: 'var(--color-error)', strokeWidth: 3, strokeDasharray: '5,5'}
+                : {strokeWidth: 2, transition: 'stroke 0.2s'};
+
+            if (currentStyleStr !== JSON.stringify(targetStyle)) {
+                changed = true;
+                return {...edge, style: targetStyle, animated: isOrphan};
+            }
+            return edge;
+        });
+
+        if (changed) setEdges(updatedEdges);
+    }, [nodes, edges.length]);
 
     return (
         <CanvasContext.Provider value={{

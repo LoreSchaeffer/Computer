@@ -45,48 +45,88 @@ public final class ComponentLibrary {
         return this.registry.get(type);
     }
 
-    public LogicComponent build(String type, String instanceName, Wire[] inputs, Wire[] outputs) {
-        if (this.isPrimitive(type)) {
-            return this.buildPrimitive(type, instanceName, inputs, outputs);
-        }
-
-        ChipDefinition def = this.registry.get(type);
-        if (def == null) throw new IllegalArgumentException("Chip definition not found for type: " + type);
+    public LogicComponent build(String type, String instanceName, Map<String, Wire> externalInputs, Map<String, Wire> externalOutputs) {
+        ChipDefinition def = registry.get(type);
+        if (def == null) throw new IllegalArgumentException("Definizione chip non trovata: " + type);
 
         Map<String, Wire> contextWires = new HashMap<>();
+        contextWires.putAll(externalInputs);
+        contextWires.putAll(externalOutputs);
 
-        for (int i = 0; i < inputs.length; i++) {
-            contextWires.put(def.pins().inputs().get(i), inputs[i]);
-        }
-
-        for (int i = 0; i < outputs.length; i++) {
-            contextWires.put(def.pins().outputs().get(i), outputs[i]);
-        }
-
-        for (String wireName : def.internalWires()) {
-            contextWires.put(wireName, new Wire());
+        if (def.internalWires() != null) {
+            for (String wireName : def.internalWires()) {
+                contextWires.putIfAbsent(wireName, new Wire());
+            }
         }
 
         LogicComponent[] internalComponents = new LogicComponent[def.components().size()];
-
-        for (int i = 0; i < internalComponents.length; i++) {
+        for (int i = 0; i < def.components().size(); i++) {
             ComponentDefinition compDef = def.components().get(i);
 
-            Wire[] compInputs = new Wire[compDef.inputs().size()];
-            for (int j = 0; j < compDef.inputs().size(); j++) {
-                compInputs[j] = contextWires.get(compDef.inputs().get(j));
-            }
+            Map<String, Wire> compInputs = new HashMap<>();
+            compDef.inputs().forEach((pinName, wireName) -> {
+                contextWires.putIfAbsent(wireName, new Wire());
+                compInputs.put(pinName, contextWires.get(wireName));
+            });
 
-            Wire[] compOutputs = new Wire[compDef.outputs().size()];
-            for (int j = 0; j < compDef.outputs().size(); j++) {
-                compOutputs[j] = contextWires.get(compDef.outputs().get(j));
-            }
+            Map<String, Wire> compOutputs = new HashMap<>();
+            compDef.outputs().forEach((pinName, wireNames) -> {
+                if (wireNames.isEmpty()) {
+                    compOutputs.put(pinName, new Wire());
+                } else {
+                    Wire masterWire = new Wire();
+                    compOutputs.put(pinName, masterWire);
 
-            internalComponents[i] = this.build(compDef.type(), compDef.name(), compInputs, compOutputs);
+                    for (String wName : wireNames) {
+                        contextWires.putIfAbsent(wName, new Wire());
+                        Wire targetWire = contextWires.get(wName);
+                        masterWire.addListener(targetWire::setState);
+                    }
+                }
+            });
+
+            internalComponents[i] = buildInternal(compDef.type(), compDef.name(), compInputs, compOutputs);
         }
 
-        return new ComplexChip(instanceName, inputs, outputs, internalComponents);
+        Wire[] inputsArray = def.pins().inputs().stream().map(name -> contextWires.getOrDefault(name, new Wire())).toArray(Wire[]::new);
+        Wire[] outputsArray = def.pins().outputs().stream().map(name -> contextWires.getOrDefault(name, new Wire())).toArray(Wire[]::new);
+
+        return new ComplexChip(instanceName, inputsArray, outputsArray, internalComponents);
     }
+
+    private LogicComponent buildInternal(String type, String instanceName, Map<String, Wire> inputs, Map<String, Wire> outputs) {
+        if (PRIMITIVES.contains(type)) {
+            return buildPrimitive(type, instanceName, inputs, outputs);
+        }
+        return build(type, instanceName, inputs, outputs);
+    }
+
+    private LogicComponent buildPrimitive(String type, String name, Map<String, Wire> inputs, Map<String, Wire> outputs) {
+        Wire inA = inputs.getOrDefault("A", inputs.getOrDefault("In0", new Wire()));
+        Wire inB = inputs.getOrDefault("B", inputs.getOrDefault("In1", new Wire()));
+        Wire inSingle = inputs.getOrDefault("In", inputs.getOrDefault("In0", new Wire()));
+        Wire out = outputs.getOrDefault("Out", outputs.getOrDefault("Out0", new Wire()));
+
+        return switch (type) {
+            case "AndGate" -> new AndGate(name, inA, inB, out);
+            case "NandGate" -> new NandGate(name, inA, inB, out);
+            case "OrGate" -> new OrGate(name, inA, inB, out);
+            case "NorGate" -> new NorGate(name, inA, inB, out);
+            case "XorGate" -> new XorGate(name, inA, inB, out);
+            case "XnorGate" -> new XnorGate(name, inA, inB, out);
+            case "NotGate" -> new NotGate(name, inSingle, out);
+            case "DLatch" -> new DLatch(name,
+                    inputs.getOrDefault("D", inputs.getOrDefault("In0", new Wire())),
+                    inputs.getOrDefault("En", inputs.getOrDefault("In1", new Wire())),
+                    outputs.getOrDefault("Q", outputs.getOrDefault("Out0", new Wire())),
+                    outputs.getOrDefault("NotQ", outputs.getOrDefault("Out1", new Wire()))
+            );
+            case "VCC" -> new VccGate(name, out);
+            case "GND" -> new GndGate(name, out);
+            default -> throw new IllegalStateException("Primitiva sconosciuta: " + type);
+        };
+    }
+
 
     private void validateDependencyGraph() {
         Map<String, Mark> marks = new HashMap<>();
@@ -118,21 +158,5 @@ public final class ComponentLibrary {
 
     private boolean isPrimitive(String type) {
         return PRIMITIVES.contains(type);
-    }
-
-    private LogicComponent buildPrimitive(String type, String name, Wire[] inputs, Wire[] outputs) {
-        return switch (type) {
-            case "AndGate" -> new AndGate(name, inputs[0], inputs[1], outputs[0]);
-            case "NandGate" -> new NandGate(name, inputs[0], inputs[1], outputs[0]);
-            case "XorGate" -> new XorGate(name, inputs[0], inputs[1], outputs[0]);
-            case "NotGate" -> new NotGate(name, inputs[0], outputs[0]);
-            case "OrGate" -> new OrGate(name, inputs[0], inputs[1], outputs[0]);
-            case "NorGate" -> new NorGate(name, inputs[0], inputs[1], outputs[0]);
-            case "XnorGate" -> new XnorGate(name, inputs[0], inputs[1], outputs[0]);
-            case "DLatch" -> new DLatch(name, inputs[0], inputs[1], outputs[0], outputs[1]);
-            case "VCC" -> new VccGate(name, outputs[0]);
-            case "GND" -> new GndGate(name, outputs[0]);
-            default -> throw new IllegalArgumentException("Unsupported primitive: " + type);
-        };
     }
 }

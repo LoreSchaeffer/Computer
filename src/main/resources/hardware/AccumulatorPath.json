@@ -2,7 +2,6 @@
   "chipName": "AccumulatorPath",
   "chipColor": "#84cc16",
   "chipGroup": "Datapath",
-  "group": "Datapath",
   "pins": {
     "inputs": [
       "DB0",
@@ -35,80 +34,118 @@
     ]
   },
   "internalWires": [
-    "wire_alu8bit_aebe06_res0",
-    "wire_alu8bit_aebe06_res1",
-    "wire_alu8bit_aebe06_res2",
-    "wire_alu8bit_aebe06_res3",
-    "wire_alu8bit_aebe06_res4",
-    "wire_alu8bit_aebe06_res5",
-    "wire_alu8bit_aebe06_res6",
-    "wire_alu8bit_aebe06_res7"
+    "wire_alu8bit_8904_Res0",
+    "wire_alu8bit_8904_Res1",
+    "wire_alu8bit_8904_Res2",
+    "wire_alu8bit_8904_Res3",
+    "wire_alu8bit_8904_Res4",
+    "wire_alu8bit_8904_Res5",
+    "wire_alu8bit_8904_Res6",
+    "wire_alu8bit_8904_Res7"
   ],
   "components": [
     {
       "type": "Register8Bit",
       "name": "Register8Bit",
-      "inputs": [
-        "wire_alu8bit_aebe06_res0",
-        "wire_alu8bit_aebe06_res1",
-        "wire_alu8bit_aebe06_res2",
-        "wire_alu8bit_aebe06_res3",
-        "wire_alu8bit_aebe06_res4",
-        "wire_alu8bit_aebe06_res5",
-        "wire_alu8bit_aebe06_res6",
-        "wire_alu8bit_aebe06_res7",
-        "LoadA"
-      ],
-      "outputs": [
-        "A0",
-        "A1",
-        "A2",
-        "A3",
-        "A4",
-        "A5",
-        "A6",
-        "A7"
-      ]
+      "inputs": {
+        "D0": "wire_alu8bit_8904_Res0",
+        "D1": "wire_alu8bit_8904_Res1",
+        "D2": "wire_alu8bit_8904_Res2",
+        "D3": "wire_alu8bit_8904_Res3",
+        "D4": "wire_alu8bit_8904_Res4",
+        "D5": "wire_alu8bit_8904_Res5",
+        "D6": "wire_alu8bit_8904_Res6",
+        "D7": "wire_alu8bit_8904_Res7",
+        "En": "LoadA"
+      },
+      "outputs": {
+        "Q0": [
+          "A0"
+        ],
+        "Q1": [
+          "A1"
+        ],
+        "Q2": [
+          "A2"
+        ],
+        "Q3": [
+          "A3"
+        ],
+        "Q4": [
+          "A4"
+        ],
+        "Q5": [
+          "A5"
+        ],
+        "Q6": [
+          "A6"
+        ],
+        "Q7": [
+          "A7"
+        ]
+      }
     },
     {
       "type": "ALU8Bit",
       "name": "ALU8Bit",
-      "inputs": [
-        "A0",
-        "A1",
-        "A2",
-        "A3",
-        "A4",
-        "A5",
-        "A6",
-        "A7",
-        "DB0",
-        "DB1",
-        "DB2",
-        "DB3",
-        "DB4",
-        "DB5",
-        "DB6",
-        "DB7",
-        "CIn",
-        "OpADD",
-        "OpAND",
-        "OpOR",
-        "OpXOR"
-      ],
-      "outputs": [
-        "wire_alu8bit_aebe06_res0",
-        "wire_alu8bit_aebe06_res1",
-        "wire_alu8bit_aebe06_res2",
-        "wire_alu8bit_aebe06_res3",
-        "wire_alu8bit_aebe06_res4",
-        "wire_alu8bit_aebe06_res5",
-        "wire_alu8bit_aebe06_res6",
-        "wire_alu8bit_aebe06_res7",
-        "FlagC",
-        "FlagN",
-        "FlagZ"
-      ]
+      "inputs": {
+        "A0": "A0",
+        "A1": "A1",
+        "A2": "A2",
+        "A3": "A3",
+        "A4": "A4",
+        "A5": "A5",
+        "A6": "A6",
+        "A7": "A7",
+        "B0": "DB0",
+        "B1": "DB1",
+        "B2": "DB2",
+        "B3": "DB3",
+        "B4": "DB4",
+        "B5": "DB5",
+        "B6": "DB6",
+        "B7": "DB7",
+        "CIn": "CIn",
+        "OpADD": "OpADD",
+        "OpAND": "OpAND",
+        "OpOR": "OpOR",
+        "OpXOR": "OpXOR"
+      },
+      "outputs": {
+        "Res0": [
+          "wire_alu8bit_8904_Res0"
+        ],
+        "Res1": [
+          "wire_alu8bit_8904_Res1"
+        ],
+        "Res2": [
+          "wire_alu8bit_8904_Res2"
+        ],
+        "Res3": [
+          "wire_alu8bit_8904_Res3"
+        ],
+        "Res4": [
+          "wire_alu8bit_8904_Res4"
+        ],
+        "Res5": [
+          "wire_alu8bit_8904_Res5"
+        ],
+        "Res6": [
+          "wire_alu8bit_8904_Res6"
+        ],
+        "Res7": [
+          "wire_alu8bit_8904_Res7"
+        ],
+        "COut": [
+          "FlagC"
+        ],
+        "FlagN": [
+          "FlagN"
+        ],
+        "FlagZ": [
+          "FlagZ"
+        ]
+      }
     }
   ],
   "layout": {
@@ -124,15 +161,15 @@
           0.5,
           0.5
         ],
-        "selected": false,
+        "selected": true,
         "data": {
-          "typeLabel": "INPUT",
           "label": "DB0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -153,13 +190,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "DB1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -180,13 +217,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "DB2",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -207,13 +244,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "DB3",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -234,13 +271,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "DB4",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -261,13 +298,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "DB5",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -288,13 +325,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "DB6",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -315,13 +352,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "DB7",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -342,13 +379,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "CIn",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -369,13 +406,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "OpADD",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -396,13 +433,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "OpAND",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -423,13 +460,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "OpOR",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -450,13 +487,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "OpXOR",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -477,13 +514,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "LoadA",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -504,16 +541,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "A0",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -534,16 +568,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "A1",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -564,16 +595,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "A2",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -594,16 +622,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "A3",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -624,16 +649,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "A4",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -654,16 +676,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "A5",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -684,16 +703,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "A6",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -714,16 +730,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "A7",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -744,16 +757,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "FlagC",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -774,16 +784,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "FlagN",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -804,16 +811,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "FlagZ",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": true
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -834,8 +838,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "Register8Bit",
           "label": "Register8Bit",
+          "typeLabel": "Register8Bit",
           "inputs": [
             "D0",
             "D1",
@@ -858,27 +862,7 @@
             "Q7"
           ],
           "headerColor": "#f43f5e",
-          "group": "Registers",
-          "internalComponents": [],
-          "values": {
-            "D0": false,
-            "D1": false,
-            "D2": false,
-            "D3": false,
-            "D4": false,
-            "D5": false,
-            "D6": false,
-            "D7": false,
-            "En": false,
-            "Q0": false,
-            "Q1": false,
-            "Q2": false,
-            "Q3": false,
-            "Q4": false,
-            "Q5": false,
-            "Q6": false,
-            "Q7": false
-          }
+          "group": "Registers"
         },
         "measured": {
           "width": 113,
@@ -897,10 +881,10 @@
           0.5,
           0.5
         ],
-        "selected": true,
+        "selected": false,
         "data": {
-          "typeLabel": "ALU8Bit",
           "label": "ALU8Bit",
+          "typeLabel": "ALU8Bit",
           "inputs": [
             "A0",
             "A1",
@@ -935,259 +919,11 @@
             "Res7",
             "COut",
             "FlagN",
-            "FlagZ"
+            "FlagZ",
+            "FlagV"
           ],
           "headerColor": "#a855f7",
-          "group": "Arithmetic",
-          "internalComponents": [
-            {
-              "type": "ALU1Bit",
-              "name": "ALU1Bit",
-              "inputs": [
-                "A0",
-                "B0",
-                "CIn",
-                "OpADD",
-                "OpAND",
-                "OpOR",
-                "OpXOR"
-              ],
-              "outputs": [
-                "Res0",
-                "wire_alu1bit_a624e7_cout"
-              ]
-            },
-            {
-              "type": "ALU1Bit",
-              "name": "ALU1Bit",
-              "inputs": [
-                "A1",
-                "B1",
-                "wire_alu1bit_a624e7_cout",
-                "OpADD",
-                "OpAND",
-                "OpOR",
-                "OpXOR"
-              ],
-              "outputs": [
-                "Res1",
-                "wire_alu1bit_0a3051_cout"
-              ]
-            },
-            {
-              "type": "ALU1Bit",
-              "name": "ALU1Bit",
-              "inputs": [
-                "A2",
-                "B2",
-                "wire_alu1bit_0a3051_cout",
-                "OpADD",
-                "OpAND",
-                "OpOR",
-                "OpXOR"
-              ],
-              "outputs": [
-                "Res2",
-                "wire_alu1bit_9ac170_cout"
-              ]
-            },
-            {
-              "type": "ALU1Bit",
-              "name": "ALU1Bit",
-              "inputs": [
-                "A3",
-                "B3",
-                "wire_alu1bit_9ac170_cout",
-                "OpADD",
-                "OpAND",
-                "OpOR",
-                "OpXOR"
-              ],
-              "outputs": [
-                "Res3",
-                "wire_alu1bit_21a046_cout"
-              ]
-            },
-            {
-              "type": "ALU1Bit",
-              "name": "ALU1Bit",
-              "inputs": [
-                "A4",
-                "B4",
-                "wire_alu1bit_21a046_cout",
-                "OpADD",
-                "OpAND",
-                "OpOR",
-                "OpXOR"
-              ],
-              "outputs": [
-                "Res4",
-                "wire_alu1bit_4042f7_cout"
-              ]
-            },
-            {
-              "type": "ALU1Bit",
-              "name": "ALU1Bit",
-              "inputs": [
-                "A5",
-                "B5",
-                "wire_alu1bit_4042f7_cout",
-                "OpADD",
-                "OpAND",
-                "OpOR",
-                "OpXOR"
-              ],
-              "outputs": [
-                "Res5",
-                "wire_alu1bit_fe8640_cout"
-              ]
-            },
-            {
-              "type": "ALU1Bit",
-              "name": "ALU1Bit",
-              "inputs": [
-                "A6",
-                "B6",
-                "wire_alu1bit_fe8640_cout",
-                "OpADD",
-                "OpAND",
-                "OpOR",
-                "OpXOR"
-              ],
-              "outputs": [
-                "Res6",
-                "wire_alu1bit_1d27ef_cout"
-              ]
-            },
-            {
-              "type": "ALU1Bit",
-              "name": "ALU1Bit",
-              "inputs": [
-                "A7",
-                "B7",
-                "wire_alu1bit_1d27ef_cout",
-                "OpADD",
-                "OpAND",
-                "OpOR",
-                "OpXOR"
-              ],
-              "outputs": [
-                "Res7",
-                "COut"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "Res0",
-                "Res1"
-              ],
-              "outputs": [
-                "wire_or_1bb651_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "Res2",
-                "Res3"
-              ],
-              "outputs": [
-                "wire_or_44df77_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "Res4",
-                "Res5"
-              ],
-              "outputs": [
-                "wire_or_85cbee_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "Res6",
-                "Res7"
-              ],
-              "outputs": [
-                "wire_or_6812c6_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "wire_or_1bb651_out",
-                "wire_or_44df77_out"
-              ],
-              "outputs": [
-                "wire_or_3382db_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "wire_or_85cbee_out",
-                "wire_or_6812c6_out"
-              ],
-              "outputs": [
-                "wire_or_ada66b_out"
-              ]
-            },
-            {
-              "type": "NorGate",
-              "name": "NOR",
-              "inputs": [
-                "wire_or_3382db_out",
-                "wire_or_ada66b_out"
-              ],
-              "outputs": [
-                "FlagZ"
-              ]
-            }
-          ],
-          "values": {
-            "A0": false,
-            "A1": false,
-            "A2": false,
-            "A3": false,
-            "A4": false,
-            "A5": false,
-            "A6": false,
-            "A7": false,
-            "B0": false,
-            "B1": false,
-            "B2": false,
-            "B3": false,
-            "B4": false,
-            "B5": false,
-            "B6": false,
-            "B7": false,
-            "CIn": false,
-            "OpADD": false,
-            "OpAND": false,
-            "OpOR": false,
-            "OpXOR": false,
-            "Res0": false,
-            "Res1": false,
-            "Res2": false,
-            "Res3": false,
-            "Res4": false,
-            "Res5": false,
-            "Res6": false,
-            "Res7": false,
-            "COut": false,
-            "FlagN": false,
-            "FlagZ": true
-          }
+          "group": "Arithmetic"
         },
         "measured": {
           "width": 110,

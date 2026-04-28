@@ -21,8 +21,8 @@ public class ProgramCounter8BitTest extends HardwareTestBase {
     @Test
     void testSequentialIncrement() {
         // Enable the counting mode
-        setPin("IncPC", true);
-        setPin("LoadPC", false);
+        setPin("IncEnable", true);
+        setPin("Load", false);
 
         // Tick 1
         pulseClock("Clk");
@@ -43,8 +43,8 @@ public class ProgramCounter8BitTest extends HardwareTestBase {
         setBus("D", 128);
 
         // Enable Load mode, disable Increment
-        setPin("LoadPC", true);
-        setPin("IncPC", false);
+        setPin("Load", true);
+        setPin("IncEnable", false);
 
         // The output shouldn't change before the clock
         update();
@@ -58,16 +58,16 @@ public class ProgramCounter8BitTest extends HardwareTestBase {
     @Test
     void testHoldState() {
         // 1. Advance to address 5
-        setPin("IncPC", true);
-        setPin("LoadPC", false);
+        setPin("IncEnable", true);
+        setPin("Load", false);
         for (int i = 0; i < 5; i++) {
             pulseClock("Clk");
         }
         assertEquals(5, getBus("Q"));
 
         // 2. Disable both Load and Increment (Hold Mode)
-        setPin("IncPC", false);
-        setPin("LoadPC", false);
+        setPin("IncEnable", false);
+        setPin("Load", false);
 
         // 3. Pulse the clock. The PC should stay frozen at 5.
         pulseClock("Clk");
@@ -80,14 +80,14 @@ public class ProgramCounter8BitTest extends HardwareTestBase {
     void testWrapAroundZero() {
         // 1. Load the maximum 8-bit address (0xFF / 255)
         setBus("D", 255);
-        setPin("LoadPC", true);
-        setPin("IncPC", false);
+        setPin("Load", true);
+        setPin("IncEnable", false);
         pulseClock("Clk");
         assertEquals(255, getBus("Q"));
 
         // 2. Increment
-        setPin("LoadPC", false);
-        setPin("IncPC", true);
+        setPin("Load", false);
+        setPin("IncEnable", true);
         pulseClock("Clk");
 
         // 255 + 1 = 0 in 8-bit space

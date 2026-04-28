@@ -2,7 +2,6 @@
   "chipName": "Inc8Bit",
   "chipColor": "#a855f7",
   "chipGroup": "Arithmetic",
-  "group": "Arithmetic",
   "pins": {
     "inputs": [
       "A0",
@@ -27,199 +26,233 @@
     ]
   },
   "internalWires": [
-    "wire_and_46ba63_out",
-    "wire_and_c46154_out",
-    "wire_and_742ff1_out",
-    "wire_and_62b939_out",
-    "wire_and_779822_out",
-    "wire_and_5a0efe_out",
-    "wire_and_92e8b7_out",
-    "wire_vcc_3d950a_out"
+    "wire_and_5661_Out",
+    "wire_and_6c48_Out",
+    "wire_and_8b89_Out",
+    "wire_and_3dd1_Out",
+    "wire_and_cfb4_Out",
+    "wire_and_54a2_Out",
+    "wire_and_f37d_Out",
+    "wire_vcc_cedd_Out"
   ],
   "components": [
     {
       "type": "XorGate",
       "name": "XOR",
-      "inputs": [
-        "A0",
-        "wire_vcc_3d950a_out"
-      ],
-      "outputs": [
-        "S0"
-      ]
+      "inputs": {
+        "A": "A0",
+        "B": "wire_vcc_cedd_Out"
+      },
+      "outputs": {
+        "Out": [
+          "S0"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A0",
-        "wire_vcc_3d950a_out"
-      ],
-      "outputs": [
-        "wire_and_46ba63_out"
-      ]
+      "inputs": {
+        "A": "A0",
+        "B": "wire_vcc_cedd_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_5661_Out"
+        ]
+      }
     },
     {
       "type": "XorGate",
       "name": "XOR",
-      "inputs": [
-        "A1",
-        "wire_and_46ba63_out"
-      ],
-      "outputs": [
-        "S1"
-      ]
+      "inputs": {
+        "A": "A1",
+        "B": "wire_and_5661_Out"
+      },
+      "outputs": {
+        "Out": [
+          "S1"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A1",
-        "wire_and_46ba63_out"
-      ],
-      "outputs": [
-        "wire_and_c46154_out"
-      ]
+      "inputs": {
+        "A": "A1",
+        "B": "wire_and_5661_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_6c48_Out"
+        ]
+      }
     },
     {
       "type": "XorGate",
       "name": "XOR",
-      "inputs": [
-        "A2",
-        "wire_and_c46154_out"
-      ],
-      "outputs": [
-        "S2"
-      ]
+      "inputs": {
+        "A": "A2",
+        "B": "wire_and_6c48_Out"
+      },
+      "outputs": {
+        "Out": [
+          "S2"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A2",
-        "wire_and_c46154_out"
-      ],
-      "outputs": [
-        "wire_and_742ff1_out"
-      ]
+      "inputs": {
+        "A": "A2",
+        "B": "wire_and_6c48_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_8b89_Out"
+        ]
+      }
     },
     {
       "type": "XorGate",
       "name": "XOR",
-      "inputs": [
-        "A3",
-        "wire_and_742ff1_out"
-      ],
-      "outputs": [
-        "S3"
-      ]
+      "inputs": {
+        "A": "A3",
+        "B": "wire_and_8b89_Out"
+      },
+      "outputs": {
+        "Out": [
+          "S3"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A3",
-        "wire_and_742ff1_out"
-      ],
-      "outputs": [
-        "wire_and_62b939_out"
-      ]
+      "inputs": {
+        "A": "A3",
+        "B": "wire_and_8b89_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_3dd1_Out"
+        ]
+      }
     },
     {
       "type": "XorGate",
       "name": "XOR",
-      "inputs": [
-        "A4",
-        "wire_and_62b939_out"
-      ],
-      "outputs": [
-        "S4"
-      ]
+      "inputs": {
+        "A": "A4",
+        "B": "wire_and_3dd1_Out"
+      },
+      "outputs": {
+        "Out": [
+          "S4"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A4",
-        "wire_and_62b939_out"
-      ],
-      "outputs": [
-        "wire_and_779822_out"
-      ]
+      "inputs": {
+        "A": "A4",
+        "B": "wire_and_3dd1_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_cfb4_Out"
+        ]
+      }
     },
     {
       "type": "XorGate",
       "name": "XOR",
-      "inputs": [
-        "A5",
-        "wire_and_779822_out"
-      ],
-      "outputs": [
-        "S5"
-      ]
+      "inputs": {
+        "A": "A5",
+        "B": "wire_and_cfb4_Out"
+      },
+      "outputs": {
+        "Out": [
+          "S5"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A5",
-        "wire_and_779822_out"
-      ],
-      "outputs": [
-        "wire_and_5a0efe_out"
-      ]
+      "inputs": {
+        "A": "A5",
+        "B": "wire_and_cfb4_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_54a2_Out"
+        ]
+      }
     },
     {
       "type": "XorGate",
       "name": "XOR",
-      "inputs": [
-        "A6",
-        "wire_and_5a0efe_out"
-      ],
-      "outputs": [
-        "S6"
-      ]
+      "inputs": {
+        "A": "A6",
+        "B": "wire_and_54a2_Out"
+      },
+      "outputs": {
+        "Out": [
+          "S6"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A6",
-        "wire_and_5a0efe_out"
-      ],
-      "outputs": [
-        "wire_and_92e8b7_out"
-      ]
+      "inputs": {
+        "A": "A6",
+        "B": "wire_and_54a2_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_f37d_Out"
+        ]
+      }
     },
     {
       "type": "XorGate",
       "name": "XOR",
-      "inputs": [
-        "A7",
-        "wire_and_92e8b7_out"
-      ],
-      "outputs": [
-        "S7"
-      ]
+      "inputs": {
+        "A": "A7",
+        "B": "wire_and_f37d_Out"
+      },
+      "outputs": {
+        "Out": [
+          "S7"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "A7",
-        "wire_and_92e8b7_out"
-      ],
-      "outputs": [
-        "COut"
-      ]
+      "inputs": {
+        "A": "A7",
+        "B": "wire_and_f37d_Out"
+      },
+      "outputs": {
+        "Out": [
+          "COut"
+        ]
+      }
     },
     {
       "type": "VCC",
       "name": "VCC",
-      "inputs": [],
-      "outputs": [
-        "wire_vcc_3d950a_out"
-      ]
+      "inputs": {},
+      "outputs": {
+        "Out": [
+          "wire_vcc_cedd_Out"
+        ]
+      }
     }
   ],
   "layout": {
@@ -237,16 +270,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -267,13 +297,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -294,13 +324,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A2",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -321,13 +351,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A3",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -348,13 +378,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A4",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -375,13 +405,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A5",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -402,13 +432,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A6",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -429,13 +459,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "A7",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -456,16 +486,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "S0",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": true
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -486,16 +513,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "S1",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -516,16 +540,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "S2",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -546,16 +567,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "S3",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -576,16 +594,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "S4",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -606,16 +621,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "S5",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -636,16 +648,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "S6",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -666,16 +675,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "S7",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -696,16 +702,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "COut",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -726,8 +729,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "XorGate",
           "label": "XOR",
+          "typeLabel": "XorGate",
           "inputs": [
             "A",
             "B"
@@ -735,12 +738,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": true,
-            "Out": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -761,8 +759,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -770,12 +768,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": true,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -796,8 +789,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "XorGate",
           "label": "XOR",
+          "typeLabel": "XorGate",
           "inputs": [
             "A",
             "B"
@@ -805,12 +798,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -831,8 +819,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -840,12 +828,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -866,8 +849,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "XorGate",
           "label": "XOR",
+          "typeLabel": "XorGate",
           "inputs": [
             "A",
             "B"
@@ -875,12 +858,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -901,8 +879,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -910,12 +888,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -936,8 +909,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "XorGate",
           "label": "XOR",
+          "typeLabel": "XorGate",
           "inputs": [
             "A",
             "B"
@@ -945,12 +918,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -971,8 +939,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -980,12 +948,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1006,8 +969,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "XorGate",
           "label": "XOR",
+          "typeLabel": "XorGate",
           "inputs": [
             "A",
             "B"
@@ -1015,12 +978,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1041,8 +999,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -1050,12 +1008,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1076,8 +1029,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "XorGate",
           "label": "XOR",
+          "typeLabel": "XorGate",
           "inputs": [
             "A",
             "B"
@@ -1085,12 +1038,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1111,8 +1059,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -1120,12 +1068,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1146,8 +1089,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "XorGate",
           "label": "XOR",
+          "typeLabel": "XorGate",
           "inputs": [
             "A",
             "B"
@@ -1155,12 +1098,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1181,8 +1119,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -1190,12 +1128,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1216,8 +1149,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "XorGate",
           "label": "XOR",
+          "typeLabel": "XorGate",
           "inputs": [
             "A",
             "B"
@@ -1225,12 +1158,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1251,8 +1179,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -1260,12 +1188,7 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -1286,16 +1209,13 @@
         ],
         "selected": true,
         "data": {
-          "typeLabel": "VCC",
           "label": "VCC",
-          "group": "I/O Nodes",
+          "typeLabel": "VCC",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": true
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,

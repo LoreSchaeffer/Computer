@@ -6,8 +6,8 @@ export interface PinsDefinition {
 export interface ComponentDefinition {
     type: string;
     name: string;
-    inputs: string[];
-    outputs: string[];
+    inputs: Record<string, string>;
+    outputs: Record<string, string[]>;
 }
 
 export interface ChipDefinition {

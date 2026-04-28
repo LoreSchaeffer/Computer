@@ -2,7 +2,6 @@
   "chipName": "Mux8",
   "chipColor": "#6366f1",
   "chipGroup": "Logic",
-  "group": "Logic",
   "pins": {
     "inputs": [
       "In0",
@@ -22,51 +21,57 @@
     ]
   },
   "internalWires": [
-    "wire_mux4_0a4c6f_out",
-    "wire_mux4_45d87a_out"
+    "wire_mux4_ef85_Out",
+    "wire_mux4_0c9a_Out"
   ],
   "components": [
     {
       "type": "Mux4",
       "name": "Mux4",
-      "inputs": [
-        "In0",
-        "In1",
-        "In2",
-        "In3",
-        "Sel0",
-        "Sel1"
-      ],
-      "outputs": [
-        "wire_mux4_0a4c6f_out"
-      ]
+      "inputs": {
+        "In0": "In0",
+        "In1": "In1",
+        "In2": "In2",
+        "In3": "In3",
+        "Sel0": "Sel0",
+        "Sel1": "Sel1"
+      },
+      "outputs": {
+        "Out": [
+          "wire_mux4_ef85_Out"
+        ]
+      }
     },
     {
       "type": "Mux4",
       "name": "Mux4",
-      "inputs": [
-        "In4",
-        "In5",
-        "In6",
-        "In7",
-        "Sel0",
-        "Sel1"
-      ],
-      "outputs": [
-        "wire_mux4_45d87a_out"
-      ]
+      "inputs": {
+        "In0": "In4",
+        "In1": "In5",
+        "In2": "In6",
+        "In3": "In7",
+        "Sel0": "Sel0",
+        "Sel1": "Sel1"
+      },
+      "outputs": {
+        "Out": [
+          "wire_mux4_0c9a_Out"
+        ]
+      }
     },
     {
       "type": "Mux2",
       "name": "Mux2",
-      "inputs": [
-        "wire_mux4_0a4c6f_out",
-        "wire_mux4_45d87a_out",
-        "Sel2"
-      ],
-      "outputs": [
-        "Out"
-      ]
+      "inputs": {
+        "In0": "wire_mux4_ef85_Out",
+        "In1": "wire_mux4_0c9a_Out",
+        "Sel": "Sel2"
+      },
+      "outputs": {
+        "Out": [
+          "Out"
+        ]
+      }
     }
   ],
   "layout": {
@@ -84,13 +89,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -111,13 +116,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -138,13 +143,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In2",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -165,13 +170,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In3",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -192,13 +197,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In4",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -219,13 +224,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In5",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -246,13 +251,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In6",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -273,13 +278,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In7",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -300,13 +305,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Sel0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -327,13 +332,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Sel1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -354,13 +359,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Sel2",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
-          ]
+          ],
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -381,8 +386,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "Mux4",
           "label": "Mux4",
+          "typeLabel": "Mux4",
           "inputs": [
             "In0",
             "In1",
@@ -395,54 +400,7 @@
             "Out"
           ],
           "headerColor": "#6366f1",
-          "group": "Logic",
-          "internalComponents": [
-            {
-              "type": "Mux2",
-              "name": "Mux2",
-              "inputs": [
-                "In0",
-                "In1",
-                "Sel0"
-              ],
-              "outputs": [
-                "wire_mux2_3b01da_out"
-              ]
-            },
-            {
-              "type": "Mux2",
-              "name": "Mux2",
-              "inputs": [
-                "In2",
-                "In3",
-                "Sel0"
-              ],
-              "outputs": [
-                "wire_mux2_86d690_out"
-              ]
-            },
-            {
-              "type": "Mux2",
-              "name": "Mux2",
-              "inputs": [
-                "wire_mux2_3b01da_out",
-                "wire_mux2_86d690_out",
-                "Sel1"
-              ],
-              "outputs": [
-                "Out"
-              ]
-            }
-          ],
-          "values": {
-            "In0": false,
-            "In1": false,
-            "In2": false,
-            "In3": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Out": false
-          }
+          "group": "Logic"
         },
         "measured": {
           "width": 110,
@@ -463,8 +421,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "Mux4",
           "label": "Mux4",
+          "typeLabel": "Mux4",
           "inputs": [
             "In0",
             "In1",
@@ -477,54 +435,7 @@
             "Out"
           ],
           "headerColor": "#6366f1",
-          "group": "Logic",
-          "internalComponents": [
-            {
-              "type": "Mux2",
-              "name": "Mux2",
-              "inputs": [
-                "In0",
-                "In1",
-                "Sel0"
-              ],
-              "outputs": [
-                "wire_mux2_3b01da_out"
-              ]
-            },
-            {
-              "type": "Mux2",
-              "name": "Mux2",
-              "inputs": [
-                "In2",
-                "In3",
-                "Sel0"
-              ],
-              "outputs": [
-                "wire_mux2_86d690_out"
-              ]
-            },
-            {
-              "type": "Mux2",
-              "name": "Mux2",
-              "inputs": [
-                "wire_mux2_3b01da_out",
-                "wire_mux2_86d690_out",
-                "Sel1"
-              ],
-              "outputs": [
-                "Out"
-              ]
-            }
-          ],
-          "values": {
-            "In0": false,
-            "In1": false,
-            "In2": false,
-            "In3": false,
-            "Sel0": false,
-            "Sel1": false,
-            "Out": false
-          }
+          "group": "Logic"
         },
         "measured": {
           "width": 110,
@@ -545,8 +456,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "Mux2",
           "label": "Mux2",
+          "typeLabel": "Mux2",
           "inputs": [
             "In0",
             "In1",
@@ -556,58 +467,7 @@
             "Out"
           ],
           "headerColor": "#6366f1",
-          "group": "Logic",
-          "internalComponents": [
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "In0",
-                "wire_not_bf8d49_out"
-              ],
-              "outputs": [
-                "wire_and_962845_out"
-              ]
-            },
-            {
-              "type": "NotGate",
-              "name": "NOT",
-              "inputs": [
-                "Sel"
-              ],
-              "outputs": [
-                "wire_not_bf8d49_out"
-              ]
-            },
-            {
-              "type": "OrGate",
-              "name": "OR",
-              "inputs": [
-                "wire_and_962845_out",
-                "wire_and_18e3b5_out"
-              ],
-              "outputs": [
-                "Out"
-              ]
-            },
-            {
-              "type": "AndGate",
-              "name": "AND",
-              "inputs": [
-                "In1",
-                "Sel"
-              ],
-              "outputs": [
-                "wire_and_18e3b5_out"
-              ]
-            }
-          ],
-          "values": {
-            "In0": false,
-            "In1": false,
-            "Sel": false,
-            "Out": false
-          }
+          "group": "Logic"
         },
         "measured": {
           "width": 110,
@@ -628,16 +488,13 @@
         ],
         "selected": true,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Out",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,

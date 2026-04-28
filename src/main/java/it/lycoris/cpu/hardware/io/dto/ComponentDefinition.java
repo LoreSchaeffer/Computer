@@ -1,11 +1,12 @@
 package it.lycoris.cpu.hardware.io.dto;
 
 import java.util.List;
+import java.util.Map;
 
 public record ComponentDefinition(
         String type,
         String name,
-        List<String> inputs,
-        List<String> outputs
+        Map<String, String> inputs,
+        Map<String, List<String>> outputs
 ) {
 }

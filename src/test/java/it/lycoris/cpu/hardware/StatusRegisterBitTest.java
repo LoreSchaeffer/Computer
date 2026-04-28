@@ -9,7 +9,7 @@ public class StatusRegisterBitTest extends HardwareTestBase {
 
     @BeforeEach
     void setup() {
-        load("status_register_bit");
+        load("StatusRegisterBit");
     }
 
     private void setMode(int mode) {
@@ -29,7 +29,7 @@ public class StatusRegisterBitTest extends HardwareTestBase {
     void testHoldMode() {
         // First load a 1 manually
         setMode(3); // Mode 3: Manual
-        setPin("ManualIn", true);
+        setPin("ManIn", true);
         pulseClock("Clk");
         assertTrue(getPin("Q"));
 
@@ -37,7 +37,7 @@ public class StatusRegisterBitTest extends HardwareTestBase {
         setMode(0);
         setPin("AluIn", false);
         setPin("BusIn", false);
-        setPin("ManualIn", false);
+        setPin("ManIn", false);
         pulseClock("Clk");
 
         assertTrue(getPin("Q"), "Should hold its previous value of true");

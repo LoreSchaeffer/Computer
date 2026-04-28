@@ -2,7 +2,6 @@
   "chipName": "Mux2",
   "chipColor": "#6366f1",
   "chipGroup": "Logic",
-  "group": "Logic",
   "pins": {
     "inputs": [
       "In0",
@@ -14,53 +13,61 @@
     ]
   },
   "internalWires": [
-    "wire_not_bf8d49_out",
-    "wire_and_962845_out",
-    "wire_and_18e3b5_out"
+    "wire_not_2e9d_Out",
+    "wire_and_84f1_Out",
+    "wire_and_8cf5_Out"
   ],
   "components": [
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "In0",
-        "wire_not_bf8d49_out"
-      ],
-      "outputs": [
-        "wire_and_962845_out"
-      ]
+      "inputs": {
+        "A": "In0",
+        "B": "wire_not_2e9d_Out"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_84f1_Out"
+        ]
+      }
     },
     {
       "type": "NotGate",
       "name": "NOT",
-      "inputs": [
-        "Sel"
-      ],
-      "outputs": [
-        "wire_not_bf8d49_out"
-      ]
+      "inputs": {
+        "In": "Sel"
+      },
+      "outputs": {
+        "Out": [
+          "wire_not_2e9d_Out"
+        ]
+      }
     },
     {
       "type": "OrGate",
       "name": "OR",
-      "inputs": [
-        "wire_and_962845_out",
-        "wire_and_18e3b5_out"
-      ],
-      "outputs": [
-        "Out"
-      ]
+      "inputs": {
+        "A": "wire_and_84f1_Out",
+        "B": "wire_and_8cf5_Out"
+      },
+      "outputs": {
+        "Out": [
+          "Out"
+        ]
+      }
     },
     {
       "type": "AndGate",
       "name": "AND",
-      "inputs": [
-        "In1",
-        "Sel"
-      ],
-      "outputs": [
-        "wire_and_18e3b5_out"
-      ]
+      "inputs": {
+        "A": "In1",
+        "B": "Sel"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_8cf5_Out"
+        ]
+      }
     }
   ],
   "layout": {
@@ -78,16 +85,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In0",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -108,16 +112,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "In1",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -138,16 +139,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "INPUT",
           "label": "Sel",
-          "group": "I/O Nodes",
+          "typeLabel": "INPUT",
           "inputs": [],
           "outputs": [
             "Out"
           ],
-          "values": {
-            "Out": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -168,16 +166,13 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OUTPUT",
           "label": "Out",
-          "group": "I/O Nodes",
+          "typeLabel": "OUTPUT",
           "inputs": [
             "In"
           ],
           "outputs": [],
-          "values": {
-            "In": false
-          }
+          "group": "I/O Nodes"
         },
         "measured": {
           "width": 110,
@@ -198,8 +193,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -207,16 +202,11 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": true,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -233,19 +223,15 @@
         ],
         "selected": true,
         "data": {
-          "typeLabel": "NotGate",
           "label": "NOT",
+          "typeLabel": "NotGate",
           "inputs": [
             "In"
           ],
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "In": false,
-            "Out": true
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
@@ -266,8 +252,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "OrGate",
           "label": "OR",
+          "typeLabel": "OrGate",
           "inputs": [
             "A",
             "B"
@@ -275,16 +261,11 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       },
@@ -301,8 +282,8 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
           "label": "AND",
+          "typeLabel": "AndGate",
           "inputs": [
             "A",
             "B"
@@ -310,16 +291,11 @@
           "outputs": [
             "Out"
           ],
-          "group": "Primitives",
-          "values": {
-            "A": false,
-            "B": false,
-            "Out": false
-          }
+          "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 79
+          "height": 99
         },
         "dragging": false
       }
