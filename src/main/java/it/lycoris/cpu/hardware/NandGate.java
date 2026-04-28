@@ -1,5 +1,7 @@
 package it.lycoris.cpu.hardware;
 
+import it.lycoris.cpu.simulation.SimulationContext;
+
 public final class NandGate implements Gate {
     private final String name;
     private final Wire inputA;
@@ -17,6 +19,10 @@ public final class NandGate implements Gate {
 
         this.inputsArray = new Wire[]{this.inputA, this.inputB};
         this.outputsArray = new Wire[]{this.output};
+
+        Wire.Listener scheduleMe = (newState, ctx) -> ctx.schedule(this);
+        this.inputA.addListener(scheduleMe);
+        this.inputB.addListener(scheduleMe);
     }
 
     @Override
@@ -35,7 +41,7 @@ public final class NandGate implements Gate {
     }
 
     @Override
-    public void update() {
-        this.output.setState(!(this.inputA.getState() & this.inputB.getState()));
+    public void update(SimulationContext ctx) {
+        this.output.setState(!(this.inputA.getState() & this.inputB.getState()), ctx);
     }
 }

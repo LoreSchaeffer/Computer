@@ -28,7 +28,7 @@ public class InternalBus8BitTest extends HardwareTestBase {
         setSelector(0);
         update();
 
-        assertEquals(170, getBus("BusOut"), "The bus should output the value of Source 0 (170).");
+        assertEquals(170, getBus("Out"), "The bus should output the value of Source 0 (170).");
     }
 
     @Test
@@ -40,7 +40,7 @@ public class InternalBus8BitTest extends HardwareTestBase {
         setSelector(7);
         update();
 
-        assertEquals(85, getBus("BusOut"), "The bus should output the value of Source 7 (85).");
+        assertEquals(85, getBus("Out"), "The bus should output the value of Source 7 (85).");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class InternalBus8BitTest extends HardwareTestBase {
             update();
 
             int expectedValue = (i + 1) * 10;
-            assertEquals(expectedValue, getBus("BusOut"),
+            assertEquals(expectedValue, getBus("Out"),
                     "Routing failed for Source " + i + ". Expected " + expectedValue);
         }
     }

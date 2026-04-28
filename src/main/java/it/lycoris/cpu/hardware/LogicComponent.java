@@ -1,5 +1,7 @@
 package it.lycoris.cpu.hardware;
 
+import it.lycoris.cpu.simulation.SimulationContext;
+
 public sealed interface LogicComponent permits Gate, ComplexChip {
 
     String getName();
@@ -8,5 +10,5 @@ public sealed interface LogicComponent permits Gate, ComplexChip {
 
     Wire[] getOutputs();
 
-    void update();
+    void update(SimulationContext ctx);
 }

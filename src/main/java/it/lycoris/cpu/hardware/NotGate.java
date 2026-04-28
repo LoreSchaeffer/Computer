@@ -1,5 +1,7 @@
 package it.lycoris.cpu.hardware;
 
+import it.lycoris.cpu.simulation.SimulationContext;
+
 public final class NotGate implements Gate {
     private final String name;
     private final Wire input;
@@ -15,6 +17,9 @@ public final class NotGate implements Gate {
 
         this.inputsArray = new Wire[]{this.input};
         this.outputsArray = new Wire[]{this.output};
+
+        Wire.Listener scheduleMe = (newState, ctx) -> ctx.schedule(this);
+        this.input.addListener(scheduleMe);
     }
 
     @Override
@@ -33,7 +38,7 @@ public final class NotGate implements Gate {
     }
 
     @Override
-    public void update() {
-        this.output.setState(!this.input.getState());
+    public void update(SimulationContext ctx) {
+        this.output.setState(!this.input.getState(), ctx);
     }
 }

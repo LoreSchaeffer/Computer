@@ -31,7 +31,6 @@
   "internalWires": [
     "wire_inc8bit_3638_S0",
     "wire_inc8bit_3638_S1",
-    "wire_not_5bf5_Out",
     "wire_inc8bit_3638_S2",
     "wire_inc8bit_3638_S3",
     "wire_inc8bit_3638_S4",
@@ -45,7 +44,9 @@
     "wire_mux8bit_98d7_Out4",
     "wire_mux8bit_98d7_Out5",
     "wire_mux8bit_98d7_Out6",
-    "wire_mux8bit_98d7_Out7"
+    "wire_mux8bit_98d7_Out7",
+    "wire_or_a589_Out",
+    "wire_and_6a76_Out"
   ],
   "components": [
     {
@@ -109,7 +110,7 @@
         "D5": "wire_mux8bit_98d7_Out5",
         "D6": "wire_mux8bit_98d7_Out6",
         "D7": "wire_mux8bit_98d7_Out7",
-        "En": "Clk"
+        "En": "wire_and_6a76_Out"
       },
       "outputs": {
         "Q0": [
@@ -182,14 +183,28 @@
       }
     },
     {
-      "type": "NotGate",
-      "name": "NOT",
+      "type": "OrGate",
+      "name": "OR",
       "inputs": {
-        "In": "IncEnable"
+        "A": "Load",
+        "B": "IncEnable"
       },
       "outputs": {
         "Out": [
-          "wire_not_5bf5_Out"
+          "wire_or_a589_Out"
+        ]
+      }
+    },
+    {
+      "type": "AndGate",
+      "name": "AND",
+      "inputs": {
+        "A": "wire_or_a589_Out",
+        "B": "Clk"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_6a76_Out"
         ]
       }
     }
@@ -423,7 +438,7 @@
           0.5,
           0.5
         ],
-        "selected": true,
+        "selected": false,
         "data": {
           "label": "Load",
           "typeLabel": "INPUT",
@@ -853,35 +868,6 @@
         "dragging": false
       },
       {
-        "id": "node_bca232a0-8951-4609-b071-ac6a02505bf5",
-        "type": "logicGate",
-        "position": {
-          "x": -1490,
-          "y": 474.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "NOT",
-          "typeLabel": "NotGate",
-          "inputs": [
-            "In"
-          ],
-          "outputs": [
-            "Out"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 79
-        },
-        "dragging": false
-      },
-      {
         "id": "node_c50bfb48-cc69-45ea-88b2-4487f61f02fd",
         "type": "inputPin",
         "position": {
@@ -905,6 +891,66 @@
         "measured": {
           "width": 110,
           "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_6f691c34-2833-4113-a955-3f6a33cda589",
+        "type": "logicGate",
+        "position": {
+          "x": -1670,
+          "y": 514.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "OrGate",
+          "label": "OR",
+          "inputs": [
+            "A",
+            "B"
+          ],
+          "outputs": [
+            "Out"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 99
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_232c1b96-3e73-4782-b50a-9d446fed6a76",
+        "type": "logicGate",
+        "position": {
+          "x": -1670,
+          "y": 379.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": true,
+        "data": {
+          "typeLabel": "AndGate",
+          "label": "AND",
+          "inputs": [
+            "A",
+            "B"
+          ],
+          "outputs": [
+            "Out"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 99
         },
         "dragging": false
       }
@@ -1125,20 +1171,6 @@
         "targetHandle": "A1",
         "id": "xy-edge__node_2c515c3a-af9f-4854-bb9f-179ae9923638S1-node_73ca3c47-fc0f-4ac4-87d6-e414b15498d7A1",
         "selected": false
-      },
-      {
-        "style": {
-          "stroke": "var(--color-error)",
-          "strokeWidth": 3,
-          "strokeDasharray": "5,5"
-        },
-        "source": "node_bca232a0-8951-4609-b071-ac6a02505bf5",
-        "sourceHandle": "Out",
-        "target": "node_2c515c3a-af9f-4854-bb9f-179ae9923638",
-        "targetHandle": "Inc",
-        "id": "xy-edge__node_bca232a0-8951-4609-b071-ac6a02505bf5Out-node_2c515c3a-af9f-4854-bb9f-179ae9923638Inc",
-        "selected": false,
-        "animated": true
       },
       {
         "style": {
@@ -1404,17 +1436,6 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_2db4ddd6-87fe-450d-870d-6760fa47d96a",
-        "sourceHandle": "Out",
-        "target": "node_b3d56f87-6eac-4416-ab15-e56297b2779a",
-        "targetHandle": "En",
-        "id": "xy-edge__node_2db4ddd6-87fe-450d-870d-6760fa47d96aOut-node_b3d56f87-6eac-4416-ab15-e56297b2779aEn"
-      },
-      {
-        "style": {
-          "strokeWidth": 2,
-          "transition": "stroke 0.2s"
-        },
         "source": "node_2c515c3a-af9f-4854-bb9f-179ae9923638",
         "sourceHandle": "COut",
         "target": "node_6d28658d-5a26-4574-8b1a-430da533a0d5",
@@ -1426,11 +1447,58 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
+        "source": "node_46e154a6-fcb7-4f6e-a8d5-ad917de6cd48",
+        "sourceHandle": "Out",
+        "target": "node_6f691c34-2833-4113-a955-3f6a33cda589",
+        "targetHandle": "A",
+        "id": "xy-edge__node_46e154a6-fcb7-4f6e-a8d5-ad917de6cd48Out-node_6f691c34-2833-4113-a955-3f6a33cda589A",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
         "source": "node_c50bfb48-cc69-45ea-88b2-4487f61f02fd",
         "sourceHandle": "Out",
-        "target": "node_bca232a0-8951-4609-b071-ac6a02505bf5",
-        "targetHandle": "In",
-        "id": "xy-edge__node_c50bfb48-cc69-45ea-88b2-4487f61f02fdOut-node_bca232a0-8951-4609-b071-ac6a02505bf5In"
+        "target": "node_6f691c34-2833-4113-a955-3f6a33cda589",
+        "targetHandle": "B",
+        "id": "xy-edge__node_c50bfb48-cc69-45ea-88b2-4487f61f02fdOut-node_6f691c34-2833-4113-a955-3f6a33cda589B",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_6f691c34-2833-4113-a955-3f6a33cda589",
+        "sourceHandle": "Out",
+        "target": "node_232c1b96-3e73-4782-b50a-9d446fed6a76",
+        "targetHandle": "A",
+        "id": "xy-edge__node_6f691c34-2833-4113-a955-3f6a33cda589Out-node_232c1b96-3e73-4782-b50a-9d446fed6a76A",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_2db4ddd6-87fe-450d-870d-6760fa47d96a",
+        "sourceHandle": "Out",
+        "target": "node_232c1b96-3e73-4782-b50a-9d446fed6a76",
+        "targetHandle": "B",
+        "id": "xy-edge__node_2db4ddd6-87fe-450d-870d-6760fa47d96aOut-node_232c1b96-3e73-4782-b50a-9d446fed6a76B"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_232c1b96-3e73-4782-b50a-9d446fed6a76",
+        "sourceHandle": "Out",
+        "target": "node_b3d56f87-6eac-4416-ab15-e56297b2779a",
+        "targetHandle": "En",
+        "id": "xy-edge__node_232c1b96-3e73-4782-b50a-9d446fed6a76Out-node_b3d56f87-6eac-4416-ab15-e56297b2779aEn"
       }
     ]
   }

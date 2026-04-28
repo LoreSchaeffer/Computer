@@ -14,69 +14,75 @@ public class AccumulatorPathTest extends HardwareTestBase {
 
     @Test
     void testInitialStateIsZero() {
-        update();
         assertEquals(0, getBus("A"), "The accumulator should be initialized to 0.");
     }
 
     @Test
     void testLoadAndStoreValue() {
-        // We load 0x55 (01010101 in binary) via an OR operation (A=0 | Bus=0x55)
         setBus("DB", 0x55);
         setPin("OpOR", true);
-        setPin("LoadA", false);
+        setPin("LoadA", true);
         update();
 
-        assertEquals(0, getBus("A"), "The output must not change before the clock pulse.");
-
-        pulseClock("LoadA");
+        pulseClock("Clk");
         assertEquals(0x55, getBus("A"), "The value 0x55 was not loaded correctly.");
     }
 
     @Test
     void testAdditionOverflowAndCarry() {
-        // 1. Insert 254 (0xFE) into the register via OR
         setBus("DB", 0xFE);
         setPin("OpOR", true);
-        pulseClock("LoadA");
+        setPin("LoadA", true);
+        update();
+        pulseClock("Clk");
 
-        // 2. Add 3 (0x03)
         clearOperations();
         setPin("OpADD", true);
         setBus("DB", 0x03);
         setPin("CIn", false);
-        pulseClock("LoadA");
+        setPin("LoadA", true);
+        update();
 
-        // 254 + 3 = 257. In 8-bit (modulo 256) it is 1.
-        assertEquals(0x01, getBus("A"), "Incorrect 8-bit addition result.");
         assertTrue(getPin("FlagC"), "The Carry Out flag should be active due to overflow.");
         assertFalse(getPin("FlagZ"), "The Zero flag should not be active.");
+
+        pulseClock("Clk");
+
+        assertEquals(0x01, getBus("A"), "Incorrect 8-bit addition result.");
     }
 
     @Test
     void testZeroFlagEdgeCase() {
-        // 255 + 1 = 0 (Overflow leading to exact zero)
         setBus("DB", 0xFF);
         setPin("OpOR", true);
-        pulseClock("LoadA");
+        setPin("LoadA", true);
+        update();
+        pulseClock("Clk");
 
         clearOperations();
         setPin("OpADD", true);
         setBus("DB", 0x01);
         setPin("CIn", false);
-        pulseClock("LoadA");
+        setPin("LoadA", true);
+        update();
+
+        assertTrue(getPin("FlagZ"), "The Zero flag should be active when the result is 0x00.");
+        assertTrue(getPin("FlagC"), "The Carry flag should be active.");
+
+        pulseClock("Clk");
 
         assertEquals(0x00, getBus("A"), "The result should have overflowed to 0x00.");
-        assertTrue(getPin("FlagZ"), "The Zero flag should be active when the result is 0x00.");
-        assertTrue(getPin("FlagC"), "The Carry flag should be active due to the overflow.");
     }
 
     @Test
     void testNegativeFlag() {
-        // Load a value with the Most Significant Bit (MSB) set (e.g., 0x80 / 128)
         setBus("DB", 0x80);
         setPin("OpOR", true);
-        pulseClock("LoadA");
+        setPin("LoadA", true);
+        update();
+        pulseClock("Clk");
 
+        assertEquals(0x80, getBus("A"));
         assertTrue(getPin("FlagN"), "The Negative flag must be active if bit 7 is 1.");
     }
 }

@@ -47,16 +47,14 @@ public final class ComponentLibrary {
 
     public LogicComponent build(String type, String instanceName, Map<String, Wire> externalInputs, Map<String, Wire> externalOutputs) {
         ChipDefinition def = registry.get(type);
-        if (def == null) throw new IllegalArgumentException("Definizione chip non trovata: " + type);
+        if (def == null) throw new IllegalArgumentException("Chip non trovato: " + type);
 
         Map<String, Wire> contextWires = new HashMap<>();
         contextWires.putAll(externalInputs);
         contextWires.putAll(externalOutputs);
 
         if (def.internalWires() != null) {
-            for (String wireName : def.internalWires()) {
-                contextWires.putIfAbsent(wireName, new Wire());
-            }
+            for (String w : def.internalWires()) contextWires.putIfAbsent(w, new Wire());
         }
 
         LogicComponent[] internalComponents = new LogicComponent[def.components().size()];
@@ -70,26 +68,23 @@ public final class ComponentLibrary {
             });
 
             Map<String, Wire> compOutputs = new HashMap<>();
-            compDef.outputs().forEach((pinName, wireNames) -> {
-                if (wireNames.isEmpty()) {
-                    compOutputs.put(pinName, new Wire());
-                } else {
-                    Wire masterWire = new Wire();
-                    compOutputs.put(pinName, masterWire);
+            compDef.outputs().forEach((pinName, targetWireNames) -> {
+                Wire masterWire = new Wire();
+                compOutputs.put(pinName, masterWire);
 
-                    for (String wName : wireNames) {
-                        contextWires.putIfAbsent(wName, new Wire());
-                        Wire targetWire = contextWires.get(wName);
-                        masterWire.addListener(targetWire::setState);
-                    }
+                for (String targetName : targetWireNames) {
+                    contextWires.putIfAbsent(targetName, new Wire());
+                    Wire targetWire = contextWires.get(targetName);
+
+                    masterWire.addListener(targetWire::setState);
                 }
             });
 
             internalComponents[i] = buildInternal(compDef.type(), compDef.name(), compInputs, compOutputs);
         }
 
-        Wire[] inputsArray = def.pins().inputs().stream().map(name -> contextWires.getOrDefault(name, new Wire())).toArray(Wire[]::new);
-        Wire[] outputsArray = def.pins().outputs().stream().map(name -> contextWires.getOrDefault(name, new Wire())).toArray(Wire[]::new);
+        Wire[] inputsArray = def.pins().inputs().stream().map(n -> contextWires.getOrDefault(n, new Wire())).toArray(Wire[]::new);
+        Wire[] outputsArray = def.pins().outputs().stream().map(n -> contextWires.getOrDefault(n, new Wire())).toArray(Wire[]::new);
 
         return new ComplexChip(instanceName, inputsArray, outputsArray, internalComponents);
     }
@@ -126,7 +121,6 @@ public final class ComponentLibrary {
             default -> throw new IllegalStateException("Primitiva sconosciuta: " + type);
         };
     }
-
 
     private void validateDependencyGraph() {
         Map<String, Mark> marks = new HashMap<>();

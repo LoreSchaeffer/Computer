@@ -2,6 +2,7 @@ package it.lycoris.cpu.hardware;
 
 import it.lycoris.cpu.hardware.io.ComponentLibrary;
 import it.lycoris.cpu.hardware.io.dto.ChipDefinition;
+import it.lycoris.cpu.simulation.SimulationContext;
 import org.junit.jupiter.api.Assertions;
 
 import java.nio.file.Paths;
@@ -11,6 +12,7 @@ import java.util.Map;
 public class HardwareTestBase {
     protected static ComponentLibrary lib;
     protected LogicComponent chip;
+    protected SimulationContext ctx;
 
     protected Map<String, Wire> inputWires;
     protected Map<String, Wire> outputWires;
@@ -26,6 +28,9 @@ public class HardwareTestBase {
 
     protected void load(String chipName) {
         ChipDefinition def = lib.getDefinition(chipName);
+
+        ctx = new SimulationContext();
+
         inputWires = new HashMap<>();
         outputWires = new HashMap<>();
 
@@ -33,12 +38,19 @@ public class HardwareTestBase {
         def.pins().outputs().forEach(name -> outputWires.put(name, new Wire()));
 
         this.chip = lib.build(chipName, "Test_" + chipName, inputWires, outputWires);
+
+
+        if (this.chip instanceof ComplexChip cc) {
+            cc.powerOnReset(ctx);
+        }
+
+        ctx.run();
     }
 
     protected void setPin(String name, boolean state) {
         Wire w = inputWires.get(name);
         Assertions.assertNotNull(w, "Input pin not found: " + name);
-        w.setState(state);
+        w.setState(state, ctx);
     }
 
     protected boolean getPin(String name) {
@@ -51,7 +63,7 @@ public class HardwareTestBase {
         for (int i = 0; i < 8; i++) {
             Wire w = inputWires.get(prefix + i);
             if (w != null) {
-                w.setState(((value >> i) & 1) == 1);
+                w.setState(((value >> i) & 1) == 1, ctx);
             }
         }
     }
@@ -68,9 +80,7 @@ public class HardwareTestBase {
     }
 
     protected void update() {
-        for (int i = 0; i < 10; i++) {
-            chip.update();
-        }
+        ctx.run();
     }
 
     protected void pulseClock(String clockPin) {

@@ -1,5 +1,7 @@
 package it.lycoris.cpu.hardware;
 
+import it.lycoris.cpu.simulation.SimulationContext;
+
 public final class ComplexChip implements LogicComponent {
     private final String name;
     private final Wire[] inputs;
@@ -29,9 +31,16 @@ public final class ComplexChip implements LogicComponent {
     }
 
     @Override
-    public void update() {
-        for (LogicComponent internalComponent : this.internalComponents) {
-            internalComponent.update();
+    public void update(SimulationContext ctx) {
+    }
+
+    public void powerOnReset(SimulationContext ctx) {
+        for (LogicComponent comp : this.internalComponents) {
+            if (comp instanceof ComplexChip cc) {
+                cc.powerOnReset(ctx);
+            } else {
+                ctx.schedule(comp);
+            }
         }
     }
 }

@@ -17,7 +17,8 @@
       "OpAND",
       "OpOR",
       "OpXOR",
-      "LoadA"
+      "LoadA",
+      "Clk"
     ],
     "outputs": [
       "A0",
@@ -56,7 +57,7 @@
         "D5": "wire_alu8bit_8904_Res5",
         "D6": "wire_alu8bit_8904_Res6",
         "D7": "wire_alu8bit_8904_Res7",
-        "En": "LoadA"
+        "En": "Clk"
       },
       "outputs": {
         "Q0": [
@@ -144,7 +145,8 @@
         ],
         "FlagZ": [
           "FlagZ"
-        ]
+        ],
+        "FlagV": []
       }
     }
   ],
@@ -161,7 +163,7 @@
           0.5,
           0.5
         ],
-        "selected": true,
+        "selected": false,
         "data": {
           "label": "DB0",
           "typeLabel": "INPUT",
@@ -930,6 +932,33 @@
           "height": 479
         },
         "dragging": false
+      },
+      {
+        "id": "node_179ca3e2-3680-42fb-bb52-707d7a1149f9",
+        "type": "inputPin",
+        "position": {
+          "x": -2570,
+          "y": 1780.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Clk",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
       }
     ],
     "edges": [
@@ -1266,17 +1295,6 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_254944ee-18d3-46a8-b496-2acf4b72a104",
-        "sourceHandle": "Out",
-        "target": "node_1ce94a26-7dfd-4f7a-a084-6cf9ab7ae6d9",
-        "targetHandle": "En",
-        "id": "xy-edge__node_254944ee-18d3-46a8-b496-2acf4b72a104Out-node_1ce94a26-7dfd-4f7a-a084-6cf9ab7ae6d9En"
-      },
-      {
-        "style": {
-          "strokeWidth": 2,
-          "transition": "stroke 0.2s"
-        },
         "source": "node_aebe06f2-824a-4697-a05a-c635dbb98904",
         "sourceHandle": "Res0",
         "target": "node_1ce94a26-7dfd-4f7a-a084-6cf9ab7ae6d9",
@@ -1392,6 +1410,17 @@
         "target": "node_a0c131fd-5d01-4db5-8d5a-469b5aad3cb6",
         "targetHandle": "In",
         "id": "xy-edge__node_aebe06f2-824a-4697-a05a-c635dbb98904FlagZ-node_a0c131fd-5d01-4db5-8d5a-469b5aad3cb6In"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_179ca3e2-3680-42fb-bb52-707d7a1149f9",
+        "sourceHandle": "Out",
+        "target": "node_1ce94a26-7dfd-4f7a-a084-6cf9ab7ae6d9",
+        "targetHandle": "En",
+        "id": "xy-edge__node_179ca3e2-3680-42fb-bb52-707d7a1149f9Out-node_1ce94a26-7dfd-4f7a-a084-6cf9ab7ae6d9En"
       }
     ]
   }

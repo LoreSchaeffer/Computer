@@ -1,12 +1,13 @@
 package it.lycoris.cpu.hardware;
 
+import it.lycoris.cpu.simulation.SimulationContext;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class Wire {
     private boolean state;
-    private final List<Consumer<Boolean>> listeners = new ArrayList<>();
+    private final List<Listener> listeners = new ArrayList<>();
 
     public Wire(boolean state) {
         this.state = state;
@@ -20,17 +21,23 @@ public class Wire {
         return this.state;
     }
 
-    public void setState(boolean state) {
-        if (this.state != state) {
-            this.state = state;
-            for (Consumer<Boolean> listener : listeners) {
-                listener.accept(state);
+    public void setState(boolean newState, SimulationContext ctx) {
+        if (this.state != newState) {
+            this.state = newState;
+
+            if (ctx != null) {
+                for (Listener listener : listeners) {
+                    listener.onStateChange(state, ctx);
+                }
             }
         }
     }
 
-    public void addListener(Consumer<Boolean> listener) {
-        this.listeners.add(listener);
-        listener.accept(this.state);
+    public void addListener(Listener comp) {
+        listeners.add(comp);
+    }
+
+    public interface Listener {
+        void onStateChange(boolean newState, SimulationContext ctx);
     }
 }

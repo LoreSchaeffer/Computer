@@ -1,5 +1,7 @@
 package it.lycoris.cpu.hardware;
 
+import it.lycoris.cpu.simulation.SimulationContext;
+
 public final class GndGate implements Gate {
     private final String name;
     private final Wire output;
@@ -29,7 +31,7 @@ public final class GndGate implements Gate {
     }
 
     @Override
-    public void update() {
-        this.output.setState(false);
+    public void update(SimulationContext ctx) {
+        this.output.setState(false, ctx);
     }
 }

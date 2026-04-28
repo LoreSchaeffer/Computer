@@ -1,5 +1,7 @@
 package it.lycoris.cpu.hardware;
 
+import it.lycoris.cpu.simulation.SimulationContext;
+
 public final class DLatch implements Gate {
     private final String name;
     private final Wire inputD;
@@ -7,10 +9,10 @@ public final class DLatch implements Gate {
     private final Wire outputQ;
     private final Wire outputNotQ;
 
-    private boolean latchedValue;
-
     private final Wire[] inputsArray;
     private final Wire[] outputsArray;
+
+    private boolean lastEn = false;
 
     public DLatch(String name, Wire inputD, Wire enable, Wire outputQ, Wire outputNotQ) {
         this.name = name;
@@ -22,7 +24,9 @@ public final class DLatch implements Gate {
         this.inputsArray = new Wire[]{this.inputD, this.enable};
         this.outputsArray = new Wire[]{this.outputQ, this.outputNotQ};
 
-        this.latchedValue = false;
+        Wire.Listener listener = (newState, ctx) -> ctx.schedule(this);
+        this.inputD.addListener(listener);
+        this.enable.addListener(listener);
     }
 
     @Override
@@ -41,12 +45,14 @@ public final class DLatch implements Gate {
     }
 
     @Override
-    public void update() {
-        if (this.enable.getState()) {
-            this.latchedValue = this.inputD.getState();
+    public void update(SimulationContext ctx) {
+        boolean currentEn = this.enable.getState();
+
+        if (currentEn && !lastEn) {
+            this.outputQ.setState(this.inputD.getState(), ctx);
+            this.outputNotQ.setState(!this.inputD.getState(), ctx);
         }
 
-        this.outputQ.setState(this.latchedValue);
-        this.outputNotQ.setState(!this.latchedValue);
+        this.lastEn = currentEn;
     }
 }
