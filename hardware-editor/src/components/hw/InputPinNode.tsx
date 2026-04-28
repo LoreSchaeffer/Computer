@@ -1,13 +1,12 @@
 import type {NodeProps} from "@xyflow/react";
-import {GenericNode, type GenericNodeData} from "./GenericNode.tsx";
+import {type AppNode, GenericNode, type GenericNodeData} from "./GenericNode.tsx";
 import {INPUT_COLOR} from "../../utils/consts.ts";
 import {useCanvasContext} from "../../context/CanvasContext.tsx";
 
-export function InputPinNode(props: NodeProps) {
+export function InputPinNode(props: NodeProps<AppNode>) {
     const {toggleInput} = useCanvasContext();
 
-    const nodeData = props.data as unknown as GenericNodeData;
-    const isActive = nodeData.values?.['Out'] === true;
+    const isActive = props.data.values?.['Out'] === true;
 
     const dataWithConfig: GenericNodeData = {
         ...(props.data as unknown as GenericNodeData),

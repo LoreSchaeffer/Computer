@@ -2,7 +2,6 @@ import {useCallback, useEffect} from 'react';
 import {useCanvasContext} from "../../context/CanvasContext.tsx";
 import {useWorkspaceContext} from "../../context/WorkspaceContext.tsx";
 import {DEF_CHIP_COLOR, DEF_CHIP_GROUP, DEF_CHIP_NAME, STORAGE_KEY_STATE} from "../../utils/consts.ts";
-import {toSnakeCase} from "../../utils/utils.ts";
 import {useToast} from "../../context/ToastContext.tsx";
 
 export function useProjectManager() {
@@ -50,7 +49,6 @@ export function useProjectManager() {
     }, [setChipName, setChipGroup, setChipColor, restoreCanvas]);
 
     const saveChip = useCallback(async (): Promise<{ success: boolean, error?: string }> => {
-        // Validation
         for (const node of nodes) {
             if (node.type === 'logicGate' || node.type === 'latch' || node.type === 'customChip') {
                 const isSource = node.data.typeLabel === 'VCC' || node.data.typeLabel === 'GND';
@@ -58,80 +56,83 @@ export function useProjectManager() {
                 const hasOutput = edges.some(e => e.source === node.id);
 
                 if (isSource) {
-                    if (!hasOutput) return {
-                        success: false,
-                        error: `The constant source "${node.data.label}" must be connected to something.`
-                    };
+                    if (!hasOutput) return {success: false, error: `The constant source "${node.data.label}" must be connected.`};
                 } else {
-                    if (!hasInput || !hasOutput) return {
-                        success: false,
-                        error: `The component "${node.data.label}" must have at least one input and one output connected.`
-                    };
+                    if (!hasInput || !hasOutput) return {success: false, error: `Component "${node.data.label}" needs connections.`};
                 }
-            } else if (node.type === 'inputPin') {
-                if (!edges.some(e => e.source === node.id)) return {
-                    success: false,
-                    error: `The input pin "${node.data.label}" is not connected.`
-                };
-            } else if (node.type === 'outputPin') {
-                if (!edges.some(e => e.target === node.id)) return {
-                    success: false,
-                    error: `The output pin "${node.data.label}" is not connected.`
-                };
             }
         }
 
-        const inputNodes = nodes.filter(n => n.type === 'inputPin');
-        const outputNodes = nodes.filter(n => n.type === 'outputPin');
-        const chipInputs = inputNodes.map(n => n.data.label as string);
-        const chipOutputs = outputNodes.map(n => n.data.label as string);
+        const chipInputs = nodes.filter(n => n.type === 'inputPin').map(n => n.data.label as string);
+        const chipOutputs = nodes.filter(n => n.type === 'outputPin').map(n => n.data.label as string);
 
         const nets = new Map<string, string>();
         const internalWires: string[] = [];
 
         edges.forEach(edge => {
-            const sourceKey = `${edge.source}_${edge.sourceHandle || 'out'}`;
+            const sourceKey = `${edge.source}_${edge.sourceHandle || 'Out'}`;
             if (!nets.has(sourceKey)) {
                 const sourceNode = nodes.find(n => n.id === edge.source);
-                const siblingEdges = edges.filter(e => e.source === edge.source && e.sourceHandle === edge.sourceHandle);
-                const outputPinTarget = siblingEdges.map(e => nodes.find(n => n.id === e.target)).find(n => n?.type === 'outputPin');
+                const isInputPin = sourceNode?.type === 'inputPin';
+                const targetIsOutput = edges.filter(e => e.source === edge.source && e.sourceHandle === edge.sourceHandle)
+                    .some(e => nodes.find(n => n.id === e.target)?.type === 'outputPin');
 
-                if (sourceNode?.type === 'inputPin') {
+                if (isInputPin) {
                     nets.set(sourceKey, sourceNode.data.label as string);
-                } else if (outputPinTarget) {
-                    nets.set(sourceKey, outputPinTarget.data.label as string);
+                } else if (targetIsOutput) {
+                    const outNode = nodes.find(n => edges.find(e => e.source === edge.source && e.sourceHandle === edge.sourceHandle && nodes.find(nt => nt.id === e.target)?.type === 'outputPin')?.target === n.id);
+                    nets.set(sourceKey, outNode?.data.label as string);
                 } else {
-                    const cleanSourceName = String(sourceNode?.data.label).toLowerCase().replace(/[^a-z0-9_]/g, '');
-                    const handleName = edge.sourceHandle ? `_${edge.sourceHandle.toLowerCase()}` : '';
-                    const uniqueHash = sourceNode?.id.replace('node_', '').substring(0, 6) || 'unk';
-                    const wireName = `wire_${cleanSourceName}_${uniqueHash}${handleName}`;
+                    const cleanName = String(sourceNode?.data.label).toLowerCase().replace(/\W/g, '');
+                    const wireName = `wire_${cleanName}_${sourceNode?.id.slice(-4)}${edge.sourceHandle ? '_' + edge.sourceHandle : ''}`;
                     nets.set(sourceKey, wireName);
                     if (!internalWires.includes(wireName)) internalWires.push(wireName);
                 }
             }
         });
 
-        const components: any[] = [];
+        const components = nodes.filter(n => ['logicGate', 'latch', 'customChip'].includes(n.type!)).map(node => ({
+            type: node.data.typeLabel,
+            name: node.data.label,
+            inputs: ((node.data.inputs as string[]) || []).map(p => {
+                const edge = edges.find(e => e.target === node.id && e.targetHandle === p);
+                return edge ? nets.get(`${edge.source}_${edge.sourceHandle || 'Out'}`) : 'NC';
+            }),
+            outputs: ((node.data.outputs as string[]) || []).map(p => nets.get(`${node.id}_${p}`)).filter(Boolean)
+        }));
 
-        nodes.filter(n => n.type === 'logicGate' || n.type === 'latch' || n.type === 'customChip').forEach(node => {
-            const compInputs = ((node.data.inputs as string[]) || []).map(pinName => {
-                const incomingEdge = edges.find(e => e.target === node.id && e.targetHandle === pinName);
-                return incomingEdge ? (nets.get(`${incomingEdge.source}_${incomingEdge.sourceHandle || 'out'}`) || 'UNCONNECTED') : 'UNCONNECTED';
-            });
-            const compOutputs = ((node.data.outputs as string[]) || []).map(pinName => nets.get(`${node.id}_${pinName}`)!).filter(Boolean);
+        const simplifiedNodes = nodes.map(node => {
+            const {
+                values,
+                internalComponents,
+                internalState,
+                ...cleanData
+            } = node.data as any;
 
-            components.push({type: node.data.typeLabel, name: node.data.label, inputs: compInputs, outputs: compOutputs});
+            return {
+                ...node,
+                data: cleanData
+            };
         });
 
         const exportData = {
-            chipName, chipColor, chipGroup, group: chipGroup,
-            pins: {inputs: chipInputs, outputs: chipOutputs},
-            internalWires, components,
-            layout: {nodes, edges}
+            chipName,
+            chipColor,
+            chipGroup,
+            pins: {
+                inputs: chipInputs,
+                outputs: chipOutputs
+            },
+            internalWires,
+            components,
+            layout: {
+                nodes: simplifiedNodes,
+                edges
+            }
         };
 
+        const fileName = `${chipName}.json`;
         const jsonString = JSON.stringify(exportData, null, 2);
-        const fileName = `${toSnakeCase(chipName)}.json`;
 
         if (workspaceHandle) {
             try {
@@ -139,30 +140,24 @@ export function useProjectManager() {
                 const writable = await fileHandle.createWritable();
                 await writable.write(jsonString);
                 await writable.close();
-
-                showToast('success', 'Chip Saved!', `Saved successfully to your workspace.`);
+                showToast('success', 'Chip Saved!', `Saved as ${fileName}`);
                 await connectWorkspace();
                 return {success: true};
             } catch (err) {
-                console.error("Failed to write to workspace.", err);
+                console.error("Save error:", err);
             }
         }
 
-        // Fallback Download
         const blob = new Blob([jsonString], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
         URL.revokeObjectURL(url);
-
-        showToast('success', 'Chip Exported', `Downloaded ${fileName} to your computer.`);
-        await connectWorkspace();
         return {success: true};
-    }, [nodes, edges, chipName, chipColor, chipGroup, workspaceHandle]);
+
+    }, [nodes, edges, chipName, chipColor, chipGroup, workspaceHandle, connectWorkspace, showToast]);
 
     return {newChip, openChip, saveChip};
 }

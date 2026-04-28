@@ -1,5 +1,5 @@
 import {createContext, type PropsWithChildren, useContext, useEffect, useState} from 'react';
-import type {ChipDefinition, HardwareTemplate} from "../types/HardwareTypes.ts";
+import type {ChipDefinition, HardwareTemplate} from "../types/hardware.ts";
 import {loadDirectoryHandle, saveDirectoryHandle} from "../utils/IndexedDB.ts";
 import {DEF_CHIP_COLOR, DEF_CHIP_GROUP, DEF_CHIP_NAME, STORAGE_KEY_STATE} from "../utils/consts.ts";
 
@@ -32,6 +32,7 @@ interface WorkspaceContextType {
     isWorkspaceConnected: boolean;
     workspaceHandle: any | null;
     connectWorkspace: (forcePicker?: boolean) => Promise<void>;
+    isWorkspaceReady: boolean;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefined);
@@ -58,10 +59,11 @@ export function WorkspaceProvider({children}: PropsWithChildren) {
     const [chipColor, setChipColor] = useState<string>(initialState.chipColor);
     const [chipGroup, setChipGroup] = useState<string>(initialState.chipGroup);
 
-    const [library, setLibrary] = useState<HardwareTemplate[]>([]);
-    const [groups, setGroups] = useState<string[]>(['Custom Chips']);
+    const [library, setLibrary] = useState<HardwareTemplate[]>([...IO_NODES, ...GATE_NODES]);
+    const [groups, setGroups] = useState<string[]>(Array.from(new Set([...IO_NODES, ...GATE_NODES].map(n => n.data.group!))).sort());
     const [isWorkspaceConnected, setIsWorkspaceConnected] = useState(false);
     const [workspaceHandle, setWorkspaceHandle] = useState<any | null>(null);
+    const [isWorkspaceReady, setIsWorkspaceReady] = useState(false);
 
     const connectWorkspace = async (forcePicker = false) => {
         try {
@@ -84,7 +86,7 @@ export function WorkspaceProvider({children}: PropsWithChildren) {
                     const text = await file.text();
                     try {
                         const json = JSON.parse(text) as ChipDefinition;
-                        const groupName = json.group || 'Custom Chips';
+                        const groupName = json.chipGroup || 'Custom Chips';
                         foundGroups.add(groupName);
                         loadedChips.push({
                             type: 'customChip',
@@ -101,7 +103,11 @@ export function WorkspaceProvider({children}: PropsWithChildren) {
                 }
             }
             setGroups(Array.from(foundGroups).sort());
-            setLibrary([...IO_NODES, ...GATE_NODES, ...loadedChips.sort((a, b) => a.data.label.localeCompare(b.data.label))]);
+            setLibrary([
+                ...IO_NODES,
+                ...GATE_NODES,
+                ...loadedChips.sort((a, b) => a.data.label.localeCompare(b.data.label))
+            ]);
             setIsWorkspaceConnected(true);
         } catch (error) {
             console.error("Workspace connection failed:", error);
@@ -110,13 +116,25 @@ export function WorkspaceProvider({children}: PropsWithChildren) {
     };
 
     useEffect(() => {
-        connectWorkspace().catch(() => setLibrary([...IO_NODES, ...GATE_NODES]));
+        connectWorkspace()
+            .catch(() => setLibrary([...IO_NODES, ...GATE_NODES]))
+            .finally(() => setIsWorkspaceReady(true));
     }, []);
 
     return (
         <WorkspaceContext.Provider value={{
-            chipName, chipColor, chipGroup, setChipName, setChipColor, setChipGroup,
-            library, groups, isWorkspaceConnected, workspaceHandle, connectWorkspace
+            chipName,
+            chipColor,
+            chipGroup,
+            setChipName,
+            setChipColor,
+            setChipGroup,
+            library,
+            groups,
+            isWorkspaceConnected,
+            workspaceHandle,
+            connectWorkspace,
+            isWorkspaceReady
         }}>
             {children}
         </WorkspaceContext.Provider>

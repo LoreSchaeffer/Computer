@@ -1,7 +1,6 @@
 import styles from './GenericNode.module.css';
-import {type KeyboardEvent, type ReactNode, useEffect, useRef} from 'react';
-import {useState} from 'react';
-import {Handle, type NodeProps, Position} from '@xyflow/react';
+import {type KeyboardEvent, type ReactNode, useEffect, useRef, useState} from 'react';
+import {Handle, type Node, type NodeProps, Position} from '@xyflow/react';
 import clsx from 'clsx';
 import {useCanvasContext} from "../../context/CanvasContext.tsx";
 
@@ -12,16 +11,17 @@ export interface GenericNodeData extends Record<string, unknown> {
     outputs?: string[];
     headerColor?: string;
     values?: Record<string, boolean>;
+    internalState?: Record<string, any>;
     customControl?: ReactNode;
-    internalComponents?: any[];
 }
 
-export function GenericNode({id, data, selected}: NodeProps) {
-    const nodeData = data as unknown as GenericNodeData;
+export type AppNode = Node<GenericNodeData>;
+
+export function GenericNode({id, data, selected}: NodeProps<AppNode>) {
     const {updateCustomNodeData} = useCanvasContext();
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [editValue, setEditValue] = useState<string>(nodeData.label);
+    const [editValue, setEditValue] = useState<string>(data.label);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -44,24 +44,24 @@ export function GenericNode({id, data, selected}: NodeProps) {
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') commitNameChange();
         if (e.key === 'Escape') {
-            setEditValue(nodeData.label);
+            setEditValue(data.label);
             setIsEditing(false);
         }
     };
 
-    const maxPins = Math.max(nodeData.inputs?.length || 0, nodeData.outputs?.length || 0);
+    const maxPins = Math.max(data.inputs?.length || 0, data.outputs?.length || 0);
     const dynamicMinHeight = Math.max(40, maxPins * 20 + 20);
 
     return (
         <div className={clsx(styles.nodeWrapper, selected && styles.selected)}>
             <div
                 className={styles.header}
-                style={{backgroundColor: nodeData.headerColor || 'transparent'}}
+                style={{backgroundColor: data.headerColor || 'transparent'}}
                 onDoubleClick={handleDoubleClick}
             >
                 <div className={styles.titleContainer}>
                     <div className={clsx(styles.titleText, isEditing && styles.titleTextHidden)}>
-                        {isEditing ? (editValue || '\u00A0') : nodeData.label}
+                        {isEditing ? (editValue || '\u00A0') : data.label}
                     </div>
 
                     {isEditing && (
@@ -78,22 +78,22 @@ export function GenericNode({id, data, selected}: NodeProps) {
                     )}
                 </div>
 
-                <div className={styles.subtitle}>{nodeData.typeLabel}</div>
+                <div className={styles.subtitle}>{data.typeLabel}</div>
             </div>
 
             <div className={styles.body} style={{minHeight: `${dynamicMinHeight}px`}}>
-                {nodeData.customControl && (
+                {data.customControl && (
                     <div className={styles.customControlContainer}>
-                        {nodeData.customControl}
+                        {data.customControl}
                     </div>
                 )}
 
-                {nodeData.inputs && nodeData.inputs.map((pinId, index) => {
-                    const topPercent = ((index + 1) / (nodeData.inputs!.length + 1)) * 100;
+                {data.inputs && data.inputs.map((pinId, index) => {
+                    const topPercent = ((index + 1) / (data.inputs!.length + 1)) * 100;
                     return (
                         <div key={`in-${pinId}`}>
                             <Handle
-                                className={nodeData.values?.[pinId] ? styles.handleActive : ''}
+                                className={data.values?.[pinId] ? styles.handleActive : ''}
                                 type="target"
                                 position={Position.Left}
                                 id={pinId}
@@ -106,12 +106,12 @@ export function GenericNode({id, data, selected}: NodeProps) {
                     );
                 })}
 
-                {nodeData.outputs && nodeData.outputs.map((pinId, index) => {
-                    const topPercent = ((index + 1) / (nodeData.outputs!.length + 1)) * 100;
+                {data.outputs && data.outputs.map((pinId, index) => {
+                    const topPercent = ((index + 1) / (data.outputs!.length + 1)) * 100;
                     return (
                         <div key={`out-${pinId}`}>
                             <Handle
-                                className={nodeData.values?.[pinId] ? styles.handleActive : ''}
+                                className={data.values?.[pinId] ? styles.handleActive : ''}
                                 type="source"
                                 position={Position.Right}
                                 id={pinId}

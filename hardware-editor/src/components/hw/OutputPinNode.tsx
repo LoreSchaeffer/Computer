@@ -1,10 +1,9 @@
-import type {NodeProps} from "@xyflow/react";
-import {GenericNode, type GenericNodeData} from "./GenericNode.tsx";
+import {type AppNode, GenericNode, type GenericNodeData} from "./GenericNode.tsx";
 import {OUTPUT_COLOR} from "../../utils/consts.ts";
+import type {NodeProps} from "@xyflow/react";
 
-export function OutputPinNode(props: NodeProps) {
-    const nodeData = props.data as unknown as GenericNodeData;
-    const isActive = nodeData.values?.['In'] === true;
+export function OutputPinNode(props: NodeProps<AppNode>) {
+    const isActive = props.data.values?.['In'] === true;
 
     const dataWithConfig: GenericNodeData = {
         ...(props.data as unknown as GenericNodeData),

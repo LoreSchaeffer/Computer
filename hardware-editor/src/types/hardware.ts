@@ -13,7 +13,7 @@ export interface ComponentDefinition {
 export interface ChipDefinition {
     chipName: string;
     chipColor?: string;
-    group?: string;
+    chipGroup?: string;
     pins: PinsDefinition;
     internalWires: string[];
     components: ComponentDefinition[];
@@ -28,6 +28,6 @@ export interface HardwareTemplate {
         outputs?: string[];
         headerColor?: string;
         group?: string;
-        internalComponents?: any[];
+        internalComponents?: ComponentDefinition[];
     };
 }

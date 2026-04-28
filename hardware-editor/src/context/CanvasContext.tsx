@@ -2,40 +2,8 @@ import {createContext, type PropsWithChildren, useCallback, useContext, useEffec
 import {addEdge, applyEdgeChanges, applyNodeChanges, type Connection, type Edge, type EdgeChange, type Node, type NodeChange} from '@xyflow/react';
 import {v4 as uuidv4} from 'uuid';
 import {STORAGE_KEY_STATE} from "../utils/consts.ts";
-import type {HardwareTemplate} from "../types/HardwareTypes.ts";
 import {useWorkspaceContext} from "./WorkspaceContext.tsx";
-
-const GATE_LOGIC: Record<string, (inputs: boolean[], previousState?: boolean) => boolean> = {
-    'AndGate': (ins) => ins.length > 0 && ins.every(v => v),
-    'OrGate': (ins) => ins.some(v => v),
-    'NotGate': (ins) => !ins[0],
-    'NandGate': (ins) => !(ins.length > 0 && ins.every(v => v)),
-    'NorGate': (ins) => !ins.some(v => v),
-    'XorGate': (ins) => ins.filter(v => v).length % 2 !== 0,
-    'VCC': () => true,
-    'GND': () => false,
-};
-
-const SEQUENTIAL_LOGIC: Record<string, (inputs: boolean[], currentState: any) => Record<string, boolean>> = {
-    'DLatch': (ins, currentState) => {
-        const data = ins[0];
-        const enable = ins[1];
-
-        const latchedValue = enable ? data : (currentState?.values?.['Q'] || false);
-
-        return {
-            'Q': latchedValue,
-            '!Q': !latchedValue
-        };
-    }
-};
-
-const getExpectedOutputs = (typeLabel: string, library: HardwareTemplate[]): string[] => {
-    if (GATE_LOGIC[typeLabel]) return ['Out'];
-    if (SEQUENTIAL_LOGIC[typeLabel]) return ['Q', '!Q'];
-    const chip = library.find(c => c.data.typeLabel === typeLabel);
-    return chip?.data.outputs || [];
-};
+import {GATE_LOGIC, getExpectedOutputs, SEQUENTIAL_LOGIC} from "../utils/logicEngine.ts";
 
 interface CanvasContextType {
     nodes: Node[];
@@ -57,7 +25,7 @@ interface CanvasContextType {
 const CanvasContext = createContext<CanvasContextType | undefined>(undefined);
 
 export function CanvasProvider({children}: PropsWithChildren) {
-    const {library} = useWorkspaceContext();
+    const {library, isWorkspaceReady} = useWorkspaceContext();
 
     const getInitialCanvasState = () => {
         try {
@@ -121,28 +89,65 @@ export function CanvasProvider({children}: PropsWithChildren) {
     }, []);
 
     const runSimulation = useCallback(() => {
+        if (!isWorkspaceReady) return;
+
         setNodes((nds) => {
             let currentNodes = nds;
             const edgeMap = edges;
 
-            const evaluateComponent = (typeLabel: string, inputs: boolean[], nodeState: any, path: string[] = []): Record<string, boolean> => {
-                if (path.includes(typeLabel)) return {};
+            const evaluateComponent = (
+                typeLabel: string,
+                inputs: boolean[],
+                compName: string,
+                nodeInternalState: Record<string, any>,
+                path: string[] = [],
+                typePath: string[] = []
+            ): Record<string, boolean> => {
+                const targetType = typeLabel.trim();
+                const statePath = [...path, compName].join('/');
 
-                if (GATE_LOGIC[typeLabel]) return {'Out': GATE_LOGIC[typeLabel](inputs)};
-                if (SEQUENTIAL_LOGIC[typeLabel]) return SEQUENTIAL_LOGIC[typeLabel](inputs, nodeState);
+                if (typePath.includes(targetType)) {
+                    console.error(`Infinite loop detected: The chip "${typeLabel}" is trying to contain itself!`);
+                    return {};
+                }
 
-                const chipDef = library.find(c => c.data.typeLabel === typeLabel);
-                if (chipDef && chipDef.data.internalComponents) {
+                if (GATE_LOGIC[targetType]) return {'Out': GATE_LOGIC[targetType](inputs)};
+
+                if (SEQUENTIAL_LOGIC[targetType]) {
+                    const prevState = nodeInternalState[statePath] || {};
+                    const result = SEQUENTIAL_LOGIC[targetType](inputs, prevState);
+                    nodeInternalState[statePath] = {values: result};
+                    return result;
+                }
+
+                const chipDef = library.find(c =>
+                    c.data.typeLabel?.trim().toLowerCase() === targetType.toLowerCase() ||
+                    c.data.label?.trim().toLowerCase() === targetType.toLowerCase()
+                );
+
+                if (!chipDef) {
+                    const availableChips = library.map(c => c.data.typeLabel).join(', ');
+                    console.warn(`Simulation interrupted: Component "${targetType}" not found in your Library.\nAvailable chips in memory: [${availableChips}]\nMake sure that its JSON is saved in your workspace!`);
+
+                    return {};
+                }
+
+                if (chipDef.data.internalComponents) {
                     const nets: Record<string, boolean> = {};
-                    const chipInputs = chipDef.data.inputs || [];
-                    const chipOutputs = chipDef.data.outputs || [];
-
-                    chipInputs.forEach((pin, i) => nets[pin] = inputs[i] || false);
+                    (chipDef.data.inputs || []).forEach((pin, i) => nets[pin] = inputs[i] || false);
 
                     for (let step = 0; step < 5; step++) {
                         chipDef.data.internalComponents.forEach((comp: any) => {
                             const compIns = (comp.inputs || []).map((wire: string) => nets[wire] || false);
-                            const subOuts = evaluateComponent(comp.type, compIns, nodeState, [...path, typeLabel]);
+
+                            const subOuts = evaluateComponent(
+                                comp.type,
+                                compIns,
+                                comp.name,
+                                nodeInternalState,
+                                [...path, compName],
+                                [...typePath, targetType]
+                            );
 
                             const expectedOutPins = getExpectedOutputs(comp.type, library);
                             (comp.outputs || []).forEach((wire: string, i: number) => {
@@ -151,9 +156,8 @@ export function CanvasProvider({children}: PropsWithChildren) {
                             });
                         });
                     }
-
                     const result: Record<string, boolean> = {};
-                    chipOutputs.forEach(pin => {
+                    (chipDef.data.outputs || []).forEach(pin => {
                         result[pin] = nets[pin] || false;
                     });
                     return result;
@@ -162,13 +166,16 @@ export function CanvasProvider({children}: PropsWithChildren) {
                 return {};
             };
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 5; i++) {
                 currentNodes = currentNodes.map((node) => {
                     if (node.type === 'inputPin') return node;
 
                     const nodeData = node.data as any;
                     const newValues = {...(nodeData.values || {})};
-                    const inputPins = node.type === 'outputPin' ? ['In'] : (nodeData.inputs || []);
+
+                    const newInternalState: Record<string, any> = {...(nodeData.internalState || {})};
+
+                    const inputPins = nodeData.inputs || [];
 
                     const inputValues: boolean[] = inputPins.map((pinId: string) => {
                         const connection = edgeMap.find(e => e.target === node.id && e.targetHandle === pinId);
@@ -188,12 +195,13 @@ export function CanvasProvider({children}: PropsWithChildren) {
                     if (node.type === 'outputPin') {
                         newValues['In'] = inputValues[0] || false;
                     } else {
-                        const outResults = evaluateComponent(nodeData.typeLabel, inputValues, nodeData);
+                        const outResults = evaluateComponent(nodeData.typeLabel, inputValues, 'root', newInternalState, [], []);
                         Object.assign(newValues, outResults);
                     }
 
-                    if (JSON.stringify(nodeData.values) !== JSON.stringify(newValues)) {
-                        return {...node, data: {...nodeData, values: newValues}};
+                    if (JSON.stringify(nodeData.values) !== JSON.stringify(newValues) ||
+                        JSON.stringify(nodeData.internalState) !== JSON.stringify(newInternalState)) {
+                        return {...node, data: {...nodeData, values: newValues, internalState: newInternalState}};
                     }
 
                     return node;
@@ -201,7 +209,7 @@ export function CanvasProvider({children}: PropsWithChildren) {
             }
             return currentNodes;
         });
-    }, [edges, library]);
+    }, [edges, library, isWorkspaceReady]);
 
     const toggleInput = useCallback((nodeId: string) => {
         setNodes(nds => nds.map(node => {

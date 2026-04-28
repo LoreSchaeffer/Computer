@@ -84,22 +84,25 @@ export default function App() {
 
     const onDrop = useCallback((event: DragEvent<HTMLDivElement>) => {
         event.preventDefault();
-
         const reactFlowDataStr = event.dataTransfer.getData('application/reactflow');
         if (!reactFlowDataStr) return;
 
         const template = JSON.parse(reactFlowDataStr);
         const position = screenToFlowPosition({x: event.clientX, y: event.clientY});
 
+        const {internalComponents, values, ...cleanData} = template.data;
+
         const newNode: Node = {
             id: `node_${uuidv4()}`,
             type: template.type,
             position,
-            origin: [0.5, 0.5],
+            origin: [0.5, 0.5] as [number, number],
             selected: true,
-            data: template.data
+            data: {
+                ...cleanData,
+                values: {}
+            }
         };
-
         addNode(newNode);
         runSimulation();
     }, [screenToFlowPosition, addNode]);
