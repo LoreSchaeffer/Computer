@@ -2,6 +2,7 @@ package it.lycoris.cpu;
 
 import it.lycoris.cpu.hardware.MOS6502;
 import it.lycoris.cpu.hardware.io.ComponentLibrary;
+import it.lycoris.cpu.monitoring.SystemMonitor;
 import it.lycoris.cpu.system.Memory;
 
 import java.nio.file.Paths;
@@ -16,23 +17,24 @@ public class Main {
 
         Memory ram = new Memory();
 
-        byte[] rom = {
-                (byte) 0xA9, // LDA
-                (byte) 0x42, // VALUE (66 dec | 42 hex)
+        byte[] program = {
+                (byte) 0xA9, (byte) 0x42, // LDA #$42
+                (byte) 0xAA,              // TAX
+                (byte) 0x8D, (byte) 0x00, (byte) 0x02 // STA $0200
         };
 
-        ram.loadProgram(0x8000, rom);
-
+        ram.loadProgram(0x8000, program);
         MOS6502 cpu = new MOS6502(lib, ram);
         cpu.reset();
 
-        System.out.println("\n--- INITIAL STATE ---");
-        cpu.printState();
+        SystemMonitor.display(cpu, "Initial State");
 
-        System.out.println("\n--- RUNNING 1° CYCLE (LDA #$42) ---");
-        cpu.step();
+        for (int i = 0; i < 3; i++) {
+            cpu.step();
+            SystemMonitor.display(cpu, "After step " + (i + 1));
+        }
 
-        System.out.println("\n--- FINAL STATE ---");
-        cpu.printState();
+        System.out.println("\nCheck RAM at $0200: $" +
+                Integer.toHexString(ram.read(0x0200)));
     }
 }

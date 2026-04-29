@@ -1,7 +1,9 @@
 package it.lycoris.cpu.hardware;
 
+import it.lycoris.cpu.control.InstructionSet;
 import it.lycoris.cpu.hardware.io.ComponentLibrary;
 import it.lycoris.cpu.hardware.io.dto.ChipDefinition;
+import it.lycoris.cpu.model.CpuState;
 import it.lycoris.cpu.simulation.SimulationContext;
 import it.lycoris.cpu.system.Memory;
 
@@ -12,6 +14,7 @@ public class MOS6502 {
     private final LogicComponent datapath;
     private final SimulationContext ctx;
     private final Memory memory;
+    private final InstructionSet instructionSet = new InstructionSet();
 
     private final Map<String, Wire> inputs = new HashMap<>();
     private final Map<String, Wire> outputs = new HashMap<>();
@@ -33,23 +36,29 @@ public class MOS6502 {
         ctx.run();
     }
 
-    public boolean getPin(String name) {
-        return outputs.get(name).getState();
-    }
+    // --- Hardware Pin Interface ---
 
     public void setPin(String name, boolean state) {
-        inputs.get(name).setState(state, ctx);
+        if (inputs.containsKey(name)) {
+            inputs.get(name).setState(state, ctx);
+        }
+    }
+
+    public boolean getPin(String name) {
+        return outputs.getOrDefault(name, new Wire()).getState();
     }
 
     public void pulseClock() {
-        ctx.run();
+        ctx.run(); // Setup time: stabilize signals on wires
         setPin("Clk", true);
-        ctx.run();
+        ctx.run(); // Rising edge: data is latched
         setPin("Clk", false);
-        ctx.run();
+        ctx.run(); // Falling edge
     }
 
-    private void setBusSelector(int source) {
+    // --- Bus & Data Control ---
+
+    public void setBusSelector(int source) {
         setPin("SelBus0", (source & 1) != 0);
         setPin("SelBus1", (source & 2) != 0);
         setPin("SelBus2", (source & 4) != 0);
@@ -61,6 +70,20 @@ public class MOS6502 {
         }
     }
 
+    public void writeToBus(int value, int source) {
+        setBusSelector(source);
+        if (source == 0) {
+            setDataBusIn(value);
+        }
+        ctx.run();
+    }
+
+    // --- CPU Control Unit Interface ---
+
+    public Memory getMemory() {
+        return memory;
+    }
+
     public int getAddressBus() {
         int address = 0;
         for (int i = 0; i < 16; i++) {
@@ -70,24 +93,36 @@ public class MOS6502 {
     }
 
     public int getAccumulator() {
-        setBusSelector(1);
-        ctx.run();
+        return readRegisterDirectly("Accumulator");
+    }
 
-        int value = 0;
-        for (int i = 0; i < 8; i++) {
-            if (getPin("DOut" + i)) value |= (1 << i);
-        }
+    public void pulseRegister(String... loadPins) {
+        for (String pin : loadPins) setPin(pin, true);
+        pulseClock();
+        for (String pin : loadPins) setPin(pin, false);
+    }
 
-        setBusSelector(0);
-        return value;
+    public int fetchOperand() {
+        int val = memory.read(getAddressBus());
+        setPin("IncPC", true);
+        pulseClock();
+        setPin("IncPC", false);
+        return val;
+    }
+
+    public int fetchAddress() {
+        int low = fetchOperand();
+        int high = fetchOperand();
+        return (high << 8) | low;
     }
 
     public void reset() {
-        System.out.println("[HARDWARE] Running Reset Sequence...");
+        System.out.println("[HARDWARE] Executing Reset Sequence...");
         setDataBusIn(0);
 
+        int startAddress = 0x8000;
         for (int i = 0; i < 16; i++) {
-            setPin("AIn" + i, ((0x8000 >> i) & 1) == 1);
+            setPin("AIn" + i, ((startAddress >> i) & 1) == 1);
         }
 
         setPin("LoadPC", true);
@@ -97,53 +132,64 @@ public class MOS6502 {
 
     public void step() {
         // Fetch
-        int pcAddress = getAddressBus();
-        int opcode = memory.read(pcAddress);
+        int currentPc = getAddressBus();
+        int opcode = memory.read(currentPc);
 
-        setDataBusIn(opcode);
-        setBusSelector(0);
+        // Load opcode into the Instruction Register (IR)
+        writeToBus(opcode, 0);
+        pulseRegister("LoadIR");
 
-        setPin("LoadIR", true);
-        pulseClock();
-        setPin("LoadIR", false);
-
-        // Increment Program Counter to the next byte
+        // Increment PC to point to the operand or next instruction
         setPin("IncPC", true);
         pulseClock();
         setPin("IncPC", false);
 
-        // Execute
-        execute(opcode);
+        // Decode & Execute
+        instructionSet.get(opcode).logic().execute(this);
     }
 
-    private void execute(int opcode) {
-        switch (opcode) {
-            case 0xA9 -> ldaImmediate();
-            default -> System.out.printf("Opcode sconosciuto: $%02X%n", opcode);
+    public CpuState snapshot() {
+        int irValue = readRegisterDirectly("IR");
+        var metadata = instructionSet.get(irValue);
+
+        return new CpuState(
+                getAddressBus(),
+                getAccumulator(),
+                readRegisterDirectly("X"),
+                readRegisterDirectly("Y"),
+                readRegisterDirectly("SP"),
+                readRegisterDirectly("Status"),
+                irValue,
+                metadata.name()
+        );
+    }
+
+    /**
+     * Debug helper to read register values directly from the bus without side effects.
+     */
+    private int readRegisterDirectly(String name) {
+        if (name.equals("IR")) {
+            int val = 0;
+            for (int i = 0; i < 8; i++) if (getPin("OPCode" + i)) val |= (1 << i);
+            return val;
         }
-    }
 
-    private void ldaImmediate() {
-        int value = memory.read(getAddressBus());
-        setDataBusIn(value);
+        int source = switch (name) {
+            case "Accumulator" -> 1;
+            case "X" -> 2;
+            case "Y" -> 3;
+            case "SP" -> 4;
+            case "Status" -> 7;
+            default -> 0;
+        };
+
+        setBusSelector(source);
+        ctx.run();
+        int value = 0;
+        for (int i = 0; i < 8; i++) {
+            if (getPin("DOut" + i)) value |= (1 << i);
+        }
         setBusSelector(0);
-
-        // Load inside Accumulator through ALU (OR with 0)
-        setPin("OpOR", true);
-        setPin("LoadA", true);
-        pulseClock();
-        setPin("LoadA", false);
-        setPin("OpOR", false);
-
-        // Increment PC
-        setPin("IncPC", true);
-        pulseClock();
-        setPin("IncPC", false);
-
-        System.out.println("Eseguito LDA #" + String.format("$%02X", value));
-    }
-
-    public void printState() {
-        System.out.printf("PC: $%04X | Accumulator: $%02X%n", getAddressBus(), getAccumulator());
+        return value;
     }
 }
