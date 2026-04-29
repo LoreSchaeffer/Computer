@@ -74,3 +74,9 @@ body {
 .react-flow__attribution {
     display: none;
 }
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:focus .react-flow__edge-path {
+    stroke: var(--color-primary) !important;
+    stroke-width: 3px !important;
+}

@@ -25,11 +25,13 @@ public class Register8BitTest extends HardwareTestBase {
         setPin("En", false);
         update();
 
-        // The output must stay 0 because the clock (Enable) hasn't pulsed yet
+        // The output must stay 0 because we haven't pulsed the clock yet
         assertEquals(0, getBus("Q"), "Output should not change before the Enable signal is high.");
 
-        // Pulse the clock to store the data
-        pulseClock("En");
+        // NUOVA LOGICA: Abilitiamo la scrittura e diamo il colpo di clock!
+        setPin("En", true);
+        pulseClock("Clk");
+        setPin("En", false); // Chiudiamo il lucchetto
 
         assertEquals(123, getBus("Q"), "Register failed to store the input value.");
     }
@@ -38,15 +40,18 @@ public class Register8BitTest extends HardwareTestBase {
     void testMemoryIsRetained() {
         // 1. Store a recognizable value (0x55 / 85)
         setBus("D", 85);
-        pulseClock("En");
+        setPin("En", true);
+        pulseClock("Clk");
+        setPin("En", false); // Lucchetto chiuso
+
         assertEquals(85, getBus("Q"));
 
-        // 2. Drop the Enable signal and change the Input data
-        setPin("En", false);
-        setBus("D", 170); // 0xAA
-        update();
+        // 2. Cambiamo i dati in ingresso, ma NON abilitiamo il registro (En = false)
+        setBus("D", 170);
 
-        // 3. Verify the output has NOT changed to 170
-        assertEquals(85, getBus("Q"), "Register did not retain its memory when Enable was low.");
+        // Diamo un colpo di clock. Il registro dovrebbe ignorarlo grazie alla porta AND!
+        pulseClock("Clk");
+
+        assertEquals(85, getBus("Q"), "Register did not retain its memory when En was false.");
     }
 }

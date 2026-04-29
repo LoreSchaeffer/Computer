@@ -7,9 +7,13 @@ import {FaSearch} from "react-icons/fa";
 import Input from "./ui/forms/Input.tsx";
 import {useWorkspaceContext} from "../context/WorkspaceContext.tsx";
 import {INPUT_COLOR, LATCH_COLOR, LOGIC_GATE_COLOR, OUTPUT_COLOR} from "../utils/consts.ts";
+import {useProjectManager} from "./hooks/useProjectManager.ts";
+import {useModal} from "../context/ModalContext.tsx";
 
 export default function Sidebar() {
     const {library, isWorkspaceConnected, connectWorkspace} = useWorkspaceContext();
+    const {openChip} = useProjectManager();
+    const {showModal} = useModal();
     const [searchTerm, setSearchTerm] = useState('');
 
     const onDragStart = (event: DragEvent<HTMLDivElement>, template: HardwareTemplate) => {
@@ -36,13 +40,34 @@ export default function Sidebar() {
 
             if (groupA === 'I/O Nodes') return -1;
             if (groupB === 'I/O Nodes') return 1;
-            if (groupA === 'Logic Gates') return -1;
-            if (groupB === 'Logic Gates') return 1;
+            if (groupA === 'Primitives') return -1;
+            if (groupB === 'Primitives') return 1;
             return groupA.localeCompare(groupB);
         });
 
         return new Map(sortedGroups);
     }, [library, searchTerm]);
+
+    const handleItemDoubleClick = (comp: HardwareTemplate) => {
+        if (comp.type !== 'customChip') return;
+
+        showModal({
+            title: "Open Chip",
+            message: "Are you sure? All unsaved progress on the canvas will be lost.",
+            type: "danger",
+            confirmText: "Open",
+            onConfirm: async () => {
+                const result = await openChip(comp.data.typeLabel);
+                if (!result.success && result.error) {
+                    showModal({
+                        title: "Error Opening File",
+                        message: result.error,
+                        type: "warning"
+                    });
+                }
+            }
+        });
+    }
 
     return (
         <aside className={styles.sidebar}>
@@ -92,6 +117,7 @@ export default function Sidebar() {
                                         style={{'--chip-color': color} as CSSProperties}
                                         draggable
                                         onDragStart={(e) => onDragStart(e, comp)}
+                                        onDoubleClick={() => handleItemDoubleClick(comp)}
                                         title={comp.data.typeLabel}
                                     >
                                         {comp.data.label}

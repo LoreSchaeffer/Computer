@@ -1,5 +1,5 @@
 import styles from '../components/ui/Modal.module.css';
-import {createContext, type ReactNode, useContext, useState} from 'react';
+import {createContext, type ReactNode, useContext, useEffect, useState} from 'react';
 import {Button} from '../components/ui/forms/Button.tsx';
 
 interface ModalConfig {
@@ -35,11 +35,34 @@ export function ModalProvider({children}: { children: ReactNode }) {
         hideModal();
     };
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (!modalConfig) return;
+
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                handleConfirm();
+            } else if (event.key === 'Escape') {
+                event.preventDefault();
+                handleCancel();
+            }
+        };
+
+        if (modalConfig) window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [modalConfig]);
+
     return (
         <ModalContext.Provider value={{showModal, hideModal}}>
             {children}
             {modalConfig && (
-                <div className={styles.modalOverlay} onClick={handleCancel}>
+                <div
+                    className={styles.modalOverlay}
+                    onClick={handleCancel}
+                >
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <h3 className={styles.modalTitle}>{modalConfig.title}</h3>
                         <p className={styles.modalMessage}>{modalConfig.message}</p>

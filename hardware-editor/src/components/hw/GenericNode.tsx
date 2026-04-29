@@ -19,7 +19,6 @@ export type AppNode = Node<GenericNodeData>;
 
 export function GenericNode({id, data, selected}: NodeProps<AppNode>) {
     const {updateCustomNodeData} = useCanvasContext();
-
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editValue, setEditValue] = useState<string>(data.label);
 

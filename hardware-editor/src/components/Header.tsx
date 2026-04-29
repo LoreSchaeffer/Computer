@@ -2,16 +2,18 @@ import styles from './Header.module.css';
 import {Button} from "./ui/forms/Button.tsx";
 import {FaFolderOpen, FaPen, FaSave} from "react-icons/fa";
 import {type KeyboardEvent, useEffect, useState} from "react";
-import {FaFile, FaFolderTree} from "react-icons/fa6";
+import {FaFile, FaFolderTree, FaMicrochip} from "react-icons/fa6";
 import Input from "./ui/forms/Input.tsx";
 import clsx from "clsx";
 import {useModal} from "../context/ModalContext.tsx";
 import {useWorkspaceContext} from "../context/WorkspaceContext.tsx";
 import {useProjectManager} from "./hooks/useProjectManager.ts";
 import {PRESET_COLORS} from "../utils/consts.ts";
+import {useCanvasContext} from "../context/CanvasContext.tsx";
 
 export default function Header() {
     const {chipName, setChipName, chipGroup, setChipGroup, chipColor, setChipColor, groups} = useWorkspaceContext();
+    const {simulationEnabled, toggleSimulationEnabled} = useCanvasContext();
     const {newChip, openChip, saveChip} = useProjectManager();
     const {showModal} = useModal();
 
@@ -41,6 +43,10 @@ export default function Header() {
         }
     };
 
+    const handleSimulationToggle = () => {
+        toggleSimulationEnabled(!simulationEnabled);
+    }
+
     const handleNewChipClick = () => {
         showModal({
             title: "Create New Chip",
@@ -64,14 +70,22 @@ export default function Header() {
     };
 
     const handleOpenClick = async () => {
-        const result = await openChip();
-        if (!result.success && result.error) {
-            showModal({
-                title: "Error Opening File",
-                message: result.error,
-                type: "warning"
-            });
-        }
+        showModal({
+            title: "Open Chip",
+            message: "Are you sure? All unsaved progress on the canvas will be lost.",
+            type: "danger",
+            confirmText: "Open",
+            onConfirm: async () => {
+                const result = await openChip();
+                if (!result.success && result.error) {
+                    showModal({
+                        title: "Error Opening File",
+                        message: result.error,
+                        type: "warning"
+                    });
+                }
+            }
+        });
     };
 
     useEffect(() => {
@@ -159,6 +173,7 @@ export default function Header() {
             </div>
 
             <div className={styles.actions}>
+                <Button className={styles.square} variant={simulationEnabled ? 'success' : 'secondary'} icon={<FaMicrochip/>} onClick={handleSimulationToggle} title="Toggle Simulation"/>
                 <Button className={styles.square} variant="secondary" icon={<FaFile/>} onClick={handleNewChipClick} title="New Chip"/>
                 <Button className={styles.square} variant="secondary" icon={<FaFolderOpen/>} onClick={handleOpenClick} title="Open File"/>
                 <Button className={styles.square} variant="primary" icon={<FaSave/>} onClick={handleSaveClick} title="Save (Ctrl+S)"/>

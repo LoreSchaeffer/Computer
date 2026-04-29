@@ -47,7 +47,10 @@ export default function App() {
     const menuOpenPos = useRef<{ x: number, y: number } | null>(null);
 
     const defaultEdgeOptions = {
-        style: {strokeWidth: 2, transition: 'stroke 0.2s'},
+        style: {
+            strokeWidth: 2,
+            transition: 'stroke 200ms'
+        },
     };
 
     const getStyledEdges = useMemo(() => {
@@ -61,7 +64,7 @@ export default function App() {
                 style: {
                     stroke: isActive ? 'var(--color-success)' : 'var(--color-border)',
                     strokeWidth: isActive ? 3 : 2,
-                    transition: 'stroke 0.2s, stroke-width 0.2s'
+                    transition: 'stroke 200ms, stroke-width 200ms'
                 }
             };
         });

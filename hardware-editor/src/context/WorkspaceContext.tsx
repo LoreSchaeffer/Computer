@@ -5,7 +5,13 @@ import {DEF_CHIP_COLOR, DEF_CHIP_GROUP, DEF_CHIP_NAME, STORAGE_KEY_STATE} from "
 
 const IO_NODES: HardwareTemplate[] = [
     {type: 'inputPin', data: {typeLabel: 'INPUT', label: 'IN', group: 'I/O Nodes', inputs: [], outputs: ['Out']}},
+    {type: 'inputPin', data: {typeLabel: 'INPUT4', label: 'IN4', group: 'I/O Nodes', inputs: [], outputs: ['Out0', 'Out1', 'Out2', 'Out3']}},
+    {type: 'inputPin', data: {typeLabel: 'INPUT8', label: 'IN8', group: 'I/O Nodes', inputs: [], outputs: ['Out0', 'Out1', 'Out2', 'Out3', 'Out4', 'Out5', 'Out6', 'Out7']}},
+    {type: 'inputPin', data: {typeLabel: 'INPUT16', label: 'IN16', group: 'I/O Nodes', inputs: [], outputs: ['Out0', 'Out1', 'Out2', 'Out3', 'Out4', 'Out5', 'Out6', 'Out7', 'Out8', 'Out9', 'Out10', 'Out11', 'Out12', 'Out13', 'Out14', 'Out15']}},
     {type: 'outputPin', data: {typeLabel: 'OUTPUT', label: 'OUT', group: 'I/O Nodes', inputs: ['In'], outputs: []}},
+    {type: 'outputPin', data: {typeLabel: 'OUTPUT4', label: 'OUT4', group: 'I/O Nodes', inputs: ['In0', 'In1', 'In2', 'In3'], outputs: []}},
+    {type: 'outputPin', data: {typeLabel: 'OUTPUT8', label: 'OUT8', group: 'I/O Nodes', inputs: ['In0', 'In1', 'In2', 'In3', 'In4', 'In5', 'In6', 'In7'], outputs: []}},
+    {type: 'outputPin', data: {typeLabel: 'OUTPUT16', label: 'OUT16', group: 'I/O Nodes', inputs: ['In0', 'In1', 'In2', 'In3', 'In4', 'In5', 'In6', 'In7', 'In8', 'In9', 'In10', 'In11', 'In12', 'In13', 'In14', 'In15'], outputs: []}},
     {type: 'logicGate', data: {typeLabel: 'VCC', label: 'VCC', group: 'I/O Nodes', inputs: [], outputs: ['Out']}},
     {type: 'logicGate', data: {typeLabel: 'GND', label: 'GND', group: 'I/O Nodes', inputs: [], outputs: ['Out']}},
 ];

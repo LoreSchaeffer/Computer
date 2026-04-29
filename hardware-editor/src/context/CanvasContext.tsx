@@ -18,14 +18,17 @@ interface CanvasContextType {
     cloneNodes: (nodesToClone: Node[], targetPosition?: { x: number, y: number }) => void;
     clearNodes: () => void;
     restoreCanvas: (nodes: Node[], edges: Edge[]) => void;
-    toggleInput: (nodeId: string) => void;
+    toggleInput: (nodeId: string, outputPort: string) => void;
     runSimulation: () => void;
+    simulationEnabled: boolean;
+    toggleSimulationEnabled: (val: boolean) => void;
 }
 
 const CanvasContext = createContext<CanvasContextType | undefined>(undefined);
 
 export function CanvasProvider({children}: PropsWithChildren) {
     const {library, isWorkspaceReady} = useWorkspaceContext();
+    const [simulationEnabled, setSimulationEnabled] = useState<boolean>(true);
 
     const getInitialCanvasState = () => {
         try {
@@ -90,6 +93,7 @@ export function CanvasProvider({children}: PropsWithChildren) {
 
     const runSimulation = useCallback(() => {
         if (!isWorkspaceReady) return;
+        if (!simulationEnabled) return;
 
         setNodes((nds) => {
             let currentNodes = nds;
@@ -222,16 +226,16 @@ export function CanvasProvider({children}: PropsWithChildren) {
         });
     }, [edges, library, isWorkspaceReady]);
 
-    const toggleInput = useCallback((nodeId: string) => {
+    const toggleInput = useCallback((nodeId: string, outputPort: string = 'Out') => {
         setNodes(nds => nds.map(node => {
             if (node.id === nodeId) {
                 const nodeData = node.data as any;
-                const currentVal = nodeData.values?.['Out'] || false;
+                const currentVal = nodeData.values?.[outputPort] || false;
                 return {
                     ...node,
                     data: {
                         ...nodeData,
-                        values: {...(nodeData.values || {}), 'Out': !currentVal}
+                        values: {...(nodeData.values || {}), [outputPort]: !currentVal}
                     }
                 };
             }
@@ -240,6 +244,10 @@ export function CanvasProvider({children}: PropsWithChildren) {
 
         setTimeout(() => runSimulation(), 0);
     }, [runSimulation]);
+
+    const toggleSimulationEnabled = useCallback((val: boolean) => {
+        setSimulationEnabled(val);
+    }, [setSimulationEnabled]);
 
     useEffect(() => {
         runSimulation();
@@ -306,8 +314,22 @@ export function CanvasProvider({children}: PropsWithChildren) {
 
     return (
         <CanvasContext.Provider value={{
-            nodes, edges, clipboard, onNodesChange, onEdgesChange, onConnect,
-            addNode, updateCustomNodeData, setClipboard, cloneNodes, clearNodes, restoreCanvas, toggleInput, runSimulation
+            nodes,
+            edges,
+            clipboard,
+            onNodesChange,
+            onEdgesChange,
+            onConnect,
+            addNode,
+            updateCustomNodeData,
+            setClipboard,
+            cloneNodes,
+            clearNodes,
+            restoreCanvas,
+            toggleInput,
+            runSimulation,
+            simulationEnabled,
+            toggleSimulationEnabled
         }}>
             {children}
         </CanvasContext.Provider>
