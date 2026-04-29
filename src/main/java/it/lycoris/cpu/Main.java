@@ -13,7 +13,7 @@ public class Main {
         System.out.println("Starting Emulator MOS 6502 Hybrid...");
 
         ComponentLibrary lib = new ComponentLibrary();
-        lib.loadDirectory(Paths.get("src/main/resources/hardware"));
+        lib.loadFromResources("hardware");
 
         Memory ram = new Memory();
 

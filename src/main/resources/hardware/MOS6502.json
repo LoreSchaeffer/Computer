@@ -154,7 +154,8 @@
     "wire_sp_28c1_Q4",
     "wire_sp_28c1_Q5",
     "wire_sp_28c1_Q6",
-    "wire_sp_28c1_Q7"
+    "wire_sp_28c1_Q7",
+    "wire_y_d0ae_Q3"
   ],
   "components": [
     {
@@ -188,7 +189,7 @@
         "S3B0": "wire_y_d0ae_Q0",
         "S3B1": "wire_y_d0ae_Q1",
         "S3B2": "wire_y_d0ae_Q2",
-        "S3B3": "NC",
+        "S3B3": "wire_y_d0ae_Q3",
         "S3B4": "wire_y_d0ae_Q4",
         "S3B5": "wire_y_d0ae_Q5",
         "S3B6": "wire_y_d0ae_Q6",
@@ -576,7 +577,9 @@
         "Q2": [
           "wire_y_d0ae_Q2"
         ],
-        "Q3": [],
+        "Q3": [
+          "wire_y_d0ae_Q3"
+        ],
         "Q4": [
           "wire_y_d0ae_Q4"
         ],
@@ -2671,7 +2674,7 @@
           0.5,
           0.5
         ],
-        "selected": true,
+        "selected": false,
         "data": {
           "typeLabel": "INPUT",
           "label": "BypassALU",
@@ -2933,19 +2936,6 @@
         "target": "node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8",
         "targetHandle": "S1B7",
         "id": "xy-edge__node_aa943e69-1575-4018-8195-6900871f63beA7-node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8S1B7",
-        "animated": false,
-        "selected": false
-      },
-      {
-        "style": {
-          "strokeWidth": 2,
-          "transition": "stroke 0.2s"
-        },
-        "source": "node_272c4079-7fa8-416f-85fe-cdb05ead6815",
-        "sourceHandle": "PCOut0",
-        "target": "node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8",
-        "targetHandle": "S5B0",
-        "id": "xy-edge__node_272c4079-7fa8-416f-85fe-cdb05ead6815PCOut0-node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8S5B0",
         "animated": false,
         "selected": false
       },
@@ -3306,7 +3296,8 @@
         "target": "node_aa943e69-1575-4018-8195-6900871f63be",
         "targetHandle": "DB4",
         "id": "xy-edge__node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8Out4-node_aa943e69-1575-4018-8195-6900871f63beDB4",
-        "animated": false
+        "animated": false,
+        "selected": false
       },
       {
         "style": {
@@ -5321,7 +5312,8 @@
         "target": "node_2c827800-5dfe-45fc-8f27-b1a93a6328c1",
         "targetHandle": "D2",
         "id": "xy-edge__node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8Out2-node_2c827800-5dfe-45fc-8f27-b1a93a6328c1D2",
-        "animated": false
+        "animated": false,
+        "selected": false
       },
       {
         "style": {
@@ -5489,6 +5481,30 @@
         "target": "node_aa943e69-1575-4018-8195-6900871f63be",
         "targetHandle": "BypassALU",
         "id": "xy-edge__node_f56ae5a2-4ab6-4f7e-b1a5-4b52a7914a23Out-node_aa943e69-1575-4018-8195-6900871f63beBypassALU",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_01355f0e-ae42-440b-a50e-465ca8b7d0ae",
+        "sourceHandle": "Q3",
+        "target": "node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8",
+        "targetHandle": "S3B3",
+        "id": "xy-edge__node_01355f0e-ae42-440b-a50e-465ca8b7d0aeQ3-node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8S3B3",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_272c4079-7fa8-416f-85fe-cdb05ead6815",
+        "sourceHandle": "PCOut0",
+        "target": "node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8",
+        "targetHandle": "S5B0",
+        "id": "xy-edge__node_272c4079-7fa8-416f-85fe-cdb05ead6815PCOut0-node_e0c429aa-c482-4789-9aa7-f50bbecd3dd8S5B0",
         "animated": false
       }
     ]
