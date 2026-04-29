@@ -142,6 +142,68 @@ public class MOS6502 {
         setPin("LoadPC", false);
     }
 
+    public void updateZAndNFlags(int value) {
+        setPin("ManZ", value == 0);
+        setPin("ManN", (value & 0x80) != 0);
+
+        // MUX to Manual Input (Binary 11)
+        setPin("SelZ0", true);
+        setPin("SelZ1", true);
+        setPin("SelN0", true);
+        setPin("SelN1", true);
+
+        pulseClock(); // Latch the flags
+
+        // MUX to Hold (Binary 00)
+        setPin("SelZ0", false);
+        setPin("SelZ1", false);
+        setPin("SelN0", false);
+        setPin("SelN1", false);
+    }
+
+    public void loadAccumulatorDirect(int source) {
+        setBusSelector(source);
+
+        setPin("BypassALU", true);  // Switch the MUX to the Internal Bus
+        pulseRegister("LoadA");     // Latch the data into the Accumulator
+        setPin("BypassALU", false); // Switch the MUX back to the ALU output
+    }
+
+    public void executeALU(String opPin, int operandValue, boolean carryIn) {
+        // 1. Set data on the bus (Source 0 = DIn)
+        writeToBus(operandValue, 0);
+
+        // 2. Set initial Carry In in the ALU
+        setPin("CIn", carryIn);
+
+        // 3. Enable the required operation
+        setPin(opPin, true);
+
+        // 4. MUX of Status Register: Source ALU (Binary 01)
+        setPin("SelC0", true);
+        setPin("SelC1", false);
+        setPin("SelZ0", true);
+        setPin("SelZ1", false);
+        setPin("SelV0", true);
+        setPin("SelV1", false);
+        setPin("SelN0", true);
+        setPin("SelN1", false);
+
+        // 5. Enable Accubumator writing (BypassALU is false by default, it goes through the ALU!)
+        setPin("LoadA", true);
+
+        // 6. Clock: The result is saved in A and flags in P
+        pulseClock();
+
+        // 7. Clean-up
+        setPin(opPin, false);
+        setPin("LoadA", false);
+        setPin("SelC0", false);
+        setPin("SelZ0", false);
+        setPin("SelV0", false);
+        setPin("SelN0", false);
+    }
+
     public void reset() {
         System.out.println("[HARDWARE] Executing Reset Sequence...");
         setDataBusIn(0);
@@ -154,6 +216,9 @@ public class MOS6502 {
         setPin("LoadPC", true);
         pulseClock();
         setPin("LoadPC", false);
+
+        writeToBus(0xFF, 0);
+        pulseRegister("LoadSP");
     }
 
     public void step() {
@@ -186,7 +251,7 @@ public class MOS6502 {
                 readRegisterDirectly("SP"),
                 readRegisterDirectly("Status"),
                 irValue,
-                metadata.name()
+                metadata.mnemonic()
         );
     }
 

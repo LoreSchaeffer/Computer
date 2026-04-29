@@ -1,7 +1,7 @@
 package it.lycoris.cpu.control;
 
-public record InstructionMetadata(
-        String name,
+public record OpcodeMetadata(
+        String mnemonic,
         Instruction logic
 ) {
 }

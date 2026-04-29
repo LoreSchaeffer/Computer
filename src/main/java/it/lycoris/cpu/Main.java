@@ -18,30 +18,21 @@ public class Main {
         Memory ram = new Memory();
 
         byte[] program = {
-                (byte) 0xA9, (byte) 0x05, // LDA #$05
-                (byte) 0xAA,              // TAX
-                // --- LOOP START ($8003) ---
-                (byte) 0xCA,              // DEX       ($8003)
-                (byte) 0xD0, (byte) -3    // BNE -3    ($8004, $8005) -> Salta a PC(8006) - 3 = 8003
+                (byte) 0xA9,
+                (byte) 0x50, // LDA #$50 (Carica 80 decimale)
+                (byte) 0x69,
+                (byte) 0x50  // ADC #$50 (Aggiunge 80 decimale)
         };
 
         ram.loadProgram(0x8000, program);
         MOS6502 cpu = new MOS6502(lib, ram);
         cpu.reset();
 
-        SystemMonitor.display(cpu, "Initial State");
+        System.out.println("\n--- RUNNING ALU MATH TEST ---");
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 2; i++) {
             cpu.step();
-            SystemMonitor.display(cpu, "After step " + (i + 1));
-
-            if (cpu.snapshot().currentOpcode() == 0x00) {
-                System.out.println("Execution terminated (Reached empty space in RAM).");
-                break;
-            }
+            SystemMonitor.display(cpu, "After Step " + (i + 1));
         }
-
-        System.out.println("\nCheck RAM at $0200: $" +
-                Integer.toHexString(ram.read(0x0200)));
     }
 }
