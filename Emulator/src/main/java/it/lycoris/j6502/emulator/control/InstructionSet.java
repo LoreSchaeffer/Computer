@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.control;
 
-import it.lycoris.cpu.control.groups.*;
+import it.lycoris.j6502.emulator.control.groups.*;
 import it.lycoris.j6502.emulator.control.groups.*;
 
 import java.util.HashMap;

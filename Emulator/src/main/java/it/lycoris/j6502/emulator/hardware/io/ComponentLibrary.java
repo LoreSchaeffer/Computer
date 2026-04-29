@@ -1,7 +1,7 @@
 package it.lycoris.j6502.emulator.hardware.io;
 
 import com.google.gson.Gson;
-import it.lycoris.cpu.hardware.*;
+import it.lycoris.j6502.emulator.hardware.*;
 import it.lycoris.j6502.emulator.hardware.*;
 import it.lycoris.j6502.emulator.hardware.io.dto.ChipDefinition;
 import it.lycoris.j6502.emulator.hardware.io.dto.ComponentDefinition;

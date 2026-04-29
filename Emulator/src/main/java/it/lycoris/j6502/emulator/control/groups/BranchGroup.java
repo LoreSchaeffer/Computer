@@ -21,14 +21,13 @@ public class BranchGroup implements InstructionGroup {
     }
 
     private void branchIf(MOS6502 cpu, boolean condition) {
-        int offset = (byte) cpu.fetchOperand();
+        int rawOffset = cpu.fetchOperand();
 
         if (condition) {
-            int currentPc = cpu.getAddressBus();
-            cpu.jump(currentPc + offset);
-            System.out.println("Branch taken to $" + Integer.toHexString(currentPc + offset));
-        } else {
-            System.out.println("Branch not taken");
+            int offset = (rawOffset >= 0x80) ? rawOffset - 256 : rawOffset;
+            int targetPc = (cpu.snapshot().pc() + offset) & 0xFFFF;
+
+            cpu.jump(targetPc);
         }
     }
 }
