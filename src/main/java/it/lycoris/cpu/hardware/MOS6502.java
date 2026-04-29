@@ -116,6 +116,32 @@ public class MOS6502 {
         return (high << 8) | low;
     }
 
+    public boolean isFlagSet(char flag) {
+        ctx.run();
+        return switch (flag) {
+            case 'C' -> getPin("OutC");
+            case 'Z' -> getPin("OutZ");
+            case 'V' -> getPin("OutV");
+            case 'N' -> getPin("OutN");
+            default -> false;
+        };
+    }
+
+    public void indexOp(String pin) {
+        setPin(pin, true);
+        pulseClock();
+        setPin(pin, false);
+    }
+
+    public void jump(int targetAddress) {
+        for (int i = 0; i < 16; i++) {
+            setPin("AIn" + i, ((targetAddress >> i) & 1) == 1);
+        }
+        setPin("LoadPC", true);
+        pulseClock();
+        setPin("LoadPC", false);
+    }
+
     public void reset() {
         System.out.println("[HARDWARE] Executing Reset Sequence...");
         setDataBusIn(0);

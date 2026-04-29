@@ -18,9 +18,11 @@ public class Main {
         Memory ram = new Memory();
 
         byte[] program = {
-                (byte) 0xA9, (byte) 0x42, // LDA #$42
+                (byte) 0xA9, (byte) 0x05, // LDA #$05
                 (byte) 0xAA,              // TAX
-                (byte) 0x8D, (byte) 0x00, (byte) 0x02 // STA $0200
+                // --- LOOP START ($8003) ---
+                (byte) 0xCA,              // DEX       ($8003)
+                (byte) 0xD0, (byte) -3    // BNE -3    ($8004, $8005) -> Salta a PC(8006) - 3 = 8003
         };
 
         ram.loadProgram(0x8000, program);
@@ -29,9 +31,14 @@ public class Main {
 
         SystemMonitor.display(cpu, "Initial State");
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 15; i++) {
             cpu.step();
             SystemMonitor.display(cpu, "After step " + (i + 1));
+
+            if (cpu.snapshot().currentOpcode() == 0x00) {
+                System.out.println("Execution terminated (Reached empty space in RAM).");
+                break;
+            }
         }
 
         System.out.println("\nCheck RAM at $0200: $" +
