@@ -169,17 +169,12 @@ public class MOS6502 {
         setPin("BypassALU", false); // Switch the MUX back to the ALU output
     }
 
-    public void executeALU(String opPin, int operandValue, boolean carryIn) {
-        // 1. Set data on the bus (Source 0 = DIn)
-        writeToBus(operandValue, 0);
-
-        // 2. Set initial Carry In in the ALU
+    public void executeALU(String opPin, int operandValue, boolean carryIn, boolean saveToAccumulator) {
+        writeToBus(operandValue, 0); // Source 0 = DIn
         setPin("CIn", carryIn);
-
-        // 3. Enable the required operation
         setPin(opPin, true);
 
-        // 4. MUX of Status Register: Source ALU (Binary 01)
+        // MUX to ALU output (Binary 01)
         setPin("SelC0", true);
         setPin("SelC1", false);
         setPin("SelZ0", true);
@@ -189,19 +184,31 @@ public class MOS6502 {
         setPin("SelN0", true);
         setPin("SelN1", false);
 
-        // 5. Enable Accubumator writing (BypassALU is false by default, it goes through the ALU!)
-        setPin("LoadA", true);
+        if (saveToAccumulator) {
+            setPin("LoadA", true);
+        }
 
-        // 6. Clock: The result is saved in A and flags in P
         pulseClock();
 
-        // 7. Clean-up
         setPin(opPin, false);
         setPin("LoadA", false);
         setPin("SelC0", false);
         setPin("SelZ0", false);
         setPin("SelV0", false);
         setPin("SelN0", false);
+    }
+
+    public void forceFlag(char flag, boolean state) {
+        String manPin = "Man" + flag;
+        String sel0 = "Sel" + flag + "0";
+        String sel1 = "Sel" + flag + "1";
+
+        setPin(manPin, state);
+        setPin(sel0, true);
+        setPin(sel1, true); // MUX 11 = Manual
+        pulseClock();
+        setPin(sel0, false);
+        setPin(sel1, false); // MUX 00 = Hold
     }
 
     public void reset() {
@@ -238,6 +245,122 @@ public class MOS6502 {
         // Decode & Execute
         instructionSet.get(opcode).logic().execute(this);
     }
+
+    // --- ADDRESSING MODES ---
+
+    public int addrAbsolute() {
+        return fetchAddress();
+    }
+
+    public int addrAbsoluteX() {
+        int base = fetchAddress();
+        return (base + snapshot().x()) & 0xFFFF;
+    }
+
+    public int addrAbsoluteY() {
+        int base = fetchAddress();
+        return (base + snapshot().y()) & 0xFFFF;
+    }
+
+    public int addrZeroPage() {
+        return fetchOperand();
+    }
+
+    public int addrZeroPageX() {
+        int zp = fetchOperand();
+        return (zp + snapshot().x()) & 0xFF;
+    }
+
+    public int addrZeroPageY() {
+        int zp = fetchOperand();
+        return (zp + snapshot().y()) & 0xFF;
+    }
+
+    public int addrIndirect() {
+        int pointer = fetchAddress();
+        int lo = memory.read(pointer);
+        // 6502 Hardware Bug: if pointer ends in $FF, it wraps around the same page!
+        int hi = memory.read((pointer & 0xFF00) | ((pointer + 1) & 0x00FF));
+        return (hi << 8) | lo;
+    }
+
+    // --- SPECIAL ALU OPERATIONS ---
+
+    public void bitTest(int memoryValue) {
+        boolean z = (getAccumulator() & memoryValue) == 0;
+        boolean n = (memoryValue & 0x80) != 0;
+        boolean v = (memoryValue & 0x40) != 0;
+
+        // Update flags manually
+        setPin("ManZ", z);
+        setPin("ManN", n);
+        setPin("ManV", v);
+
+        // Select Manual MUX for Z, N, V
+        setPin("SelZ0", true);
+        setPin("SelZ1", true);
+        setPin("SelN0", true);
+        setPin("SelN1", true);
+        setPin("SelV0", true);
+        setPin("SelV1", true);
+
+        pulseClock();
+
+        // Reset MUX
+        setPin("SelZ0", false);
+        setPin("SelZ1", false);
+        setPin("SelN0", false);
+        setPin("SelN1", false);
+        setPin("SelV0", false);
+        setPin("SelV1", false);
+    }
+
+    // --- MEMORY HELPERS ---
+
+    public int readMemory(int address) {
+        return memory.read(address);
+    }
+
+    public void writeMemory(int address, int value) {
+        memory.write(address, value);
+    }
+
+    // --- STACK HELPERS ---
+
+    public void pushStack(int value) {
+        int sp = snapshot().stackPointer();
+        memory.write(0x0100 | sp, value);
+        indexOp("DecSP");
+    }
+
+    public int pullStack() {
+        indexOp("IncSP");
+        int sp = snapshot().stackPointer();
+        return memory.read(0x0100 | sp);
+    }
+
+    public int getStatusRegister() {
+        int p = 0x20; // Bit 5 is always strictly 1
+        if (isFlagSet('C')) p |= 0x01;
+        if (isFlagSet('Z')) p |= 0x02;
+        if (isFlagSet('I')) p |= 0x04;
+        if (isFlagSet('D')) p |= 0x08;
+        if (isFlagSet('B')) p |= 0x10; // Break flag (software)
+        if (isFlagSet('V')) p |= 0x40;
+        if (isFlagSet('N')) p |= 0x80;
+        return p;
+    }
+
+    public void setStatusRegister(int value) {
+        forceFlag('C', (value & 0x01) != 0);
+        forceFlag('Z', (value & 0x02) != 0);
+        forceFlag('I', (value & 0x04) != 0);
+        forceFlag('D', (value & 0x08) != 0);
+        forceFlag('V', (value & 0x40) != 0);
+        forceFlag('N', (value & 0x80) != 0);
+    }
+
+    // --- EXTRA ---
 
     public CpuState snapshot() {
         int irValue = readRegisterDirectly("IR");

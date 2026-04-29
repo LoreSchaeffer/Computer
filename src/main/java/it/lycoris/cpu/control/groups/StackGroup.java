@@ -34,5 +34,32 @@ public class StackGroup implements InstructionGroup {
             cpu.loadAccumulatorDirect(0); // Bypass ALU and load
             cpu.updateZAndNFlags(val);
         }));
+
+        // TSX - Transfer Stack Pointer to X
+        registry.put(0xBA, new OpcodeMetadata("TSX", cpu -> {
+            int sp = cpu.snapshot().stackPointer();
+            cpu.writeToBus(sp, 0); // Put SP on the bus
+            cpu.pulseRegister("LoadX");
+            cpu.updateZAndNFlags(sp);
+        }));
+
+        // TXS - Transfer X to Stack Pointer (Flags are NOT updated)
+        registry.put(0x9A, new OpcodeMetadata("TXS", cpu -> {
+            int x = cpu.snapshot().x();
+            cpu.writeToBus(x, 0);
+            cpu.pulseRegister("LoadSP");
+        }));
+
+        // PHP - Push Processor Status
+        registry.put(0x08, new OpcodeMetadata("PHP", cpu -> {
+            // PHP pushes with the Break flag (bit 4) set to 1
+            cpu.pushStack(cpu.getStatusRegister() | 0x10);
+        }));
+
+        // PLP - Pull Processor Status
+        registry.put(0x28, new OpcodeMetadata("PLP", cpu -> {
+            int status = cpu.pullStack();
+            cpu.setStatusRegister(status);
+        }));
     }
 }

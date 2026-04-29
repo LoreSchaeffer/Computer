@@ -11,8 +11,13 @@ public class InstructionSet {
     public InstructionSet() {
         load(new ArithmeticGroup());
         load(new BranchGroup());
+        load(new CompareGroup());
+        load(new FlagControlGroup());
+        load(new JumpSystemGroup());
         load(new LoadStoreGroup());
+        load(new LogicalGroup());
         load(new RegisterTransferGroup());
+        load(new ShiftRotateGroup());
         load(new StackGroup());
     }
 
