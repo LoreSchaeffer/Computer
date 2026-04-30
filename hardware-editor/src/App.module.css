@@ -1,0 +1,69 @@
+.appContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+}
+
+.mainWorkspace {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.canvasContainer {
+    flex: 1;
+    position: relative;
+    background-color: var(--color-bg-primary);
+}
+
+.canvasContainer :global(.react-flow__background) {
+    background-color: var(--color-bg-primary);
+}
+
+.canvasContainer :global(.react-flow__controls) {
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    padding: 0;
+}
+
+.canvasContainer :global(.react-flow__controls button) {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    fill: var(--color-text-primary);
+    transition: background-color var(--transition-fast), fill var(--transition-fast);
+}
+
+.canvasContainer :global(.react-flow__controls button:last-child) {
+    border-bottom: none;
+}
+
+.canvasContainer :global(.react-flow__controls button:hover) {
+    background-color: var(--color-primary);
+    fill: var(--color-text-accent);
+}
+
+.canvasContainer :global(.react-flow__minimap) {
+    background-color: var(--color-bg-tertiary) !important;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.canvasContainer :global(.react-flow__pane) {
+    cursor: crosshair !important;
+}
+
+.canvasContainer :global(.react-flow__controls),
+.canvasContainer :global(.react-flow__minimap) {
+    cursor: default;
+}
+
+.canvasContainer :global(.react-flow__nodesselection-rect) {
+    display: none !important;
+}

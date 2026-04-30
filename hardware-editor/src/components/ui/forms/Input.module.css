@@ -1,0 +1,137 @@
+.formInput {
+    width: 100%;
+}
+
+.inputWrapper {
+    position: relative;
+    width: 100%;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.inputWrapper.spinnerMode {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    background-color: transparent;
+    overflow: hidden;
+}
+
+.input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+    outline: none;
+    font-family: var(--font-family-base);
+}
+
+.input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.standardInput {
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+}
+
+.inputWrapper.primary .standardInput {
+    background-color: var(--color-bg-primary);
+}
+
+.inputWrapper.secondary .standardInput {
+    background-color: var(--color-bg-secondary);
+}
+
+.inputWrapper.tertiary .standardInput {
+    background-color: var(--color-bg-tertiary);
+}
+
+.inputWrapper.error .standardInput {
+    border-color: var(--color-error);
+}
+
+.standardInput:focus {
+    border-color: var(--color-primary);
+}
+
+.spinnerInput {
+    border: none;
+    padding: 4px 0;
+    text-align: center;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.inputWrapper.spinnerMode:has(.spinnerInput:focus) {
+    border-color: var(--color-primary);
+}
+
+.spinnerBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary);
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.spinnerBtn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.inputWrapper:has(.icon) .standardInput {
+    padding-right: 36px;
+}
+
+.icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    opacity: 0.6;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon.clickable {
+    pointer-events: auto;
+    cursor: pointer;
+    opacity: 0.8;
+    z-index: 10;
+}
+
+.standardInput:focus ~ .icon {
+    color: var(--color-primary);
+    opacity: 1;
+}
+
+.errorMessage {
+    color: var(--color-error);
+    font-size: 0.8rem;
+    margin-top: 4px;
+}

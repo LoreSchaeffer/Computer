@@ -1,0 +1,2140 @@
+{
+  "chipName": "StatusRegister",
+  "chipColor": "#f43f5e",
+  "chipGroup": "Registers",
+  "pins": {
+    "inputs": [
+      "Bus0",
+      "Bus1",
+      "Bus2",
+      "Bus3",
+      "Bus4",
+      "Bus5",
+      "Bus6",
+      "Bus7",
+      "AluN",
+      "AluV",
+      "AluZ",
+      "AluC",
+      "SelC0",
+      "SelC1",
+      "ManC",
+      "SelZ0",
+      "SelZ1",
+      "ManZ",
+      "SelI0",
+      "SelI1",
+      "ManI",
+      "SelD0",
+      "SelD1",
+      "ManD",
+      "SelB0",
+      "SelB1",
+      "ManB",
+      "SelV0",
+      "SelV1",
+      "ManV",
+      "SelN0",
+      "SelN1",
+      "ManN",
+      "Clk",
+      "InI",
+      "InD",
+      "InB"
+    ],
+    "outputs": [
+      "P0",
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5",
+      "P6",
+      "P7"
+    ]
+  },
+  "internalWires": [
+    "wire_vcc_bd98_Out"
+  ],
+  "components": [
+    {
+      "type": "StatusRegisterBit",
+      "name": "StatusRegisterBit",
+      "inputs": {
+        "AluIn": "AluC",
+        "BusIn": "Bus0",
+        "ManIn": "ManC",
+        "Sel0": "SelC0",
+        "Sel1": "SelC1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P0"
+        ]
+      }
+    },
+    {
+      "type": "StatusRegisterBit",
+      "name": "StatusRegisterBit",
+      "inputs": {
+        "AluIn": "AluZ",
+        "BusIn": "Bus1",
+        "ManIn": "ManZ",
+        "Sel0": "SelZ0",
+        "Sel1": "SelZ1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P1"
+        ]
+      }
+    },
+    {
+      "type": "StatusRegisterBit",
+      "name": "StatusRegisterBit",
+      "inputs": {
+        "AluIn": "InI",
+        "BusIn": "Bus2",
+        "ManIn": "ManI",
+        "Sel0": "SelI0",
+        "Sel1": "SelI1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P2"
+        ]
+      }
+    },
+    {
+      "type": "StatusRegisterBit",
+      "name": "StatusRegisterBit",
+      "inputs": {
+        "AluIn": "InD",
+        "BusIn": "Bus3",
+        "ManIn": "ManD",
+        "Sel0": "SelD0",
+        "Sel1": "SelD1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P3"
+        ]
+      }
+    },
+    {
+      "type": "StatusRegisterBit",
+      "name": "StatusRegisterBit",
+      "inputs": {
+        "AluIn": "InB",
+        "BusIn": "Bus4",
+        "ManIn": "ManB",
+        "Sel0": "SelB0",
+        "Sel1": "SelB1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P4"
+        ]
+      }
+    },
+    {
+      "type": "StatusRegisterBit",
+      "name": "StatusRegisterBit",
+      "inputs": {
+        "AluIn": "AluV",
+        "BusIn": "Bus6",
+        "ManIn": "ManV",
+        "Sel0": "SelV0",
+        "Sel1": "SelV1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P6"
+        ]
+      }
+    },
+    {
+      "type": "StatusRegisterBit",
+      "name": "StatusRegisterBit",
+      "inputs": {
+        "AluIn": "AluN",
+        "BusIn": "Bus7",
+        "ManIn": "ManN",
+        "Sel0": "SelN0",
+        "Sel1": "SelN1",
+        "Clk": "Clk"
+      },
+      "outputs": {
+        "Q": [
+          "P7"
+        ]
+      }
+    },
+    {
+      "type": "VCC",
+      "name": "VCC",
+      "inputs": {},
+      "outputs": {
+        "Out": [
+          "wire_vcc_bd98_Out"
+        ]
+      }
+    },
+    {
+      "type": "OrGate",
+      "name": "OR",
+      "inputs": {
+        "A": "wire_vcc_bd98_Out",
+        "B": "Bus5"
+      },
+      "outputs": {
+        "Out": [
+          "P5"
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "nodes": [
+      {
+        "id": "node_483f0ec0-7454-48d9-914d-ad6b1df788de",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 625.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Bus0",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_5baa8135-4ffc-45a6-8480-6a4150c100dc",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1135.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Bus1",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_ccb571c4-bb93-46f6-be98-7754322516c1",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1690.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Bus2",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_b345c284-4274-4e67-9194-17a5e9f4e21f",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 2260.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Bus3",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_9db88853-e5b6-4344-84fa-5150f57b52a5",
+        "type": "inputPin",
+        "position": {
+          "x": -2360,
+          "y": 2875.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Bus4",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_45a8620a-8cd5-403d-8bd1-0b91b33d1a9e",
+        "type": "inputPin",
+        "position": {
+          "x": -2360,
+          "y": 3505.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Bus5",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_ba7a7a55-6abb-4a2d-aeae-1f15f3476b40",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 3700.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Bus6",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_2dfb1bc6-1107-4931-8370-f3cae046ab9f",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 4255.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Bus7",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_2f46a17f-c50c-425a-a2f6-e27cfcac33f9",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 4345.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "AluN",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_896808f4-d722-4fdd-93fe-8a054be9e219",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 3790.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "AluV",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_280cdbab-4522-474a-93ce-f090fb80989f",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1225.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "AluZ",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_b4569fa2-83d4-4e2e-9421-c5f0e5f0e056",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 715.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "AluC",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_9afa90ae-e06e-49cf-a24e-2c3e2a97c928",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 805.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelC0",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_74eadf56-51b7-4cd2-aeb2-9ff36bc1aebd",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 895.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelC1",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_cc855bba-15fc-4b01-8fe7-fddbc3723c94",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 985.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "ManC",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_384af636-03fb-4462-966e-e8f3fef83066",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1315.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelZ0",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_5a2031b7-1a1c-4bcd-aca5-574e1c11a505",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1405.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelZ1",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_ef0c6195-c1df-4e64-99e5-c5d6dce0648c",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1495.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "ManZ",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_f09bee71-3cc7-4b86-99f8-c47fed710c31",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1870.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelI0",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_216074aa-355a-48e3-a328-6afc986b2134",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1960.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelI1",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_f508a0c6-030e-48c6-959b-ef958856f2e2",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 2050.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "ManI",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_dc74f48d-a5f3-47ec-8f35-9e5be367742a",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 2440.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelD0",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_ae23e9a3-db29-491e-b703-0bb461a6d205",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 2530.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelD1",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_c52bb6c0-a426-4d93-ba67-63a195fe2631",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 2620.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "ManD",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_4135ea32-74a6-472d-a9b6-80cdb2e338c6",
+        "type": "inputPin",
+        "position": {
+          "x": -2360,
+          "y": 3055.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelB0",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_3336001b-3391-4478-b9e8-5a14d566dfb8",
+        "type": "inputPin",
+        "position": {
+          "x": -2360,
+          "y": 3145.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelB1",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_5a098f47-9acf-4dcf-b5fd-ab2374824af4",
+        "type": "inputPin",
+        "position": {
+          "x": -2360,
+          "y": 3235.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "ManB",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_fc204f1a-1044-4f39-9169-d5ab2140b792",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 3880.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelV0",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_f4e2e6b7-ec89-42c0-9e50-08be6f484194",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 3970.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelV1",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_8358c79f-b433-4f85-92bb-d9ca5c13fd0e",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 4060.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "ManV",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_f7180790-f01b-4d9f-b6b3-9aef2b0c846b",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 4435.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelN0",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_af0ccd18-37f2-4240-9de2-a2e8c513c2f4",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 4525.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "SelN1",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_e8dd645f-f283-4f13-9e6f-6ca4fdebe1c9",
+        "type": "inputPin",
+        "position": {
+          "x": -2315,
+          "y": 4615.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "ManN",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_279a9696-45f4-46a9-ac17-68ba299262c9",
+        "type": "inputPin",
+        "position": {
+          "x": -3275,
+          "y": 1825.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Clk",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_4b8e9c81-9675-4a6d-8e3b-83abd567789b",
+        "type": "customChip",
+        "position": {
+          "x": -1620,
+          "y": 824.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
+          "inputs": [
+            "AluIn",
+            "BusIn",
+            "ManIn",
+            "Sel0",
+            "Sel1",
+            "Clk"
+          ],
+          "outputs": [
+            "Q"
+          ],
+          "headerColor": "#f43f5e",
+          "group": "Registers"
+        },
+        "measured": {
+          "width": 150,
+          "height": 179
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_557bac1c-596f-4188-8db3-74f2a4e8bbb6",
+        "type": "customChip",
+        "position": {
+          "x": -1620,
+          "y": 1199.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
+          "inputs": [
+            "AluIn",
+            "BusIn",
+            "ManIn",
+            "Sel0",
+            "Sel1",
+            "Clk"
+          ],
+          "outputs": [
+            "Q"
+          ],
+          "headerColor": "#f43f5e",
+          "group": "Registers"
+        },
+        "measured": {
+          "width": 150,
+          "height": 179
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2f",
+        "type": "customChip",
+        "position": {
+          "x": -1605,
+          "y": 1694.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
+          "inputs": [
+            "AluIn",
+            "BusIn",
+            "ManIn",
+            "Sel0",
+            "Sel1",
+            "Clk"
+          ],
+          "outputs": [
+            "Q"
+          ],
+          "headerColor": "#f43f5e",
+          "group": "Registers"
+        },
+        "measured": {
+          "width": 150,
+          "height": 179
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15",
+        "type": "customChip",
+        "position": {
+          "x": -1590,
+          "y": 2309.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
+          "inputs": [
+            "AluIn",
+            "BusIn",
+            "ManIn",
+            "Sel0",
+            "Sel1",
+            "Clk"
+          ],
+          "outputs": [
+            "Q"
+          ],
+          "headerColor": "#f43f5e",
+          "group": "Registers"
+        },
+        "measured": {
+          "width": 150,
+          "height": 179
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_f1115c16-5a9e-4667-8ca2-218697822b79",
+        "type": "customChip",
+        "position": {
+          "x": -1575,
+          "y": 2954.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
+          "inputs": [
+            "AluIn",
+            "BusIn",
+            "ManIn",
+            "Sel0",
+            "Sel1",
+            "Clk"
+          ],
+          "outputs": [
+            "Q"
+          ],
+          "headerColor": "#f43f5e",
+          "group": "Registers"
+        },
+        "measured": {
+          "width": 150,
+          "height": 179
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8a",
+        "type": "customChip",
+        "position": {
+          "x": -1515,
+          "y": 3989.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
+          "inputs": [
+            "AluIn",
+            "BusIn",
+            "ManIn",
+            "Sel0",
+            "Sel1",
+            "Clk"
+          ],
+          "outputs": [
+            "Q"
+          ],
+          "headerColor": "#f43f5e",
+          "group": "Registers"
+        },
+        "measured": {
+          "width": 150,
+          "height": 179
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_583d97cb-7a7f-4849-b2ce-d83d894e9750",
+        "type": "customChip",
+        "position": {
+          "x": -1485,
+          "y": 4454.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "StatusRegisterBit",
+          "typeLabel": "StatusRegisterBit",
+          "inputs": [
+            "AluIn",
+            "BusIn",
+            "ManIn",
+            "Sel0",
+            "Sel1",
+            "Clk"
+          ],
+          "outputs": [
+            "Q"
+          ],
+          "headerColor": "#f43f5e",
+          "group": "Registers"
+        },
+        "measured": {
+          "width": 150,
+          "height": 179
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_3746b9a0-5c22-45d6-9726-49a3b2aafec2",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 1780.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "InI",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_a1a0ee92-c995-4ec2-9c92-dbf7af74016c",
+        "type": "inputPin",
+        "position": {
+          "x": -2345,
+          "y": 2350.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "InD",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_021f2cb5-6f7c-4bf2-8647-1658ff5d37c9",
+        "type": "inputPin",
+        "position": {
+          "x": -2360,
+          "y": 2965.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "InB",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_73d85b87-e745-453b-956b-9c262b61bd98",
+        "type": "logicGate",
+        "position": {
+          "x": -2360,
+          "y": 3384.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "VCC",
+          "typeLabel": "VCC",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_e0c31fb4-d9cd-42f8-abe5-14456e5104d8",
+        "type": "logicGate",
+        "position": {
+          "x": -2070,
+          "y": 3465
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "OR",
+          "typeLabel": "OrGate",
+          "inputs": [
+            "A",
+            "B"
+          ],
+          "outputs": [
+            "Out"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 99
+        }
+      },
+      {
+        "id": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "type": "outputPin",
+        "position": {
+          "x": -755,
+          "y": 2704.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": true,
+        "data": {
+          "typeLabel": "OUTPUT8",
+          "label": "P",
+          "group": "I/O Nodes",
+          "inputs": [
+            "In0",
+            "In1",
+            "In2",
+            "In3",
+            "In4",
+            "In5",
+            "In6",
+            "In7"
+          ],
+          "outputs": []
+        },
+        "measured": {
+          "width": 110,
+          "height": 219
+        },
+        "dragging": false
+      }
+    ],
+    "edges": [
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_b4569fa2-83d4-4e2e-9421-c5f0e5f0e056",
+        "sourceHandle": "Out",
+        "target": "node_4b8e9c81-9675-4a6d-8e3b-83abd567789b",
+        "targetHandle": "AluIn",
+        "id": "xy-edge__node_b4569fa2-83d4-4e2e-9421-c5f0e5f0e056Out-node_4b8e9c81-9675-4a6d-8e3b-83abd567789bAluIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_483f0ec0-7454-48d9-914d-ad6b1df788de",
+        "sourceHandle": "Out",
+        "target": "node_4b8e9c81-9675-4a6d-8e3b-83abd567789b",
+        "targetHandle": "BusIn",
+        "id": "xy-edge__node_483f0ec0-7454-48d9-914d-ad6b1df788deOut-node_4b8e9c81-9675-4a6d-8e3b-83abd567789bBusIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_cc855bba-15fc-4b01-8fe7-fddbc3723c94",
+        "sourceHandle": "Out",
+        "target": "node_4b8e9c81-9675-4a6d-8e3b-83abd567789b",
+        "targetHandle": "ManIn",
+        "id": "xy-edge__node_cc855bba-15fc-4b01-8fe7-fddbc3723c94Out-node_4b8e9c81-9675-4a6d-8e3b-83abd567789bManIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_9afa90ae-e06e-49cf-a24e-2c3e2a97c928",
+        "sourceHandle": "Out",
+        "target": "node_4b8e9c81-9675-4a6d-8e3b-83abd567789b",
+        "targetHandle": "Sel0",
+        "id": "xy-edge__node_9afa90ae-e06e-49cf-a24e-2c3e2a97c928Out-node_4b8e9c81-9675-4a6d-8e3b-83abd567789bSel0",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_74eadf56-51b7-4cd2-aeb2-9ff36bc1aebd",
+        "sourceHandle": "Out",
+        "target": "node_4b8e9c81-9675-4a6d-8e3b-83abd567789b",
+        "targetHandle": "Sel1",
+        "id": "xy-edge__node_74eadf56-51b7-4cd2-aeb2-9ff36bc1aebdOut-node_4b8e9c81-9675-4a6d-8e3b-83abd567789bSel1",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_279a9696-45f4-46a9-ac17-68ba299262c9",
+        "sourceHandle": "Out",
+        "target": "node_4b8e9c81-9675-4a6d-8e3b-83abd567789b",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_279a9696-45f4-46a9-ac17-68ba299262c9Out-node_4b8e9c81-9675-4a6d-8e3b-83abd567789bClk",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_5baa8135-4ffc-45a6-8480-6a4150c100dc",
+        "sourceHandle": "Out",
+        "target": "node_557bac1c-596f-4188-8db3-74f2a4e8bbb6",
+        "targetHandle": "BusIn",
+        "id": "xy-edge__node_5baa8135-4ffc-45a6-8480-6a4150c100dcOut-node_557bac1c-596f-4188-8db3-74f2a4e8bbb6BusIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_280cdbab-4522-474a-93ce-f090fb80989f",
+        "sourceHandle": "Out",
+        "target": "node_557bac1c-596f-4188-8db3-74f2a4e8bbb6",
+        "targetHandle": "AluIn",
+        "id": "xy-edge__node_280cdbab-4522-474a-93ce-f090fb80989fOut-node_557bac1c-596f-4188-8db3-74f2a4e8bbb6AluIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_384af636-03fb-4462-966e-e8f3fef83066",
+        "sourceHandle": "Out",
+        "target": "node_557bac1c-596f-4188-8db3-74f2a4e8bbb6",
+        "targetHandle": "Sel0",
+        "id": "xy-edge__node_384af636-03fb-4462-966e-e8f3fef83066Out-node_557bac1c-596f-4188-8db3-74f2a4e8bbb6Sel0"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_5a2031b7-1a1c-4bcd-aca5-574e1c11a505",
+        "sourceHandle": "Out",
+        "target": "node_557bac1c-596f-4188-8db3-74f2a4e8bbb6",
+        "targetHandle": "Sel1",
+        "id": "xy-edge__node_5a2031b7-1a1c-4bcd-aca5-574e1c11a505Out-node_557bac1c-596f-4188-8db3-74f2a4e8bbb6Sel1"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_ef0c6195-c1df-4e64-99e5-c5d6dce0648c",
+        "sourceHandle": "Out",
+        "target": "node_557bac1c-596f-4188-8db3-74f2a4e8bbb6",
+        "targetHandle": "ManIn",
+        "id": "xy-edge__node_ef0c6195-c1df-4e64-99e5-c5d6dce0648cOut-node_557bac1c-596f-4188-8db3-74f2a4e8bbb6ManIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_ccb571c4-bb93-46f6-be98-7754322516c1",
+        "sourceHandle": "Out",
+        "target": "node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2f",
+        "targetHandle": "BusIn",
+        "id": "xy-edge__node_ccb571c4-bb93-46f6-be98-7754322516c1Out-node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2fBusIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_3746b9a0-5c22-45d6-9726-49a3b2aafec2",
+        "sourceHandle": "Out",
+        "target": "node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2f",
+        "targetHandle": "AluIn",
+        "id": "xy-edge__node_3746b9a0-5c22-45d6-9726-49a3b2aafec2Out-node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2fAluIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_f09bee71-3cc7-4b86-99f8-c47fed710c31",
+        "sourceHandle": "Out",
+        "target": "node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2f",
+        "targetHandle": "Sel0",
+        "id": "xy-edge__node_f09bee71-3cc7-4b86-99f8-c47fed710c31Out-node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2fSel0",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_216074aa-355a-48e3-a328-6afc986b2134",
+        "sourceHandle": "Out",
+        "target": "node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2f",
+        "targetHandle": "Sel1",
+        "id": "xy-edge__node_216074aa-355a-48e3-a328-6afc986b2134Out-node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2fSel1",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_f508a0c6-030e-48c6-959b-ef958856f2e2",
+        "sourceHandle": "Out",
+        "target": "node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2f",
+        "targetHandle": "ManIn",
+        "id": "xy-edge__node_f508a0c6-030e-48c6-959b-ef958856f2e2Out-node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2fManIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_b345c284-4274-4e67-9194-17a5e9f4e21f",
+        "sourceHandle": "Out",
+        "target": "node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15",
+        "targetHandle": "BusIn",
+        "id": "xy-edge__node_b345c284-4274-4e67-9194-17a5e9f4e21fOut-node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15BusIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_a1a0ee92-c995-4ec2-9c92-dbf7af74016c",
+        "sourceHandle": "Out",
+        "target": "node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15",
+        "targetHandle": "AluIn",
+        "id": "xy-edge__node_a1a0ee92-c995-4ec2-9c92-dbf7af74016cOut-node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15AluIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_dc74f48d-a5f3-47ec-8f35-9e5be367742a",
+        "sourceHandle": "Out",
+        "target": "node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15",
+        "targetHandle": "Sel0",
+        "id": "xy-edge__node_dc74f48d-a5f3-47ec-8f35-9e5be367742aOut-node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15Sel0",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_ae23e9a3-db29-491e-b703-0bb461a6d205",
+        "sourceHandle": "Out",
+        "target": "node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15",
+        "targetHandle": "Sel1",
+        "id": "xy-edge__node_ae23e9a3-db29-491e-b703-0bb461a6d205Out-node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15Sel1",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_c52bb6c0-a426-4d93-ba67-63a195fe2631",
+        "sourceHandle": "Out",
+        "target": "node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15",
+        "targetHandle": "ManIn",
+        "id": "xy-edge__node_c52bb6c0-a426-4d93-ba67-63a195fe2631Out-node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15ManIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_9db88853-e5b6-4344-84fa-5150f57b52a5",
+        "sourceHandle": "Out",
+        "target": "node_f1115c16-5a9e-4667-8ca2-218697822b79",
+        "targetHandle": "BusIn",
+        "id": "xy-edge__node_9db88853-e5b6-4344-84fa-5150f57b52a5Out-node_f1115c16-5a9e-4667-8ca2-218697822b79BusIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_021f2cb5-6f7c-4bf2-8647-1658ff5d37c9",
+        "sourceHandle": "Out",
+        "target": "node_f1115c16-5a9e-4667-8ca2-218697822b79",
+        "targetHandle": "AluIn",
+        "id": "xy-edge__node_021f2cb5-6f7c-4bf2-8647-1658ff5d37c9Out-node_f1115c16-5a9e-4667-8ca2-218697822b79AluIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_4135ea32-74a6-472d-a9b6-80cdb2e338c6",
+        "sourceHandle": "Out",
+        "target": "node_f1115c16-5a9e-4667-8ca2-218697822b79",
+        "targetHandle": "Sel0",
+        "id": "xy-edge__node_4135ea32-74a6-472d-a9b6-80cdb2e338c6Out-node_f1115c16-5a9e-4667-8ca2-218697822b79Sel0"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_3336001b-3391-4478-b9e8-5a14d566dfb8",
+        "sourceHandle": "Out",
+        "target": "node_f1115c16-5a9e-4667-8ca2-218697822b79",
+        "targetHandle": "Sel1",
+        "id": "xy-edge__node_3336001b-3391-4478-b9e8-5a14d566dfb8Out-node_f1115c16-5a9e-4667-8ca2-218697822b79Sel1"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_896808f4-d722-4fdd-93fe-8a054be9e219",
+        "sourceHandle": "Out",
+        "target": "node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8a",
+        "targetHandle": "AluIn",
+        "id": "xy-edge__node_896808f4-d722-4fdd-93fe-8a054be9e219Out-node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8aAluIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_fc204f1a-1044-4f39-9169-d5ab2140b792",
+        "sourceHandle": "Out",
+        "target": "node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8a",
+        "targetHandle": "Sel0",
+        "id": "xy-edge__node_fc204f1a-1044-4f39-9169-d5ab2140b792Out-node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8aSel0"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_f4e2e6b7-ec89-42c0-9e50-08be6f484194",
+        "sourceHandle": "Out",
+        "target": "node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8a",
+        "targetHandle": "Sel1",
+        "id": "xy-edge__node_f4e2e6b7-ec89-42c0-9e50-08be6f484194Out-node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8aSel1"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_8358c79f-b433-4f85-92bb-d9ca5c13fd0e",
+        "sourceHandle": "Out",
+        "target": "node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8a",
+        "targetHandle": "ManIn",
+        "id": "xy-edge__node_8358c79f-b433-4f85-92bb-d9ca5c13fd0eOut-node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8aManIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_ba7a7a55-6abb-4a2d-aeae-1f15f3476b40",
+        "sourceHandle": "Out",
+        "target": "node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8a",
+        "targetHandle": "BusIn",
+        "id": "xy-edge__node_ba7a7a55-6abb-4a2d-aeae-1f15f3476b40Out-node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8aBusIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_2dfb1bc6-1107-4931-8370-f3cae046ab9f",
+        "sourceHandle": "Out",
+        "target": "node_583d97cb-7a7f-4849-b2ce-d83d894e9750",
+        "targetHandle": "BusIn",
+        "id": "xy-edge__node_2dfb1bc6-1107-4931-8370-f3cae046ab9fOut-node_583d97cb-7a7f-4849-b2ce-d83d894e9750BusIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_f7180790-f01b-4d9f-b6b3-9aef2b0c846b",
+        "sourceHandle": "Out",
+        "target": "node_583d97cb-7a7f-4849-b2ce-d83d894e9750",
+        "targetHandle": "Sel0",
+        "id": "xy-edge__node_f7180790-f01b-4d9f-b6b3-9aef2b0c846bOut-node_583d97cb-7a7f-4849-b2ce-d83d894e9750Sel0",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_af0ccd18-37f2-4240-9de2-a2e8c513c2f4",
+        "sourceHandle": "Out",
+        "target": "node_583d97cb-7a7f-4849-b2ce-d83d894e9750",
+        "targetHandle": "Sel1",
+        "id": "xy-edge__node_af0ccd18-37f2-4240-9de2-a2e8c513c2f4Out-node_583d97cb-7a7f-4849-b2ce-d83d894e9750Sel1",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_e8dd645f-f283-4f13-9e6f-6ca4fdebe1c9",
+        "sourceHandle": "Out",
+        "target": "node_583d97cb-7a7f-4849-b2ce-d83d894e9750",
+        "targetHandle": "ManIn",
+        "id": "xy-edge__node_e8dd645f-f283-4f13-9e6f-6ca4fdebe1c9Out-node_583d97cb-7a7f-4849-b2ce-d83d894e9750ManIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_279a9696-45f4-46a9-ac17-68ba299262c9",
+        "sourceHandle": "Out",
+        "target": "node_557bac1c-596f-4188-8db3-74f2a4e8bbb6",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_279a9696-45f4-46a9-ac17-68ba299262c9Out-node_557bac1c-596f-4188-8db3-74f2a4e8bbb6Clk"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_279a9696-45f4-46a9-ac17-68ba299262c9",
+        "sourceHandle": "Out",
+        "target": "node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2f",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_279a9696-45f4-46a9-ac17-68ba299262c9Out-node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2fClk"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_279a9696-45f4-46a9-ac17-68ba299262c9",
+        "sourceHandle": "Out",
+        "target": "node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_279a9696-45f4-46a9-ac17-68ba299262c9Out-node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15Clk"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_279a9696-45f4-46a9-ac17-68ba299262c9",
+        "sourceHandle": "Out",
+        "target": "node_f1115c16-5a9e-4667-8ca2-218697822b79",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_279a9696-45f4-46a9-ac17-68ba299262c9Out-node_f1115c16-5a9e-4667-8ca2-218697822b79Clk"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_279a9696-45f4-46a9-ac17-68ba299262c9",
+        "sourceHandle": "Out",
+        "target": "node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8a",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_279a9696-45f4-46a9-ac17-68ba299262c9Out-node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8aClk"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_279a9696-45f4-46a9-ac17-68ba299262c9",
+        "sourceHandle": "Out",
+        "target": "node_583d97cb-7a7f-4849-b2ce-d83d894e9750",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_279a9696-45f4-46a9-ac17-68ba299262c9Out-node_583d97cb-7a7f-4849-b2ce-d83d894e9750Clk"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_5a098f47-9acf-4dcf-b5fd-ab2374824af4",
+        "sourceHandle": "Out",
+        "target": "node_f1115c16-5a9e-4667-8ca2-218697822b79",
+        "targetHandle": "ManIn",
+        "id": "xy-edge__node_5a098f47-9acf-4dcf-b5fd-ab2374824af4Out-node_f1115c16-5a9e-4667-8ca2-218697822b79ManIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_73d85b87-e745-453b-956b-9c262b61bd98",
+        "sourceHandle": "Out",
+        "target": "node_e0c31fb4-d9cd-42f8-abe5-14456e5104d8",
+        "targetHandle": "A",
+        "id": "xy-edge__node_73d85b87-e745-453b-956b-9c262b61bd98Out-node_e0c31fb4-d9cd-42f8-abe5-14456e5104d8A"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_45a8620a-8cd5-403d-8bd1-0b91b33d1a9e",
+        "sourceHandle": "Out",
+        "target": "node_e0c31fb4-d9cd-42f8-abe5-14456e5104d8",
+        "targetHandle": "B",
+        "id": "xy-edge__node_45a8620a-8cd5-403d-8bd1-0b91b33d1a9eOut-node_e0c31fb4-d9cd-42f8-abe5-14456e5104d8B"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_2f46a17f-c50c-425a-a2f6-e27cfcac33f9",
+        "sourceHandle": "Out",
+        "target": "node_583d97cb-7a7f-4849-b2ce-d83d894e9750",
+        "targetHandle": "AluIn",
+        "id": "xy-edge__node_2f46a17f-c50c-425a-a2f6-e27cfcac33f9Out-node_583d97cb-7a7f-4849-b2ce-d83d894e9750AluIn"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_4b8e9c81-9675-4a6d-8e3b-83abd567789b",
+        "sourceHandle": "Q",
+        "target": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "targetHandle": "In0",
+        "id": "xy-edge__node_4b8e9c81-9675-4a6d-8e3b-83abd567789bQ-node_9102b325-d14a-49b6-9cf8-bd5369bac06cIn0",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_557bac1c-596f-4188-8db3-74f2a4e8bbb6",
+        "sourceHandle": "Q",
+        "target": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "targetHandle": "In1",
+        "id": "xy-edge__node_557bac1c-596f-4188-8db3-74f2a4e8bbb6Q-node_9102b325-d14a-49b6-9cf8-bd5369bac06cIn1",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2f",
+        "sourceHandle": "Q",
+        "target": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "targetHandle": "In2",
+        "id": "xy-edge__node_e87259b1-e1cf-42c5-a92f-3fe865b8ac2fQ-node_9102b325-d14a-49b6-9cf8-bd5369bac06cIn2",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15",
+        "sourceHandle": "Q",
+        "target": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "targetHandle": "In3",
+        "id": "xy-edge__node_fd7b64dc-1f80-4b09-bae4-28e6a29d7c15Q-node_9102b325-d14a-49b6-9cf8-bd5369bac06cIn3",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_f1115c16-5a9e-4667-8ca2-218697822b79",
+        "sourceHandle": "Q",
+        "target": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "targetHandle": "In4",
+        "id": "xy-edge__node_f1115c16-5a9e-4667-8ca2-218697822b79Q-node_9102b325-d14a-49b6-9cf8-bd5369bac06cIn4",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_e0c31fb4-d9cd-42f8-abe5-14456e5104d8",
+        "sourceHandle": "Out",
+        "target": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "targetHandle": "In5",
+        "id": "xy-edge__node_e0c31fb4-d9cd-42f8-abe5-14456e5104d8Out-node_9102b325-d14a-49b6-9cf8-bd5369bac06cIn5",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8a",
+        "sourceHandle": "Q",
+        "target": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "targetHandle": "In6",
+        "id": "xy-edge__node_6aa97262-3bf3-48cf-ba4e-cc94ef2fcc8aQ-node_9102b325-d14a-49b6-9cf8-bd5369bac06cIn6",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_583d97cb-7a7f-4849-b2ce-d83d894e9750",
+        "sourceHandle": "Q",
+        "target": "node_9102b325-d14a-49b6-9cf8-bd5369bac06c",
+        "targetHandle": "In7",
+        "id": "xy-edge__node_583d97cb-7a7f-4849-b2ce-d83d894e9750Q-node_9102b325-d14a-49b6-9cf8-bd5369bac06cIn7",
+        "animated": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,131 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background-color: var(--color-bg-tertiary);
+    border-bottom: 1px solid var(--color-border);
+    height: 65px;
+}
+
+.leftSection {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* Field Groups & Dividers */
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.divider {
+    width: 1px;
+    height: 32px;
+    background-color: var(--color-border);
+    margin: 0 var(--spacing-xs);
+}
+
+.fieldLabel {
+    font-size: 0.65rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Chip Name Specifics */
+.titleText {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-accent);
+    cursor: text;
+    padding: 2px 6px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid transparent;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    display: flex;
+    align-items: center;
+    height: 28px;
+}
+
+.titleText:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-border);
+}
+
+.titleInputWrapper {
+    width: 180px;
+}
+
+/* Group Specifics */
+.groupInputWrapper {
+    width: 150px;
+}
+
+/* Color Controls */
+.colorControls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    height: 28px;
+}
+
+.presetColors {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 4px;
+}
+
+.presetSwatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+}
+
+.presetSwatch:hover {
+    transform: scale(1.15);
+}
+
+.presetSwatch.active {
+    border-color: var(--color-text-accent);
+    transform: scale(1.1);
+}
+
+.colorPicker {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.colorPicker::-webkit-color-swatch {
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border);
+}
+
+.colorPicker::-moz-color-swatch {
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border);
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.square {
+    padding: var(--spacing-sm) var(--spacing-sm) !important;
+}

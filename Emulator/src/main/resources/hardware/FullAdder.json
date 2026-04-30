@@ -1,0 +1,513 @@
+{
+  "chipName": "FullAdder",
+  "chipColor": "#a855f7",
+  "chipGroup": "Arithmetic",
+  "pins": {
+    "inputs": [
+      "A",
+      "B",
+      "CIn"
+    ],
+    "outputs": [
+      "Sum",
+      "COut"
+    ]
+  },
+  "internalWires": [
+    "wire_xor_6461_Out",
+    "wire_and_8576_Out",
+    "wire_and_12b9_Out"
+  ],
+  "components": [
+    {
+      "type": "XorGate",
+      "name": "XOR",
+      "inputs": {
+        "A": "wire_xor_6461_Out",
+        "B": "CIn"
+      },
+      "outputs": {
+        "Out": [
+          "Sum"
+        ]
+      }
+    },
+    {
+      "type": "XorGate",
+      "name": "XOR",
+      "inputs": {
+        "A": "A",
+        "B": "B"
+      },
+      "outputs": {
+        "Out": [
+          "wire_xor_6461_Out"
+        ]
+      }
+    },
+    {
+      "type": "AndGate",
+      "name": "AND",
+      "inputs": {
+        "A": "wire_xor_6461_Out",
+        "B": "CIn"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_8576_Out"
+        ]
+      }
+    },
+    {
+      "type": "AndGate",
+      "name": "AND",
+      "inputs": {
+        "A": "A",
+        "B": "B"
+      },
+      "outputs": {
+        "Out": [
+          "wire_and_12b9_Out"
+        ]
+      }
+    },
+    {
+      "type": "OrGate",
+      "name": "OR",
+      "inputs": {
+        "A": "wire_and_8576_Out",
+        "B": "wire_and_12b9_Out"
+      },
+      "outputs": {
+        "Out": [
+          "COut"
+        ]
+      }
+    }
+  ],
+  "layout": {
+    "nodes": [
+      {
+        "id": "node_3af6bbb4-e62b-4ece-b09c-f05d3a6c1351",
+        "type": "inputPin",
+        "position": {
+          "x": -2255,
+          "y": -424.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "A",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_d96eaf92-dece-4ac3-a2c9-b01e32ae8baa",
+        "type": "inputPin",
+        "position": {
+          "x": -2255,
+          "y": -334.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "B",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_705b6e29-1cee-4f0a-8159-0da4c1265294",
+        "type": "inputPin",
+        "position": {
+          "x": -2255,
+          "y": -244.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": true,
+        "data": {
+          "label": "CIn",
+          "typeLabel": "INPUT",
+          "inputs": [],
+          "outputs": [
+            "Out"
+          ],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 81
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_49867855-67d4-4b52-9d16-d3fe96c226f9",
+        "type": "outputPin",
+        "position": {
+          "x": -1415,
+          "y": -395.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "Sum",
+          "typeLabel": "OUTPUT",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_37f8fbff-8c88-4ef0-8f0f-b28f461aa99a",
+        "type": "outputPin",
+        "position": {
+          "x": -1415,
+          "y": -305.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "COut",
+          "typeLabel": "OUTPUT",
+          "inputs": [
+            "In"
+          ],
+          "outputs": [],
+          "group": "I/O Nodes"
+        },
+        "measured": {
+          "width": 110,
+          "height": 79
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_7866bf69-ce7f-4554-b7e3-c2b6aefff3a7",
+        "type": "logicGate",
+        "position": {
+          "x": -1835,
+          "y": -460.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "XOR",
+          "typeLabel": "XorGate",
+          "inputs": [
+            "A",
+            "B"
+          ],
+          "outputs": [
+            "Out"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 99
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_4e0786c4-e787-4164-8ad6-710d73156461",
+        "type": "logicGate",
+        "position": {
+          "x": -2060,
+          "y": -460.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "XOR",
+          "typeLabel": "XorGate",
+          "inputs": [
+            "A",
+            "B"
+          ],
+          "outputs": [
+            "Out"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 99
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_71a1385d-960d-4d34-b195-245543778576",
+        "type": "logicGate",
+        "position": {
+          "x": -1850,
+          "y": -310.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "AND",
+          "typeLabel": "AndGate",
+          "inputs": [
+            "A",
+            "B"
+          ],
+          "outputs": [
+            "Out"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 99
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_efeb4369-8278-412c-a708-4836de5312b9",
+        "type": "logicGate",
+        "position": {
+          "x": -1955,
+          "y": -175.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "AND",
+          "typeLabel": "AndGate",
+          "inputs": [
+            "A",
+            "B"
+          ],
+          "outputs": [
+            "Out"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 99
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_345cc013-f6f8-46f2-a52d-b94b6641131d",
+        "type": "logicGate",
+        "position": {
+          "x": -1655,
+          "y": -235.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "label": "OR",
+          "typeLabel": "OrGate",
+          "inputs": [
+            "A",
+            "B"
+          ],
+          "outputs": [
+            "Out"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 99
+        },
+        "dragging": false
+      }
+    ],
+    "edges": [
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_3af6bbb4-e62b-4ece-b09c-f05d3a6c1351",
+        "sourceHandle": "Out",
+        "target": "node_4e0786c4-e787-4164-8ad6-710d73156461",
+        "targetHandle": "A",
+        "id": "xy-edge__node_3af6bbb4-e62b-4ece-b09c-f05d3a6c1351Out-node_4e0786c4-e787-4164-8ad6-710d73156461A"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_d96eaf92-dece-4ac3-a2c9-b01e32ae8baa",
+        "sourceHandle": "Out",
+        "target": "node_4e0786c4-e787-4164-8ad6-710d73156461",
+        "targetHandle": "B",
+        "id": "xy-edge__node_d96eaf92-dece-4ac3-a2c9-b01e32ae8baaOut-node_4e0786c4-e787-4164-8ad6-710d73156461B"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_4e0786c4-e787-4164-8ad6-710d73156461",
+        "sourceHandle": "Out",
+        "target": "node_7866bf69-ce7f-4554-b7e3-c2b6aefff3a7",
+        "targetHandle": "A",
+        "id": "xy-edge__node_4e0786c4-e787-4164-8ad6-710d73156461Out-node_7866bf69-ce7f-4554-b7e3-c2b6aefff3a7A"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_705b6e29-1cee-4f0a-8159-0da4c1265294",
+        "sourceHandle": "Out",
+        "target": "node_7866bf69-ce7f-4554-b7e3-c2b6aefff3a7",
+        "targetHandle": "B",
+        "id": "xy-edge__node_705b6e29-1cee-4f0a-8159-0da4c1265294Out-node_7866bf69-ce7f-4554-b7e3-c2b6aefff3a7B"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_7866bf69-ce7f-4554-b7e3-c2b6aefff3a7",
+        "sourceHandle": "Out",
+        "target": "node_49867855-67d4-4b52-9d16-d3fe96c226f9",
+        "targetHandle": "In",
+        "id": "xy-edge__node_7866bf69-ce7f-4554-b7e3-c2b6aefff3a7Out-node_49867855-67d4-4b52-9d16-d3fe96c226f9In",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_3af6bbb4-e62b-4ece-b09c-f05d3a6c1351",
+        "sourceHandle": "Out",
+        "target": "node_efeb4369-8278-412c-a708-4836de5312b9",
+        "targetHandle": "A",
+        "id": "xy-edge__node_3af6bbb4-e62b-4ece-b09c-f05d3a6c1351Out-node_efeb4369-8278-412c-a708-4836de5312b9A"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_d96eaf92-dece-4ac3-a2c9-b01e32ae8baa",
+        "sourceHandle": "Out",
+        "target": "node_efeb4369-8278-412c-a708-4836de5312b9",
+        "targetHandle": "B",
+        "id": "xy-edge__node_d96eaf92-dece-4ac3-a2c9-b01e32ae8baaOut-node_efeb4369-8278-412c-a708-4836de5312b9B"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_4e0786c4-e787-4164-8ad6-710d73156461",
+        "sourceHandle": "Out",
+        "target": "node_71a1385d-960d-4d34-b195-245543778576",
+        "targetHandle": "A",
+        "id": "xy-edge__node_4e0786c4-e787-4164-8ad6-710d73156461Out-node_71a1385d-960d-4d34-b195-245543778576A"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_705b6e29-1cee-4f0a-8159-0da4c1265294",
+        "sourceHandle": "Out",
+        "target": "node_71a1385d-960d-4d34-b195-245543778576",
+        "targetHandle": "B",
+        "id": "xy-edge__node_705b6e29-1cee-4f0a-8159-0da4c1265294Out-node_71a1385d-960d-4d34-b195-245543778576B"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_345cc013-f6f8-46f2-a52d-b94b6641131d",
+        "sourceHandle": "Out",
+        "target": "node_37f8fbff-8c88-4ef0-8f0f-b28f461aa99a",
+        "targetHandle": "In",
+        "id": "xy-edge__node_345cc013-f6f8-46f2-a52d-b94b6641131dOut-node_37f8fbff-8c88-4ef0-8f0f-b28f461aa99aIn",
+        "selected": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_71a1385d-960d-4d34-b195-245543778576",
+        "sourceHandle": "Out",
+        "target": "node_345cc013-f6f8-46f2-a52d-b94b6641131d",
+        "targetHandle": "A",
+        "id": "xy-edge__node_71a1385d-960d-4d34-b195-245543778576Out-node_345cc013-f6f8-46f2-a52d-b94b6641131dA"
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_efeb4369-8278-412c-a708-4836de5312b9",
+        "sourceHandle": "Out",
+        "target": "node_345cc013-f6f8-46f2-a52d-b94b6641131d",
+        "targetHandle": "B",
+        "id": "xy-edge__node_efeb4369-8278-412c-a708-4836de5312b9Out-node_345cc013-f6f8-46f2-a52d-b94b6641131dB"
+      }
+    ]
+  }
+}
