@@ -1,35 +1,159 @@
-; ========================================================
-; TEST PROGRAM: Sum of N numbers
-;
-; This program calculates the sum of integers from 1 to N.
-; N is stored in memory address $0000 (Zero Page).
-; The final result is stored in $0001 (Zero Page).
-;
-; Example: If $0000 = $05 (5 decimal),
-; result in $0001 will be $0F (15 decimal).
-; ========================================================
+; ==============================================================================
+; Lycoris-8 Hardware Test: APU Polyphonic Synthesizer
+; Theme: Super Mario Bros. (Overworld)
+; ==============================================================================
 
-* = $8000           ; Origin directive (Start assembling at $8000)
+* = $8000
 
-START:
-    LDA #$05        ; Load Accumulator with the value N (e.g., 5)
-    STA $00         ; Store N in Zero Page address $0000
+; --- APU Memory Map Constants (Pulse 1 Channel) ---
+PULSE1_FREQ_LO = $5000
+PULSE1_FREQ_HI = $5001
+PULSE1_VOL     = $5002
 
-    LDA #$00        ; Initialize Accumulator to 0 (This will hold the sum)
-    LDX $00         ; Load X register with the value of N from memory
+; --- Note Frequencies (16-bit Hex) ---
+; E5: 659.25 Hz -> $0293
+NOTE_E5_HI = $02
+NOTE_E5_LO = $93
 
-LOOP:
-    CLC             ; Clear Carry Flag before addition (crucial for ADC)
-    ADC $00         ; Add the current value of N (from memory $0000) to Accumulator
+; C5: 523.25 Hz -> $020B
+NOTE_C5_HI = $02
+NOTE_C5_LO = $0B
 
-    DEC $00         ; Decrement the value of N in memory ($0000)
-    DEX             ; Decrement X register (used as loop counter)
+; G5: 783.99 Hz -> $030F
+NOTE_G5_HI = $03
+NOTE_G5_LO = $0F
 
-    BNE LOOP        ; Branch to LOOP if X is Not Equal to 0 (Z flag clear)
+; G4: 392.00 Hz -> $0188
+NOTE_G4_HI = $01
+NOTE_G4_LO = $88
 
-DONE:
-    STA $01         ; Store the final sum in Zero Page address $0001
+; --- Volume Constants ---
+VOL_MAX = $0A
+VOL_OFF = $00
 
-    ; The program enters an infinite loop to halt execution
-HALT:
-    JMP HALT        ; Jump to itself (infinite loop)
+; ==============================================================================
+; BOOT SEQUENCE
+; ==============================================================================
+INIT:
+    ; Note 1: E5
+    LDX #NOTE_E5_HI
+    LDY #NOTE_E5_LO
+    JSR PLAY_NOTE
+    JSR DELAY_SHORT
+    JSR MUTE_NOTE
+
+    ; Note 2: E5
+    LDX #NOTE_E5_HI
+    LDY #NOTE_E5_LO
+    JSR PLAY_NOTE
+    JSR DELAY_SHORT
+    JSR MUTE_NOTE
+    JSR DELAY_SHORT       ; Rest
+
+    ; Note 3: E5
+    LDX #NOTE_E5_HI
+    LDY #NOTE_E5_LO
+    JSR PLAY_NOTE
+    JSR DELAY_SHORT
+    JSR MUTE_NOTE
+
+    ; Note 4: C5
+    LDX #NOTE_C5_HI
+    LDY #NOTE_C5_LO
+    JSR PLAY_NOTE
+    JSR DELAY_SHORT
+    JSR MUTE_NOTE
+
+    ; Note 5: E5
+    LDX #NOTE_E5_HI
+    LDY #NOTE_E5_LO
+    JSR PLAY_NOTE
+    JSR DELAY_SHORT
+    JSR MUTE_NOTE
+    JSR DELAY_SHORT       ; Rest
+
+    ; Note 6: G5
+    LDX #NOTE_G5_HI
+    LDY #NOTE_G5_LO
+    JSR PLAY_NOTE
+    JSR DELAY_LONG
+    JSR MUTE_NOTE
+    JSR DELAY_LONG        ; Rest
+
+    ; Note 7: G4
+    LDX #NOTE_G4_HI
+    LDY #NOTE_G4_LO
+    JSR PLAY_NOTE
+    JSR DELAY_LONG
+    JSR MUTE_NOTE
+
+HALT_SYSTEM:
+    JMP HALT_SYSTEM       ; Infinite loop to end execution
+
+; ==============================================================================
+; SUBROUTINES
+; ==============================================================================
+
+; ------------------------------------------------------------------------------
+; PLAY_NOTE: Activates Pulse 1 with frequency passed in X (High) and Y (Low)
+; ------------------------------------------------------------------------------
+PLAY_NOTE:
+    STY PULSE1_FREQ_LO    ; Store Low Byte
+    STX PULSE1_FREQ_HI    ; Store High Byte
+    LDA #VOL_MAX
+    STA PULSE1_VOL        ; Set Volume to max to start the oscillator
+    RTS
+
+; ------------------------------------------------------------------------------
+; MUTE_NOTE: Silences Pulse 1 to create separation between notes
+; ------------------------------------------------------------------------------
+MUTE_NOTE:
+    LDA #VOL_OFF
+    STA PULSE1_VOL
+    JSR DELAY_TINY        ; Tiny delay to prevent audio popping
+    RTS
+
+; ------------------------------------------------------------------------------
+; DELAYS: Nested loop burn-cycle algorithms to hold notes.
+; Context saving: We push A, X, Y to the stack to preserve caller state.
+; ------------------------------------------------------------------------------
+DELAY_LONG:
+    PHA                   ; Save Accumulator
+    TXA
+    PHA                   ; Save X
+    TYA
+    PHA                   ; Save Y
+    LDX #$B0              ; Outer loop counter (Long)
+    JMP DELAY_EXEC
+
+DELAY_SHORT:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    LDX #$40              ; Outer loop counter (Short)
+    JMP DELAY_EXEC
+
+DELAY_TINY:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    LDX #$10              ; Outer loop counter (Tiny)
+
+DELAY_EXEC:
+    LDY #$FF              ; Inner loop counter
+DELAY_INNER:
+    DEY
+    BNE DELAY_INNER       ; Branch until Y = 0
+    DEX
+    BNE DELAY_EXEC        ; Branch until X = 0
+
+    PLA                   ; Restore Y
+    TAY
+    PLA                   ; Restore X
+    TAX
+    PLA                   ; Restore Accumulator
+    RTS

@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.hardware;
 
-import it.lycoris.j6502.emulator.simulation.SimulationContext;
+import it.lycoris.j6502.emulator.emulated.EmulationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class Wire {
         return this.state;
     }
 
-    public void setState(boolean newState, SimulationContext ctx) {
+    public void setState(boolean newState, EmulationContext ctx) {
         if (this.state != newState) {
             this.state = newState;
 
@@ -38,6 +38,6 @@ public class Wire {
     }
 
     public interface Listener {
-        void onStateChange(boolean newState, SimulationContext ctx);
+        void onStateChange(boolean newState, EmulationContext ctx);
     }
 }

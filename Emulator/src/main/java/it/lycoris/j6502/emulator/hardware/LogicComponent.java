@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.hardware;
 
-import it.lycoris.j6502.emulator.simulation.SimulationContext;
+import it.lycoris.j6502.emulator.emulated.EmulationContext;
 
 public sealed interface LogicComponent permits Gate, ComplexChip {
 
@@ -10,5 +10,5 @@ public sealed interface LogicComponent permits Gate, ComplexChip {
 
     Wire[] getOutputs();
 
-    void update(SimulationContext ctx);
+    void update(EmulationContext ctx);
 }

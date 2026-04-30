@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.hardware;
 
-import it.lycoris.j6502.emulator.simulation.SimulationContext;
+import it.lycoris.j6502.emulator.emulated.EmulationContext;
 
 public final class XorGate implements Gate {
     private final String name;
@@ -41,7 +41,7 @@ public final class XorGate implements Gate {
     }
 
     @Override
-    public void update(SimulationContext ctx) {
+    public void update(EmulationContext ctx) {
         this.output.setState(this.inputA.getState() ^ this.inputB.getState(), ctx);
     }
 }

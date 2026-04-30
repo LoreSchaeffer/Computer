@@ -16,24 +16,32 @@ public class LoadStoreGroup implements InstructionGroup {
             loadA(cpu);
         }));
         registry.put(0xA5, new OpcodeMetadata("LDA $zp", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrZeroPage()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrZeroPage()), 0);
             loadA(cpu);
         }));
         registry.put(0xB5, new OpcodeMetadata("LDA $zp,X", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrZeroPageX()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrZeroPageX()), 0);
             loadA(cpu);
         }));
         registry.put(0xAD, new OpcodeMetadata("LDA $abs", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrAbsolute()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrAbsolute()), 0);
             loadA(cpu);
         }));
         registry.put(0xBD, new OpcodeMetadata("LDA $abs,X", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrAbsoluteX()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrAbsoluteX()), 0);
             loadA(cpu);
         }));
         registry.put(0xB9, new OpcodeMetadata("LDA $abs,Y", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrAbsoluteY()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrAbsoluteY()), 0);
             loadA(cpu);
+        }));
+        registry.put(0xA1, new OpcodeMetadata("LDA ($zp,X)", cpu -> {
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrIndexedIndirectX()), 0);
+            this.loadA(cpu);
+        }));
+        registry.put(0xB1, new OpcodeMetadata("LDA ($zp),Y", cpu -> {
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrIndirectIndexedY()), 0);
+            this.loadA(cpu);
         }));
 
         // --- LDX (Load X Register) ---
@@ -42,19 +50,19 @@ public class LoadStoreGroup implements InstructionGroup {
             loadX(cpu);
         }));
         registry.put(0xA6, new OpcodeMetadata("LDX $zp", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrZeroPage()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrZeroPage()), 0);
             loadX(cpu);
         }));
         registry.put(0xB6, new OpcodeMetadata("LDX $zp,Y", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrZeroPageY()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrZeroPageY()), 0);
             loadX(cpu);
         }));
         registry.put(0xAE, new OpcodeMetadata("LDX $abs", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrAbsolute()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrAbsolute()), 0);
             loadX(cpu);
         }));
         registry.put(0xBE, new OpcodeMetadata("LDX $abs,Y", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrAbsoluteY()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrAbsoluteY()), 0);
             loadX(cpu);
         }));
 
@@ -64,34 +72,36 @@ public class LoadStoreGroup implements InstructionGroup {
             loadY(cpu);
         }));
         registry.put(0xA4, new OpcodeMetadata("LDY $zp", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrZeroPage()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrZeroPage()), 0);
             loadY(cpu);
         }));
         registry.put(0xB4, new OpcodeMetadata("LDY $zp,X", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrZeroPageX()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrZeroPageX()), 0);
             loadY(cpu);
         }));
         registry.put(0xAC, new OpcodeMetadata("LDY $abs", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrAbsolute()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrAbsolute()), 0);
             loadY(cpu);
         }));
         registry.put(0xBC, new OpcodeMetadata("LDY $abs,X", cpu -> {
-            cpu.writeToBus(cpu.readMemory(cpu.addrAbsoluteX()), 0);
+            cpu.writeToBus(cpu.readSystemBus(cpu.addrAbsoluteX()), 0);
             loadY(cpu);
         }));
 
         // --- STA (Store Accumulator) ---
-        registry.put(0x85, new OpcodeMetadata("STA $zp", cpu -> cpu.writeMemory(cpu.addrZeroPage(), cpu.getAccumulator())));
-        registry.put(0x95, new OpcodeMetadata("STA $zp,X", cpu -> cpu.writeMemory(cpu.addrZeroPageX(), cpu.getAccumulator())));
-        registry.put(0x8D, new OpcodeMetadata("STA $abs", cpu -> cpu.writeMemory(cpu.addrAbsolute(), cpu.getAccumulator())));
-        registry.put(0x9D, new OpcodeMetadata("STA $abs,X", cpu -> cpu.writeMemory(cpu.addrAbsoluteX(), cpu.getAccumulator())));
-        registry.put(0x99, new OpcodeMetadata("STA $abs,Y", cpu -> cpu.writeMemory(cpu.addrAbsoluteY(), cpu.getAccumulator())));
+        registry.put(0x85, new OpcodeMetadata("STA $zp", cpu -> cpu.writeSystemBus(cpu.addrZeroPage(), cpu.getAccumulator())));
+        registry.put(0x95, new OpcodeMetadata("STA $zp,X", cpu -> cpu.writeSystemBus(cpu.addrZeroPageX(), cpu.getAccumulator())));
+        registry.put(0x8D, new OpcodeMetadata("STA $abs", cpu -> cpu.writeSystemBus(cpu.addrAbsolute(), cpu.getAccumulator())));
+        registry.put(0x9D, new OpcodeMetadata("STA $abs,X", cpu -> cpu.writeSystemBus(cpu.addrAbsoluteX(), cpu.getAccumulator())));
+        registry.put(0x99, new OpcodeMetadata("STA $abs,Y", cpu -> cpu.writeSystemBus(cpu.addrAbsoluteY(), cpu.getAccumulator())));
+        registry.put(0x81, new OpcodeMetadata("STA ($zp,X)", cpu -> cpu.writeSystemBus(cpu.addrIndexedIndirectX(), cpu.getAccumulator())));
+        registry.put(0x91, new OpcodeMetadata("STA ($zp),Y", cpu -> cpu.writeSystemBus(cpu.addrIndirectIndexedY(), cpu.getAccumulator())));
 
         // --- STX/STY ---
-        registry.put(0x86, new OpcodeMetadata("STX $zp", cpu -> cpu.writeMemory(cpu.addrZeroPage(), cpu.snapshot().x())));
-        registry.put(0x8E, new OpcodeMetadata("STX $abs", cpu -> cpu.writeMemory(cpu.addrAbsolute(), cpu.snapshot().x())));
-        registry.put(0x84, new OpcodeMetadata("STY $zp", cpu -> cpu.writeMemory(cpu.addrZeroPage(), cpu.snapshot().y())));
-        registry.put(0x8C, new OpcodeMetadata("STY $abs", cpu -> cpu.writeMemory(cpu.addrAbsolute(), cpu.snapshot().y())));
+        registry.put(0x86, new OpcodeMetadata("STX $zp", cpu -> cpu.writeSystemBus(cpu.addrZeroPage(), cpu.snapshot().x())));
+        registry.put(0x8E, new OpcodeMetadata("STX $abs", cpu -> cpu.writeSystemBus(cpu.addrAbsolute(), cpu.snapshot().x())));
+        registry.put(0x84, new OpcodeMetadata("STY $zp", cpu -> cpu.writeSystemBus(cpu.addrZeroPage(), cpu.snapshot().y())));
+        registry.put(0x8C, new OpcodeMetadata("STY $abs", cpu -> cpu.writeSystemBus(cpu.addrAbsolute(), cpu.snapshot().y())));
     }
 
     private void loadA(MOS6502 cpu) {

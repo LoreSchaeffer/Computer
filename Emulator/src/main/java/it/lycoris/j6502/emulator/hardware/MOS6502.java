@@ -1,11 +1,14 @@
 package it.lycoris.j6502.emulator.hardware;
 
 import it.lycoris.j6502.emulator.control.InstructionSet;
+import it.lycoris.j6502.emulator.control.OpcodeMetadata;
+import it.lycoris.j6502.emulator.emulated.EmulationContext;
+import it.lycoris.j6502.emulator.emulated.SystemBus;
 import it.lycoris.j6502.emulator.hardware.io.ComponentLibrary;
 import it.lycoris.j6502.emulator.hardware.io.dto.ChipDefinition;
 import it.lycoris.j6502.emulator.model.CpuState;
-import it.lycoris.j6502.emulator.simulation.SimulationContext;
-import it.lycoris.j6502.emulator.system.Memory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +19,10 @@ import java.util.Map;
  * and the software-based control unit (InstructionSet).
  */
 public class MOS6502 {
+    private static final Logger LOG = LoggerFactory.getLogger(MOS6502.class);
     private final LogicComponent datapath;
-    private final SimulationContext ctx;
-    private final Memory memory;
+    private final EmulationContext ctx;
+    private final SystemBus bus;
     private final InstructionSet instructionSet = new InstructionSet();
 
     private final Map<String, Wire> inputs = new HashMap<>();
@@ -30,14 +34,15 @@ public class MOS6502 {
 
     /**
      * Initializes the CPU by loading its physical structure from the component library
-     * and linking it to the provided external memory.
+     * and linking it to the provided external ram.
      *
-     * @param lib    The component library containing the JSON hardware blueprints.
-     * @param memory The external RAM memory module connected to the CPU.
+     * @param bus The System Bus connected to the CPU.
      */
-    public MOS6502(ComponentLibrary lib, Memory memory) {
-        this.memory = memory;
-        this.ctx = new SimulationContext();
+    public MOS6502(SystemBus bus) {
+        this.bus = bus;
+        this.ctx = new EmulationContext();
+
+        ComponentLibrary lib = ComponentLibrary.get();
 
         ChipDefinition def = lib.getDefinition("MOS6502");
         def.pins().inputs().forEach(name -> inputs.put(name, new Wire()));
@@ -59,7 +64,7 @@ public class MOS6502 {
      * from the Reset Vector located at $FFFC-$FFFD.
      */
     public void reset() {
-        System.out.println("[HARDWARE] Executing Reset Sequence...");
+        LOG.info("Executing Reset sequence...");
         setDataBusIn(0);
 
         // Initialize Stack Pointer to top of Page 1 ($01FF)
@@ -67,8 +72,8 @@ public class MOS6502 {
         pulseRegister("LoadSP");
 
         // Read the Reset Vector from top of memory
-        int lo = memory.read(0xFFFC);
-        int hi = memory.read(0xFFFD);
+        int lo = bus.read(0xFFFC);
+        int hi = bus.read(0xFFFD);
         int entryPoint = (hi << 8) | lo;
 
         // Force the Program Counter to the entry point
@@ -82,7 +87,7 @@ public class MOS6502 {
     public void step() {
         // Fetch the opcode at the current PC
         int currentPc = getAddressBus();
-        int opcode = memory.read(currentPc);
+        int opcode = bus.read(currentPc);
 
         // Load the fetched opcode into the hardware Instruction Register (IR)
         writeToBus(opcode, 0);
@@ -98,7 +103,7 @@ public class MOS6502 {
         if (metadata != null && metadata.logic() != null) {
             metadata.logic().execute(this);
         } else {
-            System.err.printf("Unhandled Opcode: $%02X%n", opcode);
+            LOG.error("Unhandled or illegal Opcode detected: ${}", String.format("%02X", opcode));
         }
     }
 
@@ -209,32 +214,32 @@ public class MOS6502 {
     // ========================================================================
 
     /**
-     * Gets the memory module attached to the CPU.
+     * Gets the System Bus attached to the CPU.
      *
-     * @return The Memory instance.
+     * @return The SystemBus instance.
      */
-    public Memory getMemory() {
-        return memory;
+    public SystemBus getBus() {
+        return bus;
     }
 
     /**
-     * Reads a byte from the external memory at the specified address.
+     * Reads a byte from the external System Bus at the specified address.
      *
      * @param address The 16-bit address to read from.
-     * @return The 8-bit value read from memory.
+     * @return The 8-bit value read from System Bus.
      */
-    public int readMemory(int address) {
-        return memory.read(address);
+    public int readSystemBus(int address) {
+        return bus.read(address);
     }
 
     /**
-     * Writes a byte to the external memory at the specified address.
+     * Writes a byte to the external System Bus at the specified address.
      *
      * @param address The 16-bit address to write to.
      * @param value   The 8-bit value to write.
      */
-    public void writeMemory(int address, int value) {
-        memory.write(address, value);
+    public void writeSystemBus(int address, int value) {
+        bus.write(address, value);
     }
 
     /**
@@ -260,7 +265,7 @@ public class MOS6502 {
      * @return The fetched 8-bit operand.
      */
     public int fetchOperand() {
-        int val = memory.read(getAddressBus());
+        int val = bus.read(getAddressBus());
         setPin("IncPC", true);
         pulseClock();
         setPin("IncPC", false);
@@ -350,13 +355,40 @@ public class MOS6502 {
      */
     public int addrIndirect() {
         int pointer = fetchAddress();
-        int lo = memory.read(pointer);
+        int lo = bus.read(pointer);
 
         // 6502 Hardware Bug: if pointer ends in $FF, it wraps around the same page
         // instead of crossing into the next page.
-        int hi = memory.read((pointer & 0xFF00) | ((pointer + 1) & 0x00FF));
+        int hi = bus.read((pointer & 0xFF00) | ((pointer + 1) & 0x00FF));
 
         return (hi << 8) | lo;
+    }
+
+    /**
+     * Indexed Indirect X Addressing: ($zp,X)
+     * Adds X to the operand to find a Zero Page address, then reads a 16-bit pointer from there.
+     *
+     * @return The resolved 16-bit memory address.
+     */
+    public int addrIndexedIndirectX() {
+        int zpAddress = (this.fetchOperand() + this.readRegisterDirectly("X")) & 0xFF;
+        int lowByte = this.readSystemBus(zpAddress);
+        int highByte = this.readSystemBus((zpAddress + 1) & 0xFF);
+        return (highByte << 8) | lowByte;
+    }
+
+    /**
+     * Indirect Indexed Y Addressing: ($zp),Y
+     * Reads a 16-bit pointer from the Zero Page, then adds Y to it.
+     *
+     * @return The resolved 16-bit memory address.
+     */
+    public int addrIndirectIndexedY() {
+        int zpAddress = this.fetchOperand();
+        int lowByte = this.readSystemBus(zpAddress);
+        int highByte = this.readSystemBus((zpAddress + 1) & 0xFF);
+        int baseAddress = (highByte << 8) | lowByte;
+        return (baseAddress + this.readRegisterDirectly("Y")) & 0xFFFF;
     }
 
     // ========================================================================
@@ -579,7 +611,7 @@ public class MOS6502 {
      */
     public void pushStack(int value) {
         int sp = readRegisterDirectly("SP");
-        memory.write(0x0100 | sp, value);
+        bus.write(0x0100 | sp, value);
         indexOp("DecSP");
     }
 
@@ -591,7 +623,7 @@ public class MOS6502 {
     public int pullStack() {
         indexOp("IncSP");
         int sp = readRegisterDirectly("SP");
-        return memory.read(0x0100 | sp);
+        return bus.read(0x0100 | sp);
     }
 
     // ========================================================================
@@ -615,7 +647,7 @@ public class MOS6502 {
      */
     public CpuState snapshot() {
         int irValue = readRegisterDirectly("IR");
-        var metadata = instructionSet.get(irValue);
+        OpcodeMetadata metadata = instructionSet.get(irValue);
 
         return new CpuState(
                 getAddressBus(),

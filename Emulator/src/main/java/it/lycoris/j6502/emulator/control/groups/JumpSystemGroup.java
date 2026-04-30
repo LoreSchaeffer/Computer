@@ -45,8 +45,8 @@ public class JumpSystemGroup implements InstructionGroup {
             cpu.forceFlag('I', true); // Disable interrupts
 
             // Jump to the IRQ Vector stored at $FFFE-$FFFF
-            int lo = cpu.readMemory(0xFFFE);
-            int hi = cpu.readMemory(0xFFFF);
+            int lo = cpu.readSystemBus(0xFFFE);
+            int hi = cpu.readSystemBus(0xFFFF);
             cpu.jump((hi << 8) | lo);
         }));
 

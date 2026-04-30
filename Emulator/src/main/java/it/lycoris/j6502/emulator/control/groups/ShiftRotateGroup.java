@@ -40,21 +40,21 @@ public class ShiftRotateGroup implements InstructionGroup {
     }
 
     private void doASL(MOS6502 cpu, int addr) {
-        int val = (addr == -1) ? cpu.getAccumulator() : cpu.readMemory(addr);
+        int val = (addr == -1) ? cpu.getAccumulator() : cpu.readSystemBus(addr);
         cpu.forceFlag('C', (val & 0x80) != 0); // Old bit 7 becomes Carry
         val = (val << 1) & 0xFF;
         writeBack(cpu, addr, val);
     }
 
     private void doLSR(MOS6502 cpu, int addr) {
-        int val = (addr == -1) ? cpu.getAccumulator() : cpu.readMemory(addr);
+        int val = (addr == -1) ? cpu.getAccumulator() : cpu.readSystemBus(addr);
         cpu.forceFlag('C', (val & 0x01) != 0); // Old bit 0 becomes Carry
         val = (val >> 1) & 0xFF;
         writeBack(cpu, addr, val);
     }
 
     private void doROL(MOS6502 cpu, int addr) {
-        int val = (addr == -1) ? cpu.getAccumulator() : cpu.readMemory(addr);
+        int val = (addr == -1) ? cpu.getAccumulator() : cpu.readSystemBus(addr);
         boolean oldCarry = cpu.isFlagSet('C');
         cpu.forceFlag('C', (val & 0x80) != 0);
         val = ((val << 1) | (oldCarry ? 1 : 0)) & 0xFF;
@@ -62,7 +62,7 @@ public class ShiftRotateGroup implements InstructionGroup {
     }
 
     private void doROR(MOS6502 cpu, int addr) {
-        int val = (addr == -1) ? cpu.getAccumulator() : cpu.readMemory(addr);
+        int val = (addr == -1) ? cpu.getAccumulator() : cpu.readSystemBus(addr);
         boolean oldCarry = cpu.isFlagSet('C');
         cpu.forceFlag('C', (val & 0x01) != 0);
         val = ((val >> 1) | (oldCarry ? 0x80 : 0)) & 0xFF;
@@ -74,7 +74,7 @@ public class ShiftRotateGroup implements InstructionGroup {
             cpu.writeToBus(val, 0);
             cpu.loadAccumulatorDirect(0);
         } else {
-            cpu.writeMemory(addr, val);
+            cpu.writeSystemBus(addr, val);
         }
         cpu.updateZAndNFlags(val);
     }

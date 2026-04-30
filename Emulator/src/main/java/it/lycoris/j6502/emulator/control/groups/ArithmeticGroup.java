@@ -12,19 +12,19 @@ public class ArithmeticGroup implements InstructionGroup {
     public void install(Map<Integer, OpcodeMetadata> registry) {
         // --- ADC (Add with Carry) ---
         registry.put(0x69, new OpcodeMetadata("ADC #", cpu -> adc(cpu, cpu.fetchOperand())));
-        registry.put(0x65, new OpcodeMetadata("ADC $zp", cpu -> adc(cpu, cpu.readMemory(cpu.addrZeroPage()))));
-        registry.put(0x75, new OpcodeMetadata("ADC $zp,X", cpu -> adc(cpu, cpu.readMemory(cpu.addrZeroPageX()))));
-        registry.put(0x6D, new OpcodeMetadata("ADC $abs", cpu -> adc(cpu, cpu.readMemory(cpu.addrAbsolute()))));
-        registry.put(0x7D, new OpcodeMetadata("ADC $abs,X", cpu -> adc(cpu, cpu.readMemory(cpu.addrAbsoluteX()))));
-        registry.put(0x79, new OpcodeMetadata("ADC $abs,Y", cpu -> adc(cpu, cpu.readMemory(cpu.addrAbsoluteY()))));
+        registry.put(0x65, new OpcodeMetadata("ADC $zp", cpu -> adc(cpu, cpu.readSystemBus(cpu.addrZeroPage()))));
+        registry.put(0x75, new OpcodeMetadata("ADC $zp,X", cpu -> adc(cpu, cpu.readSystemBus(cpu.addrZeroPageX()))));
+        registry.put(0x6D, new OpcodeMetadata("ADC $abs", cpu -> adc(cpu, cpu.readSystemBus(cpu.addrAbsolute()))));
+        registry.put(0x7D, new OpcodeMetadata("ADC $abs,X", cpu -> adc(cpu, cpu.readSystemBus(cpu.addrAbsoluteX()))));
+        registry.put(0x79, new OpcodeMetadata("ADC $abs,Y", cpu -> adc(cpu, cpu.readSystemBus(cpu.addrAbsoluteY()))));
 
         // --- SBC (Subtract with Carry) ---
         registry.put(0xE9, new OpcodeMetadata("SBC #", cpu -> sbc(cpu, cpu.fetchOperand())));
-        registry.put(0xE5, new OpcodeMetadata("SBC $zp", cpu -> sbc(cpu, cpu.readMemory(cpu.addrZeroPage()))));
-        registry.put(0xF5, new OpcodeMetadata("SBC $zp,X", cpu -> sbc(cpu, cpu.readMemory(cpu.addrZeroPageX()))));
-        registry.put(0xED, new OpcodeMetadata("SBC $abs", cpu -> sbc(cpu, cpu.readMemory(cpu.addrAbsolute()))));
-        registry.put(0xFD, new OpcodeMetadata("SBC $abs,X", cpu -> sbc(cpu, cpu.readMemory(cpu.addrAbsoluteX()))));
-        registry.put(0xF9, new OpcodeMetadata("SBC $abs,Y", cpu -> sbc(cpu, cpu.readMemory(cpu.addrAbsoluteY()))));
+        registry.put(0xE5, new OpcodeMetadata("SBC $zp", cpu -> sbc(cpu, cpu.readSystemBus(cpu.addrZeroPage()))));
+        registry.put(0xF5, new OpcodeMetadata("SBC $zp,X", cpu -> sbc(cpu, cpu.readSystemBus(cpu.addrZeroPageX()))));
+        registry.put(0xED, new OpcodeMetadata("SBC $abs", cpu -> sbc(cpu, cpu.readSystemBus(cpu.addrAbsolute()))));
+        registry.put(0xFD, new OpcodeMetadata("SBC $abs,X", cpu -> sbc(cpu, cpu.readSystemBus(cpu.addrAbsoluteX()))));
+        registry.put(0xF9, new OpcodeMetadata("SBC $abs,Y", cpu -> sbc(cpu, cpu.readSystemBus(cpu.addrAbsoluteY()))));
 
         // --- Increments/Decrements ---
         registry.put(0xE8, new OpcodeMetadata("INX", cpu -> {
@@ -67,14 +67,14 @@ public class ArithmeticGroup implements InstructionGroup {
 
     // New helper methods for memory increment/decrement
     private void incMem(MOS6502 cpu, int addr) {
-        int val = (cpu.readMemory(addr) + 1) & 0xFF;
-        cpu.writeMemory(addr, val);
+        int val = (cpu.readSystemBus(addr) + 1) & 0xFF;
+        cpu.writeSystemBus(addr, val);
         cpu.updateZAndNFlags(val);
     }
 
     private void decMem(MOS6502 cpu, int addr) {
-        int val = (cpu.readMemory(addr) - 1) & 0xFF;
-        cpu.writeMemory(addr, val);
+        int val = (cpu.readSystemBus(addr) - 1) & 0xFF;
+        cpu.writeSystemBus(addr, val);
         cpu.updateZAndNFlags(val);
     }
 }

@@ -2,7 +2,6 @@ package it.lycoris.j6502.emulator.hardware.io;
 
 import com.google.gson.Gson;
 import it.lycoris.j6502.emulator.hardware.*;
-import it.lycoris.j6502.emulator.hardware.*;
 import it.lycoris.j6502.emulator.hardware.io.dto.ChipDefinition;
 import it.lycoris.j6502.emulator.hardware.io.dto.ComponentDefinition;
 
@@ -23,13 +22,14 @@ public final class ComponentLibrary {
     private static final List<String> PRIMITIVES = List.of("AndGate", "NandGate", "NotGate", "OrGate", "NorGate", "XorGate", "XnorGate", "DLatch", "VCC", "GND");
     private static final Gson GSON = new Gson();
     private final Map<String, ChipDefinition> registry = new HashMap<>();
+    private static ComponentLibrary instance;
 
-    /**
-     * Enumeration used to track traversal state during cycle detection.
-     */
-    private enum Mark {
-        VISITING,
-        VISITED
+    private ComponentLibrary() {
+    }
+
+    public static ComponentLibrary get() {
+        if (instance == null) instance = new ComponentLibrary();
+        return instance;
     }
 
     /**
@@ -246,5 +246,13 @@ public final class ComponentLibrary {
      */
     public ChipDefinition getDefinition(String type) {
         return registry.get(type);
+    }
+
+    /**
+     * Enumeration used to track traversal state during cycle detection.
+     */
+    private enum Mark {
+        VISITING,
+        VISITED
     }
 }

@@ -18,7 +18,7 @@ public class StackGroup implements InstructionGroup {
             int stackAddress = 0x0100 | sp;
 
             // 3. Write Accumulator to memory
-            cpu.getMemory().write(stackAddress, cpu.getAccumulator());
+            cpu.getBus().write(stackAddress, cpu.getAccumulator());
 
             // 4. Hardware decrement of SP (Stack grows downwards!)
             cpu.indexOp("DecSP");
@@ -28,7 +28,7 @@ public class StackGroup implements InstructionGroup {
         registry.put(0x68, new OpcodeMetadata("PLA", cpu -> {
             cpu.indexOp("IncSP");
             int stackAddress = 0x0100 | cpu.snapshot().stackPointer();
-            int val = cpu.getMemory().read(stackAddress);
+            int val = cpu.getBus().read(stackAddress);
 
             cpu.writeToBus(val, 0); // Source 0 (Data In)
             cpu.loadAccumulatorDirect(0); // Bypass ALU and load

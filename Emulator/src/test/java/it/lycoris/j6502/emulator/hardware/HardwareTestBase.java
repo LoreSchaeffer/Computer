@@ -2,7 +2,7 @@ package it.lycoris.j6502.emulator.hardware;
 
 import it.lycoris.j6502.emulator.hardware.io.ComponentLibrary;
 import it.lycoris.j6502.emulator.hardware.io.dto.ChipDefinition;
-import it.lycoris.j6502.emulator.simulation.SimulationContext;
+import it.lycoris.j6502.emulator.emulated.EmulationContext;
 import org.junit.jupiter.api.Assertions;
 
 import java.nio.file.Paths;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class HardwareTestBase {
     protected static ComponentLibrary lib;
     protected LogicComponent chip;
-    protected SimulationContext ctx;
+    protected EmulationContext ctx;
 
     protected Map<String, Wire> inputWires;
     protected Map<String, Wire> outputWires;
@@ -29,7 +29,7 @@ public class HardwareTestBase {
     protected void load(String chipName) {
         ChipDefinition def = lib.getDefinition(chipName);
 
-        ctx = new SimulationContext();
+        ctx = new EmulationContext();
 
         inputWires = new HashMap<>();
         outputWires = new HashMap<>();
