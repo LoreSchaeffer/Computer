@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Core Assembler class responsible for translating Lycoris-8 Assembly source code
+ * Core Assembler class responsible for translating Lyco-8 Assembly source code
  * into 6502 machine code binaries through a Two-Pass compilation process.
  */
 public class Assembler {

@@ -10,7 +10,7 @@ import javax.sound.sampled.SourceDataLine;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * The Advanced Audio Processing Unit (APU) for the Lycoris-8 console.
+ * The Advanced Audio Processing Unit (APU) for the Lycoris-8.
  * Implements a 4-channel polyphonic synthesizer inspired by the NES (Ricoh 2A03):
  * 2x Pulse (Square) Waves, 1x Triangle Wave, 1x Noise Generator.
  */

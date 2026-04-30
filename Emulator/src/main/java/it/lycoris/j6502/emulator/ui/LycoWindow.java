@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 /**
- * The main graphical user interface for the Lycoris-8 Fantasy Console.
+ * The main graphical user interface for the Lyco-8.
  * It renders the PPU framebuffer and captures physical keyboard inputs.
  */
 public class LycoWindow extends JFrame {
@@ -57,7 +57,7 @@ public class LycoWindow extends JFrame {
     }
 
     private void setupUI() {
-        this.setTitle("Lycoris-8 Fantasy Console");
+        this.setTitle("Lyco-8");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
 

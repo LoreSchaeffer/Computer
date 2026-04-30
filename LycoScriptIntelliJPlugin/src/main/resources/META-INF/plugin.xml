@@ -1,0 +1,30 @@
+<idea-plugin>
+    <id>it.lycoris.lycoscript</id>
+    <name>LycoScript Support</name>
+    <vendor email="lorenzo@multicore.network" url="https://lycoris.it">Lycoris</vendor>
+    <description><![CDATA[
+      Provides language support for LycoScript (.ls files), the official
+      C-like systems programming language for the Lyco-8.
+    ]]></description>
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="LycoScript File"
+                  implementationClass="it.lycoris.lycoscript.idea.LycoScriptFileType"
+                  fieldName="INSTANCE"
+                  language="LycoScript"
+                  extensions="ls"/>
+
+        <lang.syntaxHighlighterFactory language="LycoScript"
+                                       implementationClass="it.lycoris.lycoscript.idea.highlighting.LycoScriptHighlighterFactory"/>
+    </extensions>
+
+    <actions>
+        <action id="LycoScript.NewFile"
+                class="it.lycoris.lycoscript.idea.actions.CreateLycoScriptFileAction"
+                text="LycoScript File"
+                description="Create a new LycoScript source file">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
