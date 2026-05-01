@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.emulated;
 
-import it.lycoris.j6502.emulator.hardware.MOS6502;
+import it.lycoris.j6502.emulator.hardware.GateLevelCpu;
 import it.lycoris.j6502.emulator.ui.LycoWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 public class Motherboard {
     private static final Logger LOG = LoggerFactory.getLogger(Motherboard.class);
     private final SystemBus bus;
-    private final MOS6502 cpu;
+    private final Cpu cpu;
     private final Ram mainRam;
     private final GraphicsPpu ppu;
     private final Apu apu;
@@ -18,8 +18,10 @@ public class Motherboard {
 
     /**
      * Initializes the motherboard, soldering all components to the system bus.
+     *
+     * @param cpuType The Type of CPU to be used
      */
-    public Motherboard() {
+    public Motherboard(Cpu.Type cpuType) {
         bus = new SystemBus();
 
         // Memory Map Definition
@@ -39,7 +41,8 @@ public class Motherboard {
         this.bus.attachDevice(this.rom);
 
         // Connect the CPU to the bus
-        this.cpu = new MOS6502(this.bus);
+        if (cpuType.equals(Cpu.Type.HARDWARE_EMULATED)) this.cpu = new GateLevelCpu(this.bus);
+        else this.cpu = new InstructionLevelCpu(this.bus);
 
         LOG.info("Motherboard initialized successfully. Hardware mapped.");
 
@@ -61,7 +64,7 @@ public class Motherboard {
         this.rom.write(0xFFFD, (startAddress >> 8) & 0xFF);
     }
 
-    public MOS6502 cpu() {
+    public Cpu cpu() {
         return this.cpu;
     }
 

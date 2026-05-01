@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class Main {
-    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+public class Bootstrap {
+    private static final Logger LOG = LoggerFactory.getLogger(Bootstrap.class);
 
     static void main(String[] args) {
         OptionParser parser = new OptionParser();
@@ -54,23 +54,32 @@ public class Main {
     private static void launchCliMode(File inputFile, File outputFile) {
         LOG.info("Launching in CLI mode...");
 
-        // TODO
+        if (!inputFile.exists() || !inputFile.isFile()) {
+            LOG.error("Input file not found or invalid: {}", inputFile.getAbsolutePath());
+            System.exit(1);
+        }
+
+        try {
+            assemble(inputFile, outputFile);
+            LOG.info("Assembly completed successfully. Output written to: {}", outputFile.getAbsolutePath());
+        } catch (IOException e) {
+            LOG.error("Failed to assemble", e);
+            System.exit(1);
+        }
     }
 
     private static void launchGuiMode() {
         LOG.info("Launching in GUI...");
 
-        try {
-            Lexer lexer = new Lexer();
-            List<TokenLine> parsedLines = lexer.tokenizeFile(new File("test.asm"));
-
-            Assembler assembler = new Assembler();
-            assembler.pass1(parsedLines);
-            assembler.pass2(parsedLines, new File("test.bin"));
-        } catch (IOException e) {
-            LOG.error("Errore durante la lettura del file sorgente", e);
-        }
-
         // TODO To be implemented later
+    }
+
+    private static void assemble(File inputFile, File outputFile) throws IOException {
+        Lexer lexer = new Lexer();
+        List<TokenLine> parsedLines = lexer.tokenizeFile(inputFile);
+
+        Assembler assembler = new Assembler();
+        assembler.pass1(parsedLines);
+        assembler.pass2(parsedLines, outputFile);
     }
 }

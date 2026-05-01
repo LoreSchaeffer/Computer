@@ -30,6 +30,6 @@ public class InstructionSet {
     }
 
     public OpcodeMetadata get(int opcode) {
-        return registry.getOrDefault(opcode, new OpcodeMetadata("???", cpu -> LOG.error("Execution halted. Unimplemented Opcode detected: ${}", String.format("%02X", opcode))));
+        return registry.getOrDefault(opcode, new OpcodeMetadata("???", _ -> LOG.error("Execution halted. Unimplemented Opcode detected: ${}", String.format("%02X", opcode))));
     }
 }

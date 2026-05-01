@@ -19,7 +19,6 @@ public class LycoWindow extends JFrame {
     private final BufferedImage screenImage;
     private static final int PIXEL_SCALE = 8;
 
-    // A simple 16-color palette (C64/EGA style) mapped to byte values 0x00 to 0x0F
     private final Color[] palette = new Color[]{
             Color.BLACK,
             Color.WHITE,
@@ -57,15 +56,15 @@ public class LycoWindow extends JFrame {
     }
 
     private void setupUI() {
-        this.setTitle("Lyco-8");
+        this.setTitle("Lyco-8 Diagnostics");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
 
         JPanel renderPanel = new JPanel() {
             @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(
+            protected void paintComponent(Graphics graphicsContext) {
+                super.paintComponent(graphicsContext);
+                graphicsContext.drawImage(
                         screenImage,
                         0,
                         0,
@@ -80,25 +79,34 @@ public class LycoWindow extends JFrame {
         this.add(renderPanel);
         this.pack();
         this.setLocationRelativeTo(null);
+
+        this.setFocusable(true);
+        this.requestFocusInWindow();
     }
 
     private void setupInputHandling() {
         this.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                char keyChar = Character.toUpperCase(e.getKeyChar());
-                if (keyChar >= 32 && keyChar <= 126) keyboard.pressKey(keyChar);
+            public void keyPressed(KeyEvent event) {
+                int keyCode = event.getKeyCode();
+
+                if (keyCode == KeyEvent.VK_ESCAPE) {
+                    keyboard.pressKey(0x1B);
+                } else {
+                    char keyChar = Character.toUpperCase(event.getKeyChar());
+                    if (keyChar >= 32 && keyChar <= 126) keyboard.pressKey(keyChar);
+                }
             }
         });
     }
 
     private void startRenderLoop() {
         // Render at approximately 60 FPS (~16ms per frame)
-        Timer timer = new Timer(16, e -> {
+        Timer renderTimer = new Timer(16, event -> {
             this.updateScreenImage();
             this.repaint();
         });
-        timer.start();
+        renderTimer.start();
     }
 
     private void updateScreenImage() {
@@ -109,8 +117,14 @@ public class LycoWindow extends JFrame {
                 int index = (y * GraphicsPpu.SCREEN_WIDTH) + x;
                 int colorByte = vram[index];
 
-                // Map the byte to our 16-color palette (fallback to black if out of bounds)
-                Color pixelColor = (colorByte >= 0 && colorByte < this.palette.length) ? this.palette[colorByte] : Color.BLACK;
+                Color pixelColor;
+
+                if (colorByte == 0xFF) {
+                    pixelColor = Color.WHITE;
+                } else {
+                    int safePaletteIndex = colorByte & 0x0F;
+                    pixelColor = this.palette[safePaletteIndex];
+                }
 
                 this.screenImage.setRGB(x, y, pixelColor.getRGB());
             }
