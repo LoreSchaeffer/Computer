@@ -18,6 +18,7 @@ public class Cpu {
     private final MOS6502 datapath;
     private final InstructionSet instructionSet;
     private long totalClockCycles;
+    private int statusRegister = 0x20;
 
     /**
      * Initializes the CPU, connects it to the motherboard bus, and instantiates
@@ -153,70 +154,38 @@ public class Cpu {
     }
 
     public int getStatusRegister() {
-        int status = 0x20;
-        if (this.isFlagSet('C')) status |= 0x01;
-        if (this.isFlagSet('Z')) status |= 0x02;
-        if (this.isFlagSet('I')) status |= 0x04;
-        if (this.isFlagSet('D')) status |= 0x08;
-        if (this.isFlagSet('V')) status |= 0x40;
-        if (this.isFlagSet('N')) status |= 0x80;
-        return status;
+        return this.statusRegister;
+    }
+
+    public void setStatusRegister(int status) {
+        this.statusRegister = status | 0x20;
     }
 
     public boolean isFlagSet(char flag) {
-        return switch (flag) {
-            case 'C' -> this.datapath.OutC;
-            case 'Z' -> this.datapath.OutZ;
-            case 'V' -> this.datapath.OutV;
-            case 'N' -> this.datapath.OutN;
-            default -> false;
-        };
+        int mask = this.getFlagMask(flag);
+        return (this.statusRegister & mask) != 0;
     }
 
     public void forceFlag(char flag, boolean state) {
-        switch (flag) {
-            case 'C' -> {
-                this.datapath.ManC = state;
-                this.datapath.SelC0 = false;
-                this.datapath.SelC1 = true;
-            }
-            case 'Z' -> {
-                this.datapath.ManZ = state;
-                this.datapath.SelZ0 = false;
-                this.datapath.SelZ1 = true;
-            }
-            case 'I' -> {
-                this.datapath.ManI = state;
-                this.datapath.SelI0 = false;
-                this.datapath.SelI1 = true;
-            }
-            case 'V' -> {
-                this.datapath.ManV = state;
-                this.datapath.SelV0 = false;
-                this.datapath.SelV1 = true;
-            }
-            case 'N' -> {
-                this.datapath.ManN = state;
-                this.datapath.SelN0 = false;
-                this.datapath.SelN1 = true;
-            }
-            case 'D' -> {
-                this.datapath.ManD = state;
-                this.datapath.SelD0 = false;
-                this.datapath.SelD1 = true;
-            }
-            case 'B' -> {
-                this.datapath.ManB = state;
-                this.datapath.SelB0 = false;
-                this.datapath.SelB1 = true;
-            }
-            default -> {
-                return;
-            }
+        int mask = this.getFlagMask(flag);
+        if (state) {
+            this.statusRegister |= mask;
+        } else {
+            this.statusRegister &= ~mask;
         }
+    }
 
-        this.pulseClock();
-        this.setAllControlPinsIdle();
+    private int getFlagMask(char flag) {
+        return switch (flag) {
+            case 'C' -> 0x01;
+            case 'Z' -> 0x02;
+            case 'I' -> 0x04;
+            case 'D' -> 0x08;
+            case 'B' -> 0x10;
+            case 'V' -> 0x40;
+            case 'N' -> 0x80;
+            default -> 0x00;
+        };
     }
 
     public void forceZeroAndNegativeFlags(int value) {

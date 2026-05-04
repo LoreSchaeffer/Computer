@@ -23,13 +23,13 @@ public class ConsoleTerminal implements BusDevice {
 
     @Override
     public int read(int address) {
-        // The terminal is write-only. Reading from it returns zero.
         return 0x00;
     }
 
     @Override
     public void write(int address, int value) {
-        // Cast the 8-bit payload to an ASCII character and print it
-        System.out.print((char) (value & 0xFF));
+        char character = (char) (value & 0xFF);
+        System.out.print(character);
+        System.out.flush();
     }
 }

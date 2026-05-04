@@ -110,8 +110,6 @@ public class LoadStoreGroup implements InstructionGroup {
         MOS6502 datapath = cpu.getDatapath();
 
         cpu.assertDataBus(value);
-
-        // Bypass the ALU to load data directly from the bus into the Accumulator.
         datapath.BypassALU = true;
         datapath.LoadA = true;
 
@@ -120,6 +118,8 @@ public class LoadStoreGroup implements InstructionGroup {
         datapath.BypassALU = false;
         datapath.LoadA = false;
         datapath.evaluateCombinational();
+
+        cpu.forceZeroAndNegativeFlags(value);
     }
 
     private void loadX(Cpu cpu, int value) {
@@ -132,6 +132,8 @@ public class LoadStoreGroup implements InstructionGroup {
 
         datapath.LoadX = false;
         datapath.evaluateCombinational();
+
+        cpu.forceZeroAndNegativeFlags(value);
     }
 
     private void loadY(Cpu cpu, int value) {
@@ -144,5 +146,7 @@ public class LoadStoreGroup implements InstructionGroup {
 
         datapath.LoadY = false;
         datapath.evaluateCombinational();
+
+        cpu.forceZeroAndNegativeFlags(value);
     }
 }

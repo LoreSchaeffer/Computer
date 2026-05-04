@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * Handles the execution lifecycle of the emulator, managing the main clock loop,
@@ -19,20 +20,23 @@ public class EmulatorRunner {
     private final Motherboard motherboard;
     private final int startAddress;
     private final int maxSteps;
+    private final int targetFrequencyHz;
 
     /**
      * Constructs a new EmulatorRunner.
      *
-     * @param startAddress The 16-bit memory address where execution starts.
-     * @param maxSteps     The watchdog limit for execution cycles (-1 for infinite).
+     * @param startAddress      The 16-bit memory address where execution starts.
+     * @param maxSteps          The watchdog limit for execution cycles (-1 for infinite).
+     * @param targetFrequencyHz The target emulation frequency in Hz (for future timing control).
      */
-    public EmulatorRunner(int startAddress, int maxSteps) {
+    public EmulatorRunner(int startAddress, int maxSteps, int targetFrequencyHz) {
         LOG.info("Initializing Lyco-8 Gate-Level Emulator...");
         LOG.debug("Debug mode enabled: Verbose CPU logging enabled");
 
         this.motherboard = new Motherboard();
         this.startAddress = startAddress;
         this.maxSteps = maxSteps;
+        this.targetFrequencyHz = targetFrequencyHz;
     }
 
     /**
@@ -69,7 +73,7 @@ public class EmulatorRunner {
         this.motherboard.loadProgram(this.startAddress, program);
 
         Thread.ofVirtual()
-                .name("CPU-Execution-Thread")
+                .name("CPU")
                 .start(this::run);
     }
 
@@ -83,10 +87,15 @@ public class EmulatorRunner {
         cpu.reset();
 
         boolean infiniteLoop = (this.maxSteps <= 0);
-        LOG.info("Starting CPU execution {}", infiniteLoop ? "(Infinite Mode)" : "(Max steps: " + this.maxSteps + ")");
+        String speedMode = (this.targetFrequencyHz > 0) ? String.format("(Capped at %d Hz)", this.targetFrequencyHz) : "(Uncapped)";
+
+        LOG.info("Starting CPU execution {} {}", infiniteLoop ? "[Infinite Mode]" : "[Max steps: " + this.maxSteps + "]", speedMode);
 
         int stepCounter = 0;
         long startTimeNanos = System.nanoTime();
+
+        final double nanosPerInstruction = (this.targetFrequencyHz > 0) ? (1_000_000_000.0 / this.targetFrequencyHz) : 0;
+        long nextInstructionTime = startTimeNanos;
 
         while (infiniteLoop || stepCounter < this.maxSteps) {
             int programCounter = cpu.getProgramCounter();
@@ -104,10 +113,20 @@ public class EmulatorRunner {
 
             cpu.step();
             stepCounter++;
+
+            if (this.targetFrequencyHz > 0) {
+                nextInstructionTime += (long) nanosPerInstruction;
+                long sleepNanos = nextInstructionTime - System.nanoTime();
+
+                if (sleepNanos > 0) {
+                    LockSupport.parkNanos(sleepNanos);
+                } else if (sleepNanos < -1_000_000_000) {
+                    nextInstructionTime = System.nanoTime();
+                }
+            }
         }
 
         long endTimeNanos = System.nanoTime();
-
         LOG.info("Execution sequence finished.");
 
         if (!infiniteLoop && stepCounter >= this.maxSteps) {

@@ -24,6 +24,7 @@ public class Bootstrap {
         OptionSpec<File> inputOpt = parser.acceptsAll(List.of("input", "i"), "The input .bin file to emulate").withRequiredArg().ofType(File.class);
         OptionSpec<String> originOpt = parser.acceptsAll(List.of("origin", "o"), "Start address in hex (default: 8000)").withOptionalArg().defaultsTo("8000");
         OptionSpec<Integer> stepsOpt = parser.acceptsAll(List.of("steps", "s"), "Max execution steps (default: infinite)").withOptionalArg().ofType(Integer.class).defaultsTo(-1);
+        OptionSpec<Integer> freqOpt = parser.acceptsAll(List.of("freq", "f"), "Target Frequency in Hz (e.g. 20000). Default: 0 (Uncapped)").withOptionalArg().ofType(Integer.class).defaultsTo(0);
         OptionSpec<Void> debugOpt = parser.acceptsAll(List.of("debug", "d"), "Launch debug mode");
 
         try {
@@ -37,13 +38,14 @@ public class Bootstrap {
             int startAddress = Integer.parseInt(options.valueOf(originOpt).replace("$", ""), 16);
             int maxSteps = options.valueOf(stepsOpt);
             boolean debug = options.has(debugOpt);
+            int targetFrequency = options.valueOf(freqOpt);
 
             if (debug) {
                 LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
                 context.getLogger("it.lycoris.j6502.emulator").setLevel(Level.DEBUG);
             }
 
-            EmulatorRunner runner = new EmulatorRunner(startAddress, maxSteps);
+            EmulatorRunner runner = new EmulatorRunner(startAddress, maxSteps, targetFrequency);
 
             if (options.has(inputOpt)) {
                 File binFile = options.valueOf(inputOpt);
