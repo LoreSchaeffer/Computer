@@ -1,9 +1,8 @@
 package it.lycoris.j6502.emulator;
 
 import ch.qos.logback.classic.Level;
-import it.lycoris.j6502.emulator.emulated.Cpu;
+import ch.qos.logback.classic.LoggerContext;
 import it.lycoris.j6502.emulator.emulated.EmulatorRunner;
-import it.lycoris.j6502.emulator.hardware.io.ComponentLibrary;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -17,6 +16,7 @@ import java.util.List;
 
 public class Bootstrap {
     private static final Logger LOG = LoggerFactory.getLogger(Bootstrap.class);
+    private static final String DEFAULT_ROM_FILENAME = "rom.bin";
 
     static void main(String[] args) {
         OptionParser parser = new OptionParser();
@@ -24,7 +24,6 @@ public class Bootstrap {
         OptionSpec<File> inputOpt = parser.acceptsAll(List.of("input", "i"), "The input .bin file to emulate").withRequiredArg().ofType(File.class);
         OptionSpec<String> originOpt = parser.acceptsAll(List.of("origin", "o"), "Start address in hex (default: 8000)").withOptionalArg().defaultsTo("8000");
         OptionSpec<Integer> stepsOpt = parser.acceptsAll(List.of("steps", "s"), "Max execution steps (default: infinite)").withOptionalArg().ofType(Integer.class).defaultsTo(-1);
-        OptionSpec<Cpu.Type> cpuOpt = parser.acceptsAll(List.of("cpu", "c"), "Type of CPU to be used (default: SOFTWARE_EMULATED)").withOptionalArg().ofType(Cpu.Type.class).defaultsTo(Cpu.Type.SOFTWARE_EMULATED);
         OptionSpec<Void> debugOpt = parser.acceptsAll(List.of("debug", "d"), "Launch debug mode");
 
         try {
@@ -35,44 +34,41 @@ public class Bootstrap {
                 return;
             }
 
-            if (!options.has(inputOpt)) {
-                parser.printHelpOn(System.out);
-                return;
-            }
-
-            File binFile = options.valueOf(inputOpt);
             int startAddress = Integer.parseInt(options.valueOf(originOpt).replace("$", ""), 16);
             int maxSteps = options.valueOf(stepsOpt);
-            Cpu.Type cpuType = options.valueOf(cpuOpt);
             boolean debug = options.has(debugOpt);
 
             if (debug) {
-                ch.qos.logback.classic.Logger emulatorLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("it.lycoris.j6502.emulator");
-                emulatorLogger.setLevel(Level.DEBUG);
+                LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+                context.getLogger("it.lycoris.j6502.emulator").setLevel(Level.DEBUG);
             }
 
-            try {
-                ComponentLibrary lib = ComponentLibrary.get();
-                lib.loadFromResources("hardware");
-            } catch (Exception e) {
-                LOG.error("Initialization of ComponentLibrary failed!", e);
-                System.exit(1);
-            }
+            EmulatorRunner runner = new EmulatorRunner(startAddress, maxSteps);
 
-            EmulatorRunner runner = new EmulatorRunner(startAddress, maxSteps, cpuType);
-            runner.loadProgramFromFileAndRun(binFile);
+            if (options.has(inputOpt)) {
+                File binFile = options.valueOf(inputOpt);
+                runner.loadProgramFromFileAndRun(binFile);
+            } else {
+                File defaultRom = new File(DEFAULT_ROM_FILENAME);
+                if (defaultRom.exists() && defaultRom.isFile()) {
+                    LOG.info("No input file provided. Automatically loading default ROM: {}", DEFAULT_ROM_FILENAME);
+                    runner.loadProgramFromFileAndRun(defaultRom);
+                } else {
+                    LOG.error("No input file provided and '{}' not found in the current directory.", DEFAULT_ROM_FILENAME);
+                    parser.printHelpOn(System.out);
+                    System.exit(1);
+                }
+            }
         } catch (OptionException e) {
             LOG.error("Invalid arguments: {}", e.getMessage());
-
             try {
                 parser.printHelpOn(System.out);
             } catch (IOException ioException) {
                 LOG.error("Failed to print help", ioException);
             }
-
             System.exit(1);
         } catch (Exception e) {
-            LOG.error("A fatal error occurred", e);
+            LOG.error("A fatal error occurred during bootstrap", e);
             System.exit(1);
         }
     }

@@ -3,15 +3,13 @@ package it.lycoris.j6502.emulator.control.groups;
 import it.lycoris.j6502.emulator.control.InstructionGroup;
 import it.lycoris.j6502.emulator.control.OpcodeMetadata;
 import it.lycoris.j6502.emulator.emulated.Cpu;
-import it.lycoris.j6502.emulator.emulated.InstructionLevelCpu;
-import it.lycoris.j6502.emulator.hardware.GateLevelCpu;
+import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;
 
 /**
  * Registers Load and Store instructions (LDA, LDX, LDY, STA, STX, STY).
- * Demonstrates architectural elegance: store operations resolve natively via the Cpu interface
- * without requiring engine-specific polymorphic execution.
+ * Interacts with memory and routes data directly into or out of the hardware registers.
  */
 public class LoadStoreGroup implements InstructionGroup {
 
@@ -51,10 +49,10 @@ public class LoadStoreGroup implements InstructionGroup {
         registry.put(0x91, new OpcodeMetadata("STA ($zp),Y", cpu -> cpu.writeSystemBus(this.resolveIndirectIndexedY(cpu), cpu.getAccumulator())));
 
         // --- STX & STY (Store X and Y Registers) ---
-        registry.put(0x86, new OpcodeMetadata("STX $zp", cpu -> cpu.writeSystemBus(this.resolveZeroPage(cpu), cpu.readRegisterDirectly("X"))));
-        registry.put(0x8E, new OpcodeMetadata("STX $abs", cpu -> cpu.writeSystemBus(this.resolveAbsolute(cpu), cpu.readRegisterDirectly("X"))));
-        registry.put(0x84, new OpcodeMetadata("STY $zp", cpu -> cpu.writeSystemBus(this.resolveZeroPage(cpu), cpu.readRegisterDirectly("Y"))));
-        registry.put(0x8C, new OpcodeMetadata("STY $abs", cpu -> cpu.writeSystemBus(this.resolveAbsolute(cpu), cpu.readRegisterDirectly("Y"))));
+        registry.put(0x86, new OpcodeMetadata("STX $zp", cpu -> cpu.writeSystemBus(this.resolveZeroPage(cpu), cpu.getRegisterX())));
+        registry.put(0x8E, new OpcodeMetadata("STX $abs", cpu -> cpu.writeSystemBus(this.resolveAbsolute(cpu), cpu.getRegisterX())));
+        registry.put(0x84, new OpcodeMetadata("STY $zp", cpu -> cpu.writeSystemBus(this.resolveZeroPage(cpu), cpu.getRegisterY())));
+        registry.put(0x8C, new OpcodeMetadata("STY $abs", cpu -> cpu.writeSystemBus(this.resolveAbsolute(cpu), cpu.getRegisterY())));
     }
 
     // ========================================================================
@@ -62,104 +60,89 @@ public class LoadStoreGroup implements InstructionGroup {
     // ========================================================================
 
     private int fetchImmediate(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.fetchOperand();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextByte();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for immediate fetch.");
+        return cpu.fetchNextByte();
     }
 
     private int resolveZeroPage(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrZeroPage();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextByte();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page address.");
+        return cpu.fetchNextByte();
     }
 
     private int resolveZeroPageX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrZeroPageX();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return (fastCpu.fetchNextByte() + fastCpu.getRegisterX()) & 0xFF;
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page X address.");
+        return (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
     }
 
     private int resolveZeroPageY(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrZeroPageY();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return (fastCpu.fetchNextByte() + fastCpu.getRegisterY()) & 0xFF;
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page Y address.");
+        return (cpu.fetchNextByte() + cpu.getRegisterY()) & 0xFF;
     }
 
     private int resolveAbsolute(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrAbsolute();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextAddress();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute address.");
+        return cpu.fetchNextAddress();
     }
 
     private int resolveAbsoluteX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrAbsoluteX();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return (fastCpu.fetchNextAddress() + fastCpu.getRegisterX()) & 0xFFFF;
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute X address.");
+        return (cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF;
     }
 
     private int resolveAbsoluteY(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrAbsoluteY();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return (fastCpu.fetchNextAddress() + fastCpu.getRegisterY()) & 0xFFFF;
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute Y address.");
+        return (cpu.fetchNextAddress() + cpu.getRegisterY()) & 0xFFFF;
     }
 
     private int resolveIndexedIndirectX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrIndexedIndirectX();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int zpAddress = (fastCpu.fetchNextByte() + fastCpu.getRegisterX()) & 0xFF;
-            int lowByte = fastCpu.readSystemBus(zpAddress);
-            int highByte = fastCpu.readSystemBus((zpAddress + 1) & 0xFF);
-            return (highByte << 8) | lowByte;
-        }
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Indexed Indirect X.");
+        int zpAddress = (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
+        int lowByte = cpu.readSystemBus(zpAddress);
+        int highByte = cpu.readSystemBus((zpAddress + 1) & 0xFF);
+        return (highByte << 8) | lowByte;
     }
 
     private int resolveIndirectIndexedY(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrIndirectIndexedY();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int zpAddress = fastCpu.fetchNextByte();
-            int lowByte = fastCpu.readSystemBus(zpAddress);
-            int highByte = fastCpu.readSystemBus((zpAddress + 1) & 0xFF);
-            int baseAddress = (highByte << 8) | lowByte;
-            return (baseAddress + fastCpu.getRegisterY()) & 0xFFFF;
-        }
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Indirect Indexed Y.");
+        int zpAddress = cpu.fetchNextByte();
+        int lowByte = cpu.readSystemBus(zpAddress);
+        int highByte = cpu.readSystemBus((zpAddress + 1) & 0xFF);
+        int baseAddress = (highByte << 8) | lowByte;
+        return (baseAddress + cpu.getRegisterY()) & 0xFFFF;
     }
 
     // ========================================================================
-    // POLYMORPHIC EXECUTION LOGIC
+    // HARDWARE EXECUTION LOGIC
     // ========================================================================
 
     private void loadA(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.writeToBus(value, 0);
-            hardwareCpu.loadAccumulatorDirect(0);
-            hardwareCpu.updateZAndNFlags(hardwareCpu.getAccumulator());
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            fastCpu.setAccumulator(value);
-            fastCpu.updateZeroAndNegativeFlags(value);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        cpu.assertDataBus(value);
+
+        // Bypass the ALU to load data directly from the bus into the Accumulator.
+        datapath.BypassALU = true;
+        datapath.LoadA = true;
+
+        cpu.pulseClock();
+
+        datapath.BypassALU = false;
+        datapath.LoadA = false;
+        datapath.evaluateCombinational();
     }
 
     private void loadX(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.writeToBus(value, 0);
-            hardwareCpu.pulseRegister("LoadX");
-            hardwareCpu.updateZAndNFlags(hardwareCpu.readRegisterDirectly("X"));
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            fastCpu.setRegisterX(value);
-            fastCpu.updateZeroAndNegativeFlags(value);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        cpu.assertDataBus(value);
+        datapath.LoadX = true;
+
+        cpu.pulseClock();
+
+        datapath.LoadX = false;
+        datapath.evaluateCombinational();
     }
 
     private void loadY(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.writeToBus(value, 0);
-            hardwareCpu.pulseRegister("LoadY");
-            hardwareCpu.updateZAndNFlags(hardwareCpu.readRegisterDirectly("Y"));
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            fastCpu.setRegisterY(value);
-            fastCpu.updateZeroAndNegativeFlags(value);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        cpu.assertDataBus(value);
+        datapath.LoadY = true;
+
+        cpu.pulseClock();
+
+        datapath.LoadY = false;
+        datapath.evaluateCombinational();
     }
 }

@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The SystemBus acts as a Mediator between the CPU and all peripheral devices.
- * It routes read and write requests to the appropriate mapped hardware based on the address.
+ * The SystemBus acts as a Mediator between the central processing unit and all peripheral devices.
+ * It routes read and write requests to the appropriate mapped hardware based on the address space.
  */
 public class SystemBus {
     private final List<BusDevice> devices = new ArrayList<>();
 
     /**
      * Connects a new hardware peripheral to the system bus.
-     * Order of attachment matters: overlapping address spaces will be handled
-     * by the first device that accepts the address.
+     * The order of attachment establishes the priority: if address spaces overlap,
+     * the first device that accepts the address will handle the request.
      *
      * @param device The hardware component to attach.
      */
@@ -22,37 +22,34 @@ public class SystemBus {
     }
 
     /**
-     * Routes a read request to the appropriate device.
+     * Routes a read request to the appropriate device on the bus.
      *
-     * @param address The 16-bit requested address.
-     * @return int The 8-bit value read, or 0x00 if the address is unmapped (open bus).
+     * @param address The requested address (will be masked to 16-bit).
+     * @return The 8-bit value read, or 0x00 if the address is unmapped (floating bus behavior).
      */
     public int read(int address) {
         int boundedAddress = address & 0xFFFF;
 
         for (BusDevice device : this.devices) {
-            if (device.accepts(boundedAddress)) {
-                return device.read(boundedAddress);
-            }
+            if (device.accepts(boundedAddress)) return device.read(boundedAddress);
         }
 
-        // Behavior of an "open bus" (no device answered)
         return 0x00;
     }
 
     /**
-     * Routes a write request to the appropriate device.
+     * Routes a write request to the appropriate device on the bus.
      *
-     * @param address The 16-bit requested address.
-     * @param value   The 8-bit value to broadcast.
+     * @param address The requested address (will be masked to 16-bit).
+     * @param data    The value to write (will be masked to 8-bit).
      */
-    public void write(int address, int value) {
+    public void write(int address, int data) {
         int boundedAddress = address & 0xFFFF;
-        int byteValue = value & 0xFF;
+        int byteData = data & 0xFF;
 
         for (BusDevice device : this.devices) {
             if (device.accepts(boundedAddress)) {
-                device.write(boundedAddress, byteValue);
+                device.write(boundedAddress, byteData);
                 return;
             }
         }

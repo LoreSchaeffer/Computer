@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Central registry containing all supported instructions for the 6502 processor.
+ */
 public class InstructionSet {
     private static final Logger LOG = LoggerFactory.getLogger(InstructionSet.class);
     private final Map<Integer, OpcodeMetadata> registry = new HashMap<>();
@@ -26,10 +29,21 @@ public class InstructionSet {
     }
 
     private void load(InstructionGroup group) {
-        group.install(registry);
+        group.install(this.registry);
     }
 
+    /**
+     * Retrieves the metadata and execution logic for a given opcode.
+     *
+     * @param opcode The 8-bit instruction opcode.
+     * @return The associated OpcodeMetadata. Returns a safe fallback if unimplemented.
+     */
     public OpcodeMetadata get(int opcode) {
-        return registry.getOrDefault(opcode, new OpcodeMetadata("???", _ -> LOG.error("Execution halted. Unimplemented Opcode detected: ${}", String.format("%02X", opcode))));
+        return this.registry.getOrDefault(
+                opcode,
+                new OpcodeMetadata("???", _ -> LOG.error("Execution halted. Unimplemented Opcode detected: ${}", String.format("%02X", opcode)))
+        );
     }
+
+    // TODO Add a print method to dump the instruction set in a human-readable format (in a table)
 }

@@ -23,7 +23,8 @@ const GATE_NODES: HardwareTemplate[] = [
     {type: 'logicGate', data: {typeLabel: 'NorGate', label: 'NOR', inputs: ['A', 'B'], outputs: ['Out'], group: 'Primitives'}},
     {type: 'logicGate', data: {typeLabel: 'XorGate', label: 'XOR', inputs: ['A', 'B'], outputs: ['Out'], group: 'Primitives'}},
     {type: 'logicGate', data: {typeLabel: 'NotGate', label: 'NOT', inputs: ['In'], outputs: ['Out'], group: 'Primitives'}},
-    {type: 'latch', data: {typeLabel: 'DLatch', label: 'D-Latch', inputs: ['D', 'En'], outputs: ['Q', '!Q'], group: 'Primitives'}}
+    {type: 'latch', data: {typeLabel: 'DLatch', label: 'D-Latch', inputs: ['D', 'En'], outputs: ['Q', '!Q'], group: 'Primitives'}},
+    {type: 'flipflop', data: {typeLabel: 'DFlipFlop', label: 'D-FlipFlop', inputs: ['D', 'Clk', 'En'], outputs: ['Q', '!Q'], group: 'Primitives'}},
 ];
 
 interface WorkspaceContextType {

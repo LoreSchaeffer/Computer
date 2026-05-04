@@ -3,14 +3,13 @@ package it.lycoris.j6502.emulator.control.groups;
 import it.lycoris.j6502.emulator.control.InstructionGroup;
 import it.lycoris.j6502.emulator.control.OpcodeMetadata;
 import it.lycoris.j6502.emulator.emulated.Cpu;
-import it.lycoris.j6502.emulator.emulated.InstructionLevelCpu;
-import it.lycoris.j6502.emulator.hardware.GateLevelCpu;
+import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;
 
 /**
  * Registers logical instructions (AND, ORA, EOR, BIT).
- * Implements bitwise operations safely across both hardware and software emulation layers.
+ * Executes bitwise operations directly through the gate-level ALU.
  */
 public class LogicalGroup implements InstructionGroup {
 
@@ -41,64 +40,83 @@ public class LogicalGroup implements InstructionGroup {
     // ========================================================================
 
     private int fetchImmediate(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.fetchOperand();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextByte();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for immediate fetch.");
+        return cpu.fetchNextByte();
     }
 
     private int fetchZeroPage(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.readSystemBus(hardwareCpu.addrZeroPage());
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.readSystemBus(fastCpu.fetchNextByte());
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page fetch.");
+        int address = cpu.fetchNextByte();
+        return cpu.readSystemBus(address);
     }
 
     private int fetchAbsolute(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.readSystemBus(hardwareCpu.addrAbsolute());
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.readSystemBus(fastCpu.fetchNextAddress());
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute fetch.");
+        int address = cpu.fetchNextAddress();
+        return cpu.readSystemBus(address);
     }
 
     // ========================================================================
-    // POLYMORPHIC EXECUTION LOGIC
+    // HARDWARE EXECUTION LOGIC
     // ========================================================================
 
     private void executeAnd(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.executeALU("OpAND", value, false, true);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int result = fastCpu.getAccumulator() & value;
-            fastCpu.setAccumulator(result);
-            fastCpu.updateZeroAndNegativeFlags(result);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        cpu.assertDataBus(value);
+        datapath.OpAND = true;
+        datapath.LoadA = true;
+
+        cpu.pulseClock();
+
+        datapath.OpAND = false;
+        datapath.LoadA = false;
+        datapath.evaluateCombinational();
     }
 
     private void executeOra(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.executeALU("OpOR", value, false, true);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int result = fastCpu.getAccumulator() | value;
-            fastCpu.setAccumulator(result);
-            fastCpu.updateZeroAndNegativeFlags(result);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        cpu.assertDataBus(value);
+        datapath.OpOR = true;
+        datapath.LoadA = true;
+
+        cpu.pulseClock();
+
+        datapath.OpOR = false;
+        datapath.LoadA = false;
+        datapath.evaluateCombinational();
     }
 
     private void executeEor(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.executeALU("OpXOR", value, false, true);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int result = fastCpu.getAccumulator() ^ value;
-            fastCpu.setAccumulator(result);
-            fastCpu.updateZeroAndNegativeFlags(result);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        cpu.assertDataBus(value);
+        datapath.OpXOR = true;
+        datapath.LoadA = true;
+
+        cpu.pulseClock();
+
+        datapath.OpXOR = false;
+        datapath.LoadA = false;
+        datapath.evaluateCombinational();
     }
 
     private void executeBit(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.bitTest(value);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            fastCpu.setFlagZ((fastCpu.getAccumulator() & value) == 0);
-            fastCpu.setFlagN((value & 0x80) != 0);
-            fastCpu.setFlagV((value & 0x40) != 0);
-        }
+        // BIT instruction is peculiar:
+        // 1. Z flag is set to the result of (A AND M).
+        // 2. N flag is set to bit 7 of the memory value.
+        // 3. V flag is set to bit 6 of the memory value.
+        // It does NOT modify the Accumulator.
+
+        // Emulating this via control pins depends on the exact JSON layout of your ALU.
+        // Assuming your ALU sets flags on OpAND without needing LoadA, but typically,
+        // emulators manage this manually if the datapath doesn't have a specific 'BIT' pin.
+
+        int resultAnd = cpu.getAccumulator() & value;
+
+        cpu.forceFlag('Z', resultAnd == 0);
+        cpu.forceFlag('N', (value & 0x80) != 0);
+        cpu.forceFlag('V', (value & 0x40) != 0);
+
+        // This process consumes cycles on a real 6502. We simulate the timing.
+        cpu.pulseClock();
     }
 }

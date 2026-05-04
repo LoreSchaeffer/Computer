@@ -32,6 +32,7 @@ const nodeTypes: NodeTypes = {
     inputPin: InputPinNode,
     outputPin: OutputPinNode,
     latch: LatchNode,
+    flipflop: LatchNode,
     customChip: CustomChipNode,
 };
 

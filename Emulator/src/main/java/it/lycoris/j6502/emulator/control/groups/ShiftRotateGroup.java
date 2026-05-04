@@ -3,14 +3,12 @@ package it.lycoris.j6502.emulator.control.groups;
 import it.lycoris.j6502.emulator.control.InstructionGroup;
 import it.lycoris.j6502.emulator.control.OpcodeMetadata;
 import it.lycoris.j6502.emulator.emulated.Cpu;
-import it.lycoris.j6502.emulator.emulated.InstructionLevelCpu;
-import it.lycoris.j6502.emulator.hardware.GateLevelCpu;
+import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;
 
 /**
  * Registers shift and rotate instructions (ASL, LSR, ROL, ROR).
- * Supports polymorphic execution across different CPU emulation strategies.
  */
 public class ShiftRotateGroup implements InstructionGroup {
 
@@ -50,27 +48,19 @@ public class ShiftRotateGroup implements InstructionGroup {
     // ========================================================================
 
     private int resolveZeroPage(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrZeroPage();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextByte();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page address.");
+        return cpu.fetchNextByte();
     }
 
     private int resolveZeroPageX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrZeroPageX();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return (fastCpu.fetchNextByte() + fastCpu.getRegisterX()) & 0xFF;
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page X address.");
+        return (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
     }
 
     private int resolveAbsolute(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrAbsolute();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextAddress();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute address.");
+        return cpu.fetchNextAddress();
     }
 
     private int resolveAbsoluteX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrAbsoluteX();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return (fastCpu.fetchNextAddress() + fastCpu.getRegisterX()) & 0xFFFF;
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute X address.");
+        return (cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF;
     }
 
     // ========================================================================
@@ -86,74 +76,60 @@ public class ShiftRotateGroup implements InstructionGroup {
     }
 
     private void writeBack(Cpu cpu, int address, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            if (address == -1) {
-                hardwareCpu.writeToBus(value, 0);
-                hardwareCpu.loadAccumulatorDirect(0);
-            } else {
-                hardwareCpu.writeSystemBus(address, value);
-            }
-            hardwareCpu.updateZAndNFlags(value);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            if (address == -1) {
-                fastCpu.setAccumulator(value);
-            } else {
-                fastCpu.writeSystemBus(address, value);
-            }
-            fastCpu.updateZeroAndNegativeFlags(value);
+        if (address == -1) {
+            MOS6502 datapath = cpu.getDatapath();
+            cpu.assertDataBus(value);
+            datapath.BypassALU = true;
+            datapath.LoadA = true;
+            cpu.pulseClock();
+            datapath.BypassALU = false;
+            datapath.LoadA = false;
+            datapath.evaluateCombinational();
+        } else {
+            cpu.writeSystemBus(address, value);
         }
-    }
-
-    private boolean readCarry(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.isFlagSet('C');
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.isFlagC();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Carry read.");
-    }
-
-    private void updateCarry(Cpu cpu, boolean state) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) hardwareCpu.forceFlag('C', state);
-        else if (cpu instanceof InstructionLevelCpu fastCpu) fastCpu.setFlagC(state);
+        cpu.forceZeroAndNegativeFlags(value);
     }
 
     // ========================================================================
-    // POLYMORPHIC EXECUTION LOGIC
+    // HARDWARE EXECUTION LOGIC
     // ========================================================================
 
     private void executeAsl(Cpu cpu, int address) {
         int value = this.readValue(cpu, address);
-        boolean newCarry = (value & 0x80) != 0; // Old bit 7 becomes Carry
+        boolean newCarry = (value & 0x80) != 0;
         int result = (value << 1) & 0xFF;
 
-        this.updateCarry(cpu, newCarry);
+        cpu.forceFlag('C', newCarry);
         this.writeBack(cpu, address, result);
     }
 
     private void executeLsr(Cpu cpu, int address) {
         int value = this.readValue(cpu, address);
-        boolean newCarry = (value & 0x01) != 0; // Old bit 0 becomes Carry
+        boolean newCarry = (value & 0x01) != 0;
         int result = (value >> 1) & 0xFF;
 
-        this.updateCarry(cpu, newCarry);
+        cpu.forceFlag('C', newCarry);
         this.writeBack(cpu, address, result);
     }
 
     private void executeRol(Cpu cpu, int address) {
         int value = this.readValue(cpu, address);
-        boolean oldCarry = this.readCarry(cpu);
+        boolean oldCarry = cpu.isFlagSet('C');
         boolean newCarry = (value & 0x80) != 0;
         int result = ((value << 1) | (oldCarry ? 1 : 0)) & 0xFF;
 
-        this.updateCarry(cpu, newCarry);
+        cpu.forceFlag('C', newCarry);
         this.writeBack(cpu, address, result);
     }
 
     private void executeRor(Cpu cpu, int address) {
         int value = this.readValue(cpu, address);
-        boolean oldCarry = this.readCarry(cpu);
+        boolean oldCarry = cpu.isFlagSet('C');
         boolean newCarry = (value & 0x01) != 0;
         int result = ((value >> 1) | (oldCarry ? 0x80 : 0)) & 0xFF;
 
-        this.updateCarry(cpu, newCarry);
+        cpu.forceFlag('C', newCarry);
         this.writeBack(cpu, address, result);
     }
 }

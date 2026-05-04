@@ -3,15 +3,14 @@ package it.lycoris.j6502.emulator.control.groups;
 import it.lycoris.j6502.emulator.control.InstructionGroup;
 import it.lycoris.j6502.emulator.control.OpcodeMetadata;
 import it.lycoris.j6502.emulator.emulated.Cpu;
-import it.lycoris.j6502.emulator.emulated.InstructionLevelCpu;
-import it.lycoris.j6502.emulator.hardware.GateLevelCpu;
+import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;
 
 /**
  * Registers arithmetic instructions (ADC, SBC, INC, DEC, INX, DEX, INY, DEY)
  * into the execution environment.
- * Supports polymorphic execution across different CPU emulation strategies.
+ * Executes operations exclusively by manipulating the hardware datapath pins.
  */
 public class ArithmeticGroup implements InstructionGroup {
 
@@ -53,167 +52,154 @@ public class ArithmeticGroup implements InstructionGroup {
     }
 
     // ========================================================================
-    // VALUE FETCHING ABSTRACTIONS (Used by ADC, SBC)
+    // VALUE FETCHING ABSTRACTIONS 
     // ========================================================================
 
     private int fetchImmediate(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.fetchOperand();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextByte();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for immediate fetch.");
+        return cpu.fetchNextByte();
     }
 
     private int fetchZeroPage(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.readSystemBus(hardwareCpu.addrZeroPage());
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.readSystemBus(fastCpu.fetchNextByte());
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page fetch.");
+        int address = cpu.fetchNextByte();
+        return cpu.readSystemBus(address);
     }
 
     private int fetchZeroPageX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.readSystemBus(hardwareCpu.addrZeroPageX());
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.readSystemBus((fastCpu.fetchNextByte() + fastCpu.getRegisterX()) & 0xFF);
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page X fetch.");
+        int address = (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
+        return cpu.readSystemBus(address);
     }
 
     private int fetchAbsolute(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.readSystemBus(hardwareCpu.addrAbsolute());
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.readSystemBus(fastCpu.fetchNextAddress());
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute fetch.");
+        int address = cpu.fetchNextAddress();
+        return cpu.readSystemBus(address);
     }
 
     private int fetchAbsoluteX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.readSystemBus(hardwareCpu.addrAbsoluteX());
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.readSystemBus((fastCpu.fetchNextAddress() + fastCpu.getRegisterX()) & 0xFFFF);
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute X fetch.");
+        int address = (cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF;
+        return cpu.readSystemBus(address);
     }
 
     private int fetchAbsoluteY(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.readSystemBus(hardwareCpu.addrAbsoluteY());
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.readSystemBus((fastCpu.fetchNextAddress() + fastCpu.getRegisterY()) & 0xFFFF);
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute Y fetch.");
+        int address = (cpu.fetchNextAddress() + cpu.getRegisterY()) & 0xFFFF;
+        return cpu.readSystemBus(address);
     }
 
     // ========================================================================
-    // ADDRESS RESOLUTION ABSTRACTIONS (Used by INC, DEC)
+    // ADDRESS RESOLUTION ABSTRACTIONS
     // ========================================================================
 
     private int resolveZeroPage(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrZeroPage();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextByte();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page address.");
+        return cpu.fetchNextByte();
     }
 
     private int resolveZeroPageX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrZeroPageX();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return (fastCpu.fetchNextByte() + fastCpu.getRegisterX()) & 0xFF;
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Zero Page X address.");
+        return (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
     }
 
     private int resolveAbsolute(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrAbsolute();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return fastCpu.fetchNextAddress();
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute address.");
+        return cpu.fetchNextAddress();
     }
 
     private int resolveAbsoluteX(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.addrAbsoluteX();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) return (fastCpu.fetchNextAddress() + fastCpu.getRegisterX()) & 0xFFFF;
-        throw new UnsupportedOperationException("Unsupported CPU architecture for Absolute X address.");
+        return (cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF;
     }
 
     // ========================================================================
-    // POLYMORPHIC EXECUTION LOGIC
+    // HARDWARE EXECUTION LOGIC
     // ========================================================================
 
     private void adc(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.executeALU("OpADD", value, hardwareCpu.isFlagSet('C'), true);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int sum = fastCpu.getAccumulator() + value + (fastCpu.isFlagC() ? 1 : 0);
-            fastCpu.setFlagC(sum > 0xFF);
-            fastCpu.setFlagV(((fastCpu.getAccumulator() ^ sum) & (value ^ sum) & 0x80) != 0);
-            fastCpu.setAccumulator(sum);
-            fastCpu.updateZeroAndNegativeFlags(sum);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        // Assert the fetched value onto the data bus pins
+        cpu.assertDataBus(value);
+
+        // Instruct the ALU to perform addition and the Accumulator to latch the result
+        datapath.OpADD = true;
+        datapath.LoadA = true;
+
+        // Clock edge applies the hardware operation
+        cpu.pulseClock();
+
+        // Cleanup hardware pins
+        datapath.OpADD = false;
+        datapath.LoadA = false;
+        datapath.evaluateCombinational();
     }
 
     private void sbc(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.executeALU("OpADD", (~value) & 0xFF, hardwareCpu.isFlagSet('C'), true);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int invertedValue = (~value) & 0xFF;
-            int sum = fastCpu.getAccumulator() + invertedValue + (fastCpu.isFlagC() ? 1 : 0);
-            fastCpu.setFlagC(sum > 0xFF);
-            fastCpu.setFlagV(((fastCpu.getAccumulator() ^ sum) & (invertedValue ^ sum) & 0x80) != 0);
-            fastCpu.setAccumulator(sum);
-            fastCpu.updateZeroAndNegativeFlags(sum);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        // Subtraction in 6502 is Addition with the inverted operand
+        int invertedValue = (~value) & 0xFF;
+        cpu.assertDataBus(invertedValue);
+
+        datapath.OpADD = true;
+        datapath.LoadA = true;
+
+        cpu.pulseClock();
+
+        datapath.OpADD = false;
+        datapath.LoadA = false;
+        datapath.evaluateCombinational();
     }
 
     private void executeInx(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.indexOp("IncX");
-            hardwareCpu.updateZAndNFlags(hardwareCpu.snapshot().x());
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int result = (fastCpu.getRegisterX() + 1) & 0xFF;
-            fastCpu.setRegisterX(result);
-            fastCpu.updateZeroAndNegativeFlags(result);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        datapath.IncX = true;
+        cpu.pulseClock();
+        datapath.IncX = false;
+        datapath.evaluateCombinational();
     }
 
     private void executeDex(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.indexOp("DecX");
-            hardwareCpu.updateZAndNFlags(hardwareCpu.snapshot().x());
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int result = (fastCpu.getRegisterX() - 1) & 0xFF;
-            fastCpu.setRegisterX(result);
-            fastCpu.updateZeroAndNegativeFlags(result);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        datapath.DecX = true;
+        cpu.pulseClock();
+        datapath.DecX = false;
+        datapath.evaluateCombinational();
     }
 
     private void executeIny(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.indexOp("IncY");
-            hardwareCpu.updateZAndNFlags(hardwareCpu.snapshot().y());
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int result = (fastCpu.getRegisterY() + 1) & 0xFF;
-            fastCpu.setRegisterY(result);
-            fastCpu.updateZeroAndNegativeFlags(result);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        datapath.IncY = true;
+        cpu.pulseClock();
+        datapath.IncY = false;
+        datapath.evaluateCombinational();
     }
 
     private void executeDey(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.indexOp("DecY");
-            hardwareCpu.updateZAndNFlags(hardwareCpu.snapshot().y());
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int result = (fastCpu.getRegisterY() - 1) & 0xFF;
-            fastCpu.setRegisterY(result);
-            fastCpu.updateZeroAndNegativeFlags(result);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+
+        datapath.DecY = true;
+        cpu.pulseClock();
+        datapath.DecY = false;
+        datapath.evaluateCombinational();
     }
 
     private void incMem(Cpu cpu, int address) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            int value = (hardwareCpu.readSystemBus(address) + 1) & 0xFF;
-            hardwareCpu.writeSystemBus(address, value);
-            hardwareCpu.updateZAndNFlags(value);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int value = (fastCpu.readSystemBus(address) + 1) & 0xFF;
-            fastCpu.writeSystemBus(address, value);
-            fastCpu.updateZeroAndNegativeFlags(value);
-        }
+        // Read memory
+        int value = cpu.readSystemBus(address);
+
+        // Since IncMem isn't typically an ALU operation that targets a register,
+        // we manually increment and write back, simulating the hardware read-modify-write cycle.
+        int result = (value + 1) & 0xFF;
+
+        // Write back
+        cpu.writeSystemBus(address, result);
+
+        // Force the N and Z flags based on the result
+        cpu.forceZeroAndNegativeFlags(result);
     }
 
     private void decMem(Cpu cpu, int address) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            int value = (hardwareCpu.readSystemBus(address) - 1) & 0xFF;
-            hardwareCpu.writeSystemBus(address, value);
-            hardwareCpu.updateZAndNFlags(value);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int value = (fastCpu.readSystemBus(address) - 1) & 0xFF;
-            fastCpu.writeSystemBus(address, value);
-            fastCpu.updateZeroAndNegativeFlags(value);
-        }
+        int value = cpu.readSystemBus(address);
+        int result = (value - 1) & 0xFF;
+
+        cpu.writeSystemBus(address, result);
+        cpu.forceZeroAndNegativeFlags(result);
     }
 }

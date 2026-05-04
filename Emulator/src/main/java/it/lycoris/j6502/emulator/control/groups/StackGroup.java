@@ -3,28 +3,24 @@ package it.lycoris.j6502.emulator.control.groups;
 import it.lycoris.j6502.emulator.control.InstructionGroup;
 import it.lycoris.j6502.emulator.control.OpcodeMetadata;
 import it.lycoris.j6502.emulator.emulated.Cpu;
-import it.lycoris.j6502.emulator.emulated.InstructionLevelCpu;
-import it.lycoris.j6502.emulator.hardware.GateLevelCpu;
+import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;
 
 /**
  * Registers stack manipulation instructions (PHA, PLA, PHP, PLP, TSX, TXS).
- * Supports polymorphic execution across different CPU emulation strategies.
+ * Utilizes the internal hardware Stack Pointer (SP) increment/decrement pins.
  */
 public class StackGroup implements InstructionGroup {
 
     @Override
     public void install(Map<Integer, OpcodeMetadata> registry) {
-        // --- Accumulator Stack Operations ---
         registry.put(0x48, new OpcodeMetadata("PHA", this::executePha));
         registry.put(0x68, new OpcodeMetadata("PLA", this::executePla));
 
-        // --- Processor Status Stack Operations ---
         registry.put(0x08, new OpcodeMetadata("PHP", this::executePhp));
         registry.put(0x28, new OpcodeMetadata("PLP", this::executePlp));
 
-        // --- Stack Pointer Transfers ---
         registry.put(0xBA, new OpcodeMetadata("TSX", this::executeTsx));
         registry.put(0x9A, new OpcodeMetadata("TXS", this::executeTxs));
     }
@@ -34,27 +30,49 @@ public class StackGroup implements InstructionGroup {
     // ========================================================================
 
     private void pushStack(Cpu cpu, int value) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.pushStack(value);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int currentSp = fastCpu.readRegisterDirectly("SP");
-            fastCpu.writeSystemBus(0x0100 | currentSp, value);
-            fastCpu.setStackPointer((currentSp - 1) & 0xFF);
-        }
+        int sp = cpu.getStackPointer();
+        cpu.writeSystemBus(0x0100 | sp, value);
+
+        MOS6502 datapath = cpu.getDatapath();
+        datapath.DecSP = true;
+        cpu.pulseClock();
+        datapath.DecSP = false;
+        datapath.evaluateCombinational();
     }
 
     private int pullStack(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) return hardwareCpu.pullStack();
-        else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int nextSp = (fastCpu.readRegisterDirectly("SP") + 1) & 0xFF;
-            fastCpu.setStackPointer(nextSp);
-            return fastCpu.readSystemBus(0x0100 | nextSp);
-        }
-        throw new UnsupportedOperationException("Unsupported CPU architecture for stack pull.");
+        MOS6502 datapath = cpu.getDatapath();
+        datapath.IncSP = true;
+        cpu.pulseClock();
+        datapath.IncSP = false;
+        datapath.evaluateCombinational();
+
+        int sp = cpu.getStackPointer();
+        return cpu.readSystemBus(0x0100 | sp);
+    }
+
+    private int packStatusRegister(Cpu cpu) {
+        int status = 0x20;
+        if (cpu.isFlagSet('C')) status |= 0x01;
+        if (cpu.isFlagSet('Z')) status |= 0x02;
+        if (cpu.isFlagSet('I')) status |= 0x04;
+        if (cpu.isFlagSet('D')) status |= 0x08;
+        if (cpu.isFlagSet('V')) status |= 0x40;
+        if (cpu.isFlagSet('N')) status |= 0x80;
+        return status;
+    }
+
+    private void unpackStatusRegister(Cpu cpu, int status) {
+        cpu.forceFlag('C', (status & 0x01) != 0);
+        cpu.forceFlag('Z', (status & 0x02) != 0);
+        cpu.forceFlag('I', (status & 0x04) != 0);
+        cpu.forceFlag('D', (status & 0x08) != 0);
+        cpu.forceFlag('V', (status & 0x40) != 0);
+        cpu.forceFlag('N', (status & 0x80) != 0);
     }
 
     // ========================================================================
-    // POLYMORPHIC EXECUTION LOGIC
+    // HARDWARE EXECUTION LOGIC
     // ========================================================================
 
     private void executePha(Cpu cpu) {
@@ -64,55 +82,54 @@ public class StackGroup implements InstructionGroup {
     private void executePla(Cpu cpu) {
         int value = this.pullStack(cpu);
 
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.writeToBus(value, 0);
-            hardwareCpu.loadAccumulatorDirect(0); // Bypass ALU and load
-            hardwareCpu.updateZAndNFlags(value);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            fastCpu.setAccumulator(value);
-            fastCpu.updateZeroAndNegativeFlags(value);
-        }
+        MOS6502 datapath = cpu.getDatapath();
+        cpu.assertDataBus(value);
+        datapath.BypassALU = true;
+        datapath.LoadA = true;
+
+        cpu.pulseClock();
+
+        datapath.BypassALU = false;
+        datapath.LoadA = false;
+        datapath.evaluateCombinational();
+
+        cpu.forceZeroAndNegativeFlags(value);
     }
 
     private void executePhp(Cpu cpu) {
-        this.pushStack(cpu, cpu.getStatusRegister() | 0x10);
+        this.pushStack(cpu, this.packStatusRegister(cpu) | 0x10); // Push with B flag set
     }
 
     private void executePlp(Cpu cpu) {
         int status = this.pullStack(cpu);
-
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            hardwareCpu.setStatusRegister(status);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            fastCpu.setFlagC((status & 0x01) != 0);
-            fastCpu.setFlagZ((status & 0x02) != 0);
-            fastCpu.setFlagI((status & 0x04) != 0);
-            fastCpu.setFlagD((status & 0x08) != 0);
-            fastCpu.setFlagV((status & 0x40) != 0);
-            fastCpu.setFlagN((status & 0x80) != 0);
-        }
+        this.unpackStatusRegister(cpu, status);
     }
 
     private void executeTsx(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            int sp = hardwareCpu.readRegisterDirectly("SP");
-            hardwareCpu.writeToBus(sp, 0);
-            hardwareCpu.pulseRegister("LoadX");
-            hardwareCpu.updateZAndNFlags(sp);
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            int sp = fastCpu.readRegisterDirectly("SP");
-            fastCpu.setRegisterX(sp);
-            fastCpu.updateZeroAndNegativeFlags(sp);
-        }
+        int sp = cpu.getStackPointer();
+
+        MOS6502 datapath = cpu.getDatapath();
+        cpu.assertDataBus(sp);
+        datapath.LoadX = true;
+
+        cpu.pulseClock();
+
+        datapath.LoadX = false;
+        datapath.evaluateCombinational();
+
+        cpu.forceZeroAndNegativeFlags(sp);
     }
 
     private void executeTxs(Cpu cpu) {
-        if (cpu instanceof GateLevelCpu hardwareCpu) {
-            int x = hardwareCpu.readRegisterDirectly("X");
-            hardwareCpu.writeToBus(x, 0);
-            hardwareCpu.pulseRegister("LoadSP");
-        } else if (cpu instanceof InstructionLevelCpu fastCpu) {
-            fastCpu.setStackPointer(fastCpu.getRegisterX());
-        }
+        int x = cpu.getRegisterX();
+
+        MOS6502 datapath = cpu.getDatapath();
+        cpu.assertDataBus(x);
+        datapath.LoadSP = true;
+
+        cpu.pulseClock();
+
+        datapath.LoadSP = false;
+        datapath.evaluateCombinational();
     }
 }

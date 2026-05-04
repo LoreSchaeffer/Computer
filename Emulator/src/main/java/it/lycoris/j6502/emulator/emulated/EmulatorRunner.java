@@ -1,7 +1,6 @@
 package it.lycoris.j6502.emulator.emulated;
 
-import it.lycoris.j6502.emulator.hardware.GateLevelCpu;
-import it.lycoris.j6502.emulator.model.CpuState;
+import it.lycoris.j6502.emulator.control.OpcodeMetadata;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,7 @@ import java.nio.file.Files;
  */
 public class EmulatorRunner {
     private static final Logger LOG = LoggerFactory.getLogger(EmulatorRunner.class);
+
     private final Motherboard motherboard;
     private final int startAddress;
     private final int maxSteps;
@@ -25,13 +25,12 @@ public class EmulatorRunner {
      *
      * @param startAddress The 16-bit memory address where execution starts.
      * @param maxSteps     The watchdog limit for execution cycles (-1 for infinite).
-     * @param cpuType      The type of CPU emulation to use (e.g., SOFTWARE_EMULATED, HARDWARE_EMULATED).
      */
-    public EmulatorRunner(int startAddress, int maxSteps, Cpu.Type cpuType) {
-        LOG.info("Initializing Lyco-8 using {} CPU...", cpuType.equals(Cpu.Type.HARDWARE_EMULATED) ? "Hardware-Emulated (Gate-Level)" : "Software-Emulated (Instruction-Level)");
+    public EmulatorRunner(int startAddress, int maxSteps) {
+        LOG.info("Initializing Lyco-8 Gate-Level Emulator...");
         LOG.debug("Debug mode enabled: Verbose CPU logging enabled");
 
-        this.motherboard = new Motherboard(cpuType);
+        this.motherboard = new Motherboard();
         this.startAddress = startAddress;
         this.maxSteps = maxSteps;
     }
@@ -52,25 +51,30 @@ public class EmulatorRunner {
         try {
             byte[] program = Files.readAllBytes(binFile.toPath());
             LOG.info("Program loaded into Java memory ({} bytes)", program.length);
-            loadProgramAndRun(program);
-        } catch (IOException e) {
-            LOG.error("I/O error while reading the program file: {}", binFile.getAbsolutePath(), e);
+
+            this.loadProgramAndRun(program);
+        } catch (IOException exception) {
+            LOG.error("I/O error while reading the program file: {}", binFile.getAbsolutePath(), exception);
             System.exit(1);
         }
     }
 
+    /**
+     * Injects the raw byte array into the motherboard and starts the execution thread.
+     *
+     * @param program The compiled machine code.
+     */
     public void loadProgramAndRun(@NotNull byte[] program) {
         LOG.info("Injecting program into emulated RAM at address ${} ({} bytes)", String.format("%04X", this.startAddress), program.length);
         this.motherboard.loadProgram(this.startAddress, program);
-        LOG.info("Program injected into emulated RAM at address ${} ({} bytes)", String.format("%04X", this.startAddress), program.length);
 
         Thread.ofVirtual()
-                .name("CPU")
+                .name("CPU-Execution-Thread")
                 .start(this::run);
     }
 
     /**
-     * The main execution loop.
+     * The main hardware execution loop.
      */
     private void run() {
         Cpu cpu = this.motherboard.cpu();
@@ -85,15 +89,18 @@ public class EmulatorRunner {
         long startTimeNanos = System.nanoTime();
 
         while (infiniteLoop || stepCounter < this.maxSteps) {
-            int programCounter = cpu.readRegisterDirectly("PC");
+            int programCounter = cpu.getProgramCounter();
             int opcode = bus.read(programCounter);
 
             if (LOG.isDebugEnabled()) {
                 CpuState state = cpu.snapshot();
-                this.logCpuTrace(stepCounter, state);
+                OpcodeMetadata metadata = this.motherboard.instructionSet().get(opcode);
+                this.logCpuTrace(state, opcode, metadata.mnemonic());
             }
 
-            if (this.checkHaltConditions(opcode, programCounter, bus)) break;
+            if (this.checkHaltConditions(opcode, programCounter, bus)) {
+                break;
+            }
 
             cpu.step();
             stepCounter++;
@@ -103,10 +110,11 @@ public class EmulatorRunner {
 
         LOG.info("Execution sequence finished.");
 
-        if (!infiniteLoop && stepCounter >= this.maxSteps) LOG.warn("Execution watchdog triggered: Max steps exceeded ({}).", this.maxSteps);
+        if (!infiniteLoop && stepCounter >= this.maxSteps) {
+            LOG.warn("Execution watchdog triggered: Max steps exceeded ({}).", this.maxSteps);
+        }
 
         this.logPerformanceMetrics(stepCounter, startTimeNanos, endTimeNanos);
-
         LOG.info("Final CPU State:\n{}", cpu.snapshot());
     }
 
@@ -119,12 +127,14 @@ public class EmulatorRunner {
      * @return true if a halt condition is met, false otherwise.
      */
     private boolean checkHaltConditions(int opcode, int programCounter, SystemBus bus) {
+        // Halt on BRK
         if (opcode == 0x00) {
             System.out.flush();
             LOG.info(">>> BRK instruction reached (0x00). Halting execution gracefully.");
             return true;
         }
 
+        // Halt on infinite jump loop (JMP to self)
         if (opcode == 0x4C) {
             int targetAddress = bus.read(programCounter + 1) | (bus.read(programCounter + 2) << 8);
             if (targetAddress == programCounter) {
@@ -140,25 +150,13 @@ public class EmulatorRunner {
     /**
      * Prints a highly readable, single-line trace of the CPU state for debugging purposes.
      *
-     * @param stepCounter The current execution cycle.
-     * @param state       The snapshot of the CPU at the current cycle.
+     * @param state           The snapshot of the CPU at the current cycle.
+     * @param currentOpcode   The opcode being executed at this cycle.
+     * @param instructionName The human-readable name of the instruction being executed.
      */
-    private void logCpuTrace(int stepCounter, CpuState state) {
-        String binaryFlags = Integer.toBinaryString(state.status() | 0x100).substring(1);
-
-        String traceLog = "[STEP %06d] PC:$%04X | A:$%02X X:$%02X Y:$%02X P:%s | Op:$%02X (%s)"
-                .formatted(
-                        stepCounter,
-                        state.pc(),
-                        state.accumulator(),
-                        state.x(),
-                        state.y(),
-                        binaryFlags,
-                        state.currentOpcode(),
-                        state.instructionName()
-                );
-
-        LOG.debug(traceLog);
+    private void logCpuTrace(CpuState state, int currentOpcode, String instructionName) {
+        if (state == null) return;
+        LOG.debug(state.toTraceString(currentOpcode, instructionName));
     }
 
     /**
@@ -176,9 +174,8 @@ public class EmulatorRunner {
 
         double instructionsPerSecond = totalSteps / durationSeconds;
         double frequencyMHz = instructionsPerSecond / 1_000_000.0;
-        double frequency = frequencyMHz < 1 ? frequencyMHz * 1000 :  frequencyMHz;
+        double frequency = frequencyMHz < 1 ? frequencyMHz * 1000 : frequencyMHz;
         String frequencyUnit = frequencyMHz < 1 ? "KHz" : "MHz";
-
 
         String recapLog = """
                 
