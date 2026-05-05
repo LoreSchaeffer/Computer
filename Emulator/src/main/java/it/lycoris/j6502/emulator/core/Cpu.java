@@ -21,6 +21,7 @@ public class Cpu {
 
     private boolean nmiLineActive = false;
     private boolean irqLineActive = false;
+    private int suspendedCycles = 0;
 
     /**
      * Initializes the CPU, connects it to the motherboard bus, and instantiates
@@ -73,6 +74,13 @@ public class Cpu {
      * and Execute phases managed via microcode signals.
      */
     public void step() {
+        // --- 0. SUSPENDED STATE CHECK (DMA HALT) ---
+        if (this.suspendedCycles > 0) {
+            this.suspendedCycles--;
+            this.pulseClock();
+            return;
+        }
+
         // --- 1. HARDWARE INTERRUPT POLLING PHASE ---
         if (this.nmiLineActive) {
             this.nmiLineActive = false;
@@ -104,6 +112,17 @@ public class Cpu {
         OpcodeMetadata metadata = this.instructionSet.get(latchedOpcode);
 
         metadata.logic().execute(this);
+    }
+
+    /**
+     * Suspends the CPU execution for a specific number of clock cycles.
+     * Used by external devices like the DMA controller (Direct Memory Access)
+     * to halt the CPU while transferring data across the system bus.
+     *
+     * @param cycles The number of clock cycles to suspend execution.
+     */
+    public void suspendCycles(int cycles) {
+        this.suspendedCycles += cycles;
     }
 
     public int fetchNextByte() {

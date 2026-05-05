@@ -16,6 +16,7 @@ public class Motherboard {
     private final TileGraphicsPpu ppu;
     private final Apu apu;
     private final Keyboard keyboard;
+    private final Joypad joypad;
     private final ConsoleTerminal terminal;
     private final Rom rom;
     private final InstructionSet instructionSet;
@@ -28,41 +29,42 @@ public class Motherboard {
         this.instructionSet = new InstructionSet();
 
         // --------------------------------------------------------------------
-        // STRICT MEMORY MAP DEFINITION (No overlapping regions)
+        // COMPONENT INITIALIZATION & MEMORY MAP
         // --------------------------------------------------------------------
 
-        // 8KB RAM: 0x0000 to 0x1FFF (Covers Zero Page and Stack)
         this.ram = new Ram(0x0000, 0x2000);
-        // PPU Registers: 0x2000 to 0x3FFF
         this.ppu = new TileGraphicsPpu(0x2000, 0x3FFF, targetFrequencyHz);
-        // Keyboard I/O: 0x4000
         this.keyboard = new Keyboard(0x4000);
-        // APU Registers: 0x5000 to 0x500F
         this.apu = new Apu(0x5000);
-        // Terminal Output: 0xF000
         this.terminal = new ConsoleTerminal(0xF000);
-        // 32KB ROM: 0x8000 to 0xFFFF
-        // Note: Terminal at 0xF000 will intentionally shadow the ROM at that specific byte.
         this.rom = new Rom(0x8000, new int[0x8000]);
+        this.joypad = new Joypad(0x4016);
+
+        DmaController dmaController = new DmaController(this.bus, null, this.ppu);
 
         // --------------------------------------------------------------------
-        // BUS ATTACHMENT (Priority Order)
+        // BUS ATTACHMENT (Priority Order: Specific I/O first, Broad Memory last)
         // --------------------------------------------------------------------
 
-        // Attach exact-address Memory-Mapped I/O devices first
         this.bus.attachDevice(this.terminal);
         this.bus.attachDevice(this.keyboard);
+        this.bus.attachDevice(this.joypad);
+        this.bus.attachDevice(dmaController);
         this.bus.attachDevice(this.ppu);
         this.bus.attachDevice(this.apu);
 
-        // Attach broad memory regions last
         this.bus.attachDevice(this.ram);
         this.bus.attachDevice(this.rom);
 
-        // Connect the hardware-accurate CPU to the bus
+        // --------------------------------------------------------------------
+        // CPU INITIALIZATION
+        // --------------------------------------------------------------------
+
         this.cpu = new Cpu(this.bus, this.instructionSet);
 
-        LOG.info("Motherboard initialized successfully. Hardware mapped.");
+        dmaController.setCpu(this.cpu);
+
+        LOG.info("Motherboard initialized successfully. DMA, Joypad, and legacy Keyboard are fully mapped.");
     }
 
     /**
@@ -107,6 +109,10 @@ public class Motherboard {
 
     public Keyboard keyboard() {
         return this.keyboard;
+    }
+
+    public Joypad joypad() {
+        return this.joypad;
     }
 
     public InstructionSet instructionSet() {

@@ -27,25 +27,6 @@ public class LycoWindow extends JFrame {
     private final BufferedImage screenImage;
     private final int[] displayPixels;
 
-    private final int[] hexPalette = new int[]{
-            0xFF000000, // 0: BLACK
-            0xFFFFFFFF, // 1: WHITE
-            0xFFFF0000, // 2: RED
-            0xFF00FFFF, // 3: CYAN
-            0xFFFF00FF, // 4: MAGENTA
-            0xFF00FF00, // 5: GREEN
-            0xFF0000FF, // 6: BLUE
-            0xFFFFFF00, // 7: YELLOW
-            0xFFFFA500, // 8: ORANGE
-            0xFF8B4513, // 9: BROWN
-            0xFFFFC0CB, // A: PINK
-            0xFF404040, // B: DARK_GRAY
-            0xFF808080, // C: GRAY
-            0xFFD3D3D3, // D: LIGHT_GRAY
-            0xFFADD8E6, // E: LIGHT_BLUE
-            0xFF90EE90  // F: LIGHT_GREEN
-    };
-
     /**
      * Initializes the emulator console window.
      *
@@ -129,9 +110,9 @@ public class LycoWindow extends JFrame {
     }
 
     /**
-     * Delegates the pixel decoding and rendering logic to the PPU.
+     * Retrieves the latest fully-rendered frame from the PPU's Double Buffer.
      */
     private void updateScreenBuffer() {
-        this.ppu.renderToBuffer(this.displayPixels, this.hexPalette);
+        this.ppu.copyFrameTo(this.displayPixels);
     }
 }

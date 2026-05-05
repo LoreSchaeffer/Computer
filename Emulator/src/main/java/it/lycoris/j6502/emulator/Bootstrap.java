@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import it.lycoris.j6502.emulator.core.EmulatorRunner;
 import it.lycoris.j6502.emulator.core.InstructionSet;
+import it.lycoris.j6502.emulator.ui.HostGamepadPoller;
 import it.lycoris.j6502.emulator.ui.LycoWindow;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
@@ -61,6 +62,11 @@ public class Bootstrap {
                 LycoWindow window = new LycoWindow(runner.getMotherboard().ppu(), runner.getMotherboard().keyboard());
                 window.setVisible(true);
             });
+
+            HostGamepadPoller gamepadPoller = new HostGamepadPoller(runner.getMotherboard().joypad());
+            gamepadPoller.start();
+
+            Runtime.getRuntime().addShutdownHook(new Thread(gamepadPoller::stop));
 
             if (options.has(inputOpt)) {
                 File binFile = options.valueOf(inputOpt);
