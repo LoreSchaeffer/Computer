@@ -1,8 +1,8 @@
-package it.lycoris.j6502.emulator.control.groups;
+package it.lycoris.j6502.emulator.instructions.microcode;
 
-import it.lycoris.j6502.emulator.control.InstructionGroup;
-import it.lycoris.j6502.emulator.control.OpcodeMetadata;
-import it.lycoris.j6502.emulator.emulated.Cpu;
+import it.lycoris.j6502.emulator.instructions.InstructionGroup;
+import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
+import it.lycoris.j6502.emulator.core.Cpu;
 import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;

@@ -1,4 +1,4 @@
-package it.lycoris.j6502.emulator.control;
+package it.lycoris.j6502.emulator.instructions;
 
 import java.util.Map;
 

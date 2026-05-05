@@ -2,7 +2,8 @@ package it.lycoris.j6502.emulator;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
-import it.lycoris.j6502.emulator.emulated.EmulatorRunner;
+import it.lycoris.j6502.emulator.core.EmulatorRunner;
+import it.lycoris.j6502.emulator.ui.LycoWindow;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -10,6 +11,7 @@ import joptsimple.OptionSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -46,6 +48,11 @@ public class Bootstrap {
             }
 
             EmulatorRunner runner = new EmulatorRunner(startAddress, maxSteps, targetFrequency);
+
+            SwingUtilities.invokeLater(() -> {
+                LycoWindow window = new LycoWindow(runner.getMotherboard().ppu(), runner.getMotherboard().keyboard());
+                window.setVisible(true);
+            });
 
             if (options.has(inputOpt)) {
                 File binFile = options.valueOf(inputOpt);

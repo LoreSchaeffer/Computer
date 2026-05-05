@@ -1,4 +1,4 @@
-package it.lycoris.j6502.emulator.control;
+package it.lycoris.j6502.emulator.instructions;
 
 /**
  * Stores the mnemonic and the hardware execution logic for a specific opcode.

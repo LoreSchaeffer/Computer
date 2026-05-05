@@ -1,6 +1,6 @@
-package it.lycoris.j6502.emulator.emulated;
+package it.lycoris.j6502.emulator.core;
 
-import it.lycoris.j6502.emulator.control.OpcodeMetadata;
+import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,6 +164,10 @@ public class EmulatorRunner {
         }
 
         return false;
+    }
+
+    public Motherboard getMotherboard() {
+        return this.motherboard;
     }
 
     /**

@@ -1,7 +1,6 @@
-package it.lycoris.j6502.emulator.emulated;
+package it.lycoris.j6502.emulator.core;
 
-import it.lycoris.j6502.emulator.control.InstructionSet;
-import it.lycoris.j6502.emulator.control.OpcodeMetadata;
+import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 import it.lycoris.j6502.hardware.generated.MOS6502;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

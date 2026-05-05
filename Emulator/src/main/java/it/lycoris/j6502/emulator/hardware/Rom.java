@@ -1,4 +1,4 @@
-package it.lycoris.j6502.emulator.emulated;
+package it.lycoris.j6502.emulator.hardware;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

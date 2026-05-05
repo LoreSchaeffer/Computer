@@ -1,7 +1,6 @@
-package it.lycoris.j6502.emulator.emulated;
+package it.lycoris.j6502.emulator.core;
 
-import it.lycoris.j6502.emulator.control.InstructionSet;
-import it.lycoris.j6502.emulator.ui.LycoWindow;
+import it.lycoris.j6502.emulator.hardware.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
  * Represents the main board of the emulator, connecting the CPU to memory and peripherals.
  */
 public class Motherboard {
-
     private static final Logger LOG = LoggerFactory.getLogger(Motherboard.class);
 
     private final SystemBus bus;
@@ -35,19 +33,14 @@ public class Motherboard {
 
         // 8KB RAM: 0x0000 to 0x1FFF (Covers Zero Page and Stack)
         this.ram = new Ram(0x0000, 0x2000);
-
         // PPU Registers: 0x2000 to 0x3FFF
         this.ppu = new GraphicsPpu(0x2000, 0x3FFF);
-
         // Keyboard I/O: 0x4000
         this.keyboard = new Keyboard(0x4000);
-
         // APU Registers: 0x5000 to 0x500F
         this.apu = new Apu(0x5000);
-
         // Terminal Output: 0xF000
         this.terminal = new ConsoleTerminal(0xF000);
-
         // 32KB ROM: 0x8000 to 0xFFFF
         // Note: Terminal at 0xF000 will intentionally shadow the ROM at that specific byte.
         this.rom = new Rom(0x8000, new int[0x8000]);
@@ -70,9 +63,6 @@ public class Motherboard {
         this.cpu = new Cpu(this.bus, this.instructionSet);
 
         LOG.info("Motherboard initialized successfully. Hardware mapped.");
-
-        LycoWindow window = new LycoWindow(this.ppu, this.keyboard);
-        window.setVisible(true);
     }
 
     /**
@@ -109,6 +99,10 @@ public class Motherboard {
 
     public SystemBus bus() {
         return this.bus;
+    }
+
+    public GraphicsPpu ppu() {
+        return this.ppu;
     }
 
     public Keyboard keyboard() {

@@ -1,4 +1,6 @@
-package it.lycoris.j6502.emulator.emulated;
+package it.lycoris.j6502.emulator.core;
+
+import it.lycoris.j6502.emulator.hardware.BusDevice;
 
 import java.util.ArrayList;
 import java.util.List;

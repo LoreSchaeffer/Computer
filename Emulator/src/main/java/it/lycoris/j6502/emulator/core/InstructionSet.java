@@ -1,7 +1,8 @@
-package it.lycoris.j6502.emulator.control;
+package it.lycoris.j6502.emulator.core;
 
-import it.lycoris.j6502.emulator.control.groups.*;
-import it.lycoris.j6502.emulator.control.groups.*;
+import it.lycoris.j6502.emulator.instructions.InstructionGroup;
+import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
+import it.lycoris.j6502.emulator.instructions.microcode.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

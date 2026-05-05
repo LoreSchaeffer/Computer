@@ -1,41 +1,48 @@
 package it.lycoris.j6502.emulator.ui;
 
-import it.lycoris.j6502.emulator.emulated.GraphicsPpu;
-import it.lycoris.j6502.emulator.emulated.Keyboard;
+import it.lycoris.j6502.emulator.hardware.GraphicsPpu;
+import it.lycoris.j6502.emulator.hardware.Keyboard;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 /**
  * The main graphical user interface for the Lyco-8.
  * It renders the PPU framebuffer and captures physical keyboard inputs.
+ * Optimized for high-performance direct buffer manipulation.
  */
 public class LycoWindow extends JFrame {
+    private static final int PIXEL_SCALE = 8;
+    private static final int FRAMES_PER_SECOND = 60;
+    private static final int FRAME_TIME_MS = 1000 / FRAMES_PER_SECOND;
+
     private final GraphicsPpu ppu;
     private final Keyboard keyboard;
-    private final BufferedImage screenImage;
-    private static final int PIXEL_SCALE = 8;
 
-    private final Color[] palette = new Color[]{
-            Color.BLACK,
-            Color.WHITE,
-            Color.RED,
-            Color.CYAN,
-            Color.MAGENTA,
-            Color.GREEN,
-            Color.BLUE,
-            Color.YELLOW,
-            Color.ORANGE,
-            new Color(139, 69, 19),
-            Color.PINK,
-            Color.DARK_GRAY,
-            Color.GRAY,
-            Color.LIGHT_GRAY,
-            new Color(173, 216, 230),
-            new Color(144, 238, 144)
+    private final BufferedImage screenImage;
+    private final int[] displayPixels;
+
+    private final int[] hexPalette = new int[]{
+            0xFF000000, // 0: BLACK
+            0xFFFFFFFF, // 1: WHITE
+            0xFFFF0000, // 2: RED
+            0xFF00FFFF, // 3: CYAN
+            0xFFFF00FF, // 4: MAGENTA
+            0xFF00FF00, // 5: GREEN
+            0xFF0000FF, // 6: BLUE
+            0xFFFFFF00, // 7: YELLOW
+            0xFFFFA500, // 8: ORANGE
+            0xFF8B4513, // 9: BROWN
+            0xFFFFC0CB, // A: PINK
+            0xFF404040, // B: DARK_GRAY
+            0xFF808080, // C: GRAY
+            0xFFD3D3D3, // D: LIGHT_GRAY
+            0xFFADD8E6, // E: LIGHT_BLUE
+            0xFF90EE90  // F: LIGHT_GREEN
     };
 
     /**
@@ -49,14 +56,15 @@ public class LycoWindow extends JFrame {
         this.keyboard = keyboard;
 
         this.screenImage = new BufferedImage(GraphicsPpu.SCREEN_WIDTH, GraphicsPpu.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        this.displayPixels = ((DataBufferInt) this.screenImage.getRaster().getDataBuffer()).getData();
 
-        this.setupUI();
+        this.setupUserInterface();
         this.setupInputHandling();
         this.startRenderLoop();
     }
 
-    private void setupUI() {
-        this.setTitle("Lyco-8 Diagnostics");
+    private void setupUserInterface() {
+        this.setTitle("Lyco-8 Emulator");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
 
@@ -64,6 +72,7 @@ public class LycoWindow extends JFrame {
             @Override
             protected void paintComponent(Graphics graphicsContext) {
                 super.paintComponent(graphicsContext);
+
                 graphicsContext.drawImage(
                         screenImage,
                         0,
@@ -76,6 +85,8 @@ public class LycoWindow extends JFrame {
         };
 
         renderPanel.setPreferredSize(new Dimension(GraphicsPpu.SCREEN_WIDTH * PIXEL_SCALE, GraphicsPpu.SCREEN_HEIGHT * PIXEL_SCALE));
+        renderPanel.setBackground(Color.BLACK);
+
         this.add(renderPanel);
         this.pack();
         this.setLocationRelativeTo(null);
@@ -101,32 +112,24 @@ public class LycoWindow extends JFrame {
     }
 
     private void startRenderLoop() {
-        // Render at approximately 60 FPS (~16ms per frame)
-        Timer renderTimer = new Timer(16, event -> {
-            this.updateScreenImage();
+        Timer renderTimer = new Timer(FRAME_TIME_MS, _ -> {
+            this.updateScreenBuffer();
             this.repaint();
         });
         renderTimer.start();
     }
 
-    private void updateScreenImage() {
-        int[] vram = this.ppu.getVram();
+    private void updateScreenBuffer() {
+        int[] videoRam = this.ppu.getVram();
 
-        for (int y = 0; y < GraphicsPpu.SCREEN_HEIGHT; y++) {
-            for (int x = 0; x < GraphicsPpu.SCREEN_WIDTH; x++) {
-                int index = (y * GraphicsPpu.SCREEN_WIDTH) + x;
-                int colorByte = vram[index];
+        for (int index = 0; index < videoRam.length; index++) {
+            int colorByte = videoRam[index];
 
-                Color pixelColor;
-
-                if (colorByte == 0xFF) {
-                    pixelColor = Color.WHITE;
-                } else {
-                    int safePaletteIndex = colorByte & 0x0F;
-                    pixelColor = this.palette[safePaletteIndex];
-                }
-
-                this.screenImage.setRGB(x, y, pixelColor.getRGB());
+            if (colorByte == 0xFF) {
+                this.displayPixels[index] = 0xFFFFFFFF;
+            } else {
+                int safePaletteIndex = colorByte & 0x0F;
+                this.displayPixels[index] = this.hexPalette[safePaletteIndex];
             }
         }
     }

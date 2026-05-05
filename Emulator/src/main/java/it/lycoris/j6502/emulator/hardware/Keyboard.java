@@ -1,14 +1,15 @@
-package it.lycoris.j6502.emulator.emulated;
+package it.lycoris.j6502.emulator.hardware;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A Memory-Mapped I/O device representing a basic keyboard input.
- * Reading from its mapped address returns the ASCII value of the last pressed key.
+ * A Memory-Mapped I/O device representing a basic keyboard input controller.
+ * Reading from its mapped address returns the ASCII value of the last pressed key
+ * and subsequently clears the hardware buffer.
  */
 public class Keyboard implements BusDevice {
     private final int mappedAddress;
-    // Using AtomicInteger to ensure thread-safety, as GUI/Console input will come from a different thread than the CPU execution loop.
+    // Ensures thread-safety as the GUI event-dispatch thread writes here while the CPU thread reads
     private final AtomicInteger lastKeyPressed;
 
     /**
@@ -38,7 +39,6 @@ public class Keyboard implements BusDevice {
     /**
      * Simulates a hardware interrupt or external asynchronous event
      * that registers a key press into the device buffer.
-     * This method will be called by the Java host environment (e.g., a Swing KeyListener).
      *
      * @param keyCode The ASCII code of the pressed key.
      */

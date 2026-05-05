@@ -1,4 +1,4 @@
-package it.lycoris.j6502.emulator.emulated;
+package it.lycoris.j6502.emulator.hardware;
 
 /**
  * Represents the Random Access Memory (RAM) of the system.

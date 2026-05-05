@@ -1,6 +1,6 @@
-package it.lycoris.j6502.emulator.control;
+package it.lycoris.j6502.emulator.instructions;
 
-import it.lycoris.j6502.emulator.emulated.Cpu;
+import it.lycoris.j6502.emulator.core.Cpu;
 
 /**
  * Functional interface representing a single CPU instruction execution sequence.
