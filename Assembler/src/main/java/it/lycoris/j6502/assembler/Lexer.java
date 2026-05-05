@@ -15,7 +15,7 @@ public class Lexer {
 
     public List<TokenLine> tokenizeFile(File inputFile) throws IOException {
         if (!inputFile.exists() || !inputFile.isFile()) {
-            LOG.error("Input file {} does not exists", inputFile.getName());
+            LOG.error("Input file {} does not exist", inputFile.getName());
             System.exit(1);
         }
 
@@ -26,8 +26,7 @@ public class Lexer {
             String line;
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
-
-                TokenLine token = tokenizeLine(line, lineNumber);
+                TokenLine token = this.tokenizeLine(line, lineNumber);
                 if (!token.isEmpty()) tokens.add(token);
             }
         }
@@ -37,39 +36,70 @@ public class Lexer {
     }
 
     public TokenLine tokenizeLine(String rawLine, int lineNumber) {
-        // 1. Remove comments (everything after ';' is a comment)
         String cleanLine = rawLine;
-        int commentIndex = cleanLine.indexOf(';');
+
+        // 1. Safe comment removal (ignores ';' inside strings)
+        int commentIndex = -1;
+        boolean inQuotes = false;
+        for (int i = 0; i < cleanLine.length(); i++) {
+            char c = cleanLine.charAt(i);
+            if (c == '"') inQuotes = !inQuotes;
+            if (!inQuotes && c == ';') {
+                commentIndex = i;
+                break;
+            }
+        }
+
         if (commentIndex != -1) cleanLine = cleanLine.substring(0, commentIndex);
 
-        // 2. Trim initial and final spaces (If the line is empty skip it)
         cleanLine = cleanLine.trim();
         if (cleanLine.isEmpty()) return new TokenLine(null, null, null, lineNumber, rawLine);
-
-        // Standardization (Converting all to uppercase)
-        cleanLine = cleanLine.toUpperCase();
 
         String label = null;
         String mnemonic = null;
         String operand = null;
 
-        // 3. Check the label (Labels ends with ':')
-        if (cleanLine.contains(":")) {
-            int colonIndex = cleanLine.indexOf(':');
-            label = cleanLine.substring(0, colonIndex + 1).trim();
+        // 2. Safe label extraction (ignores ':' inside string literals)
+        int colonIndex = -1;
+        inQuotes = false;
+        for (int i = 0; i < cleanLine.length(); i++) {
+            char c = cleanLine.charAt(i);
+            if (c == '"') inQuotes = !inQuotes;
+            if (!inQuotes && c == ':') {
+                colonIndex = i;
+                break;
+            }
+        }
+
+        if (colonIndex != -1) {
+            label = cleanLine.substring(0, colonIndex + 1).trim().toUpperCase();
             cleanLine = cleanLine.substring(colonIndex + 1).trim();
         }
 
-        if (cleanLine.isEmpty()) {
-            return new TokenLine(label, null, null, lineNumber, rawLine);
+        if (cleanLine.isEmpty()) return new TokenLine(label, null, null, lineNumber, rawLine);
+
+        // 3. Split Mnemonic and Operand safely
+        String[] parts = cleanLine.split("\\s+", 2);
+        mnemonic = parts[0].toUpperCase();
+
+        if (parts.length > 1) {
+            operand = parts[1].trim();
+            operand = this.sanitizeOperand(operand);
         }
 
-        // 4. Splitting the rest of the line
-        String[] parts = cleanLine.split("\\s+", 2);
-        mnemonic = parts[0];
-
-        if (parts.length > 1) operand = parts[1].replaceAll("\\s+", "");
-
         return new TokenLine(label, mnemonic, operand, lineNumber, rawLine);
+    }
+
+    private String sanitizeOperand(String rawOperand) {
+        StringBuilder builder = new StringBuilder();
+        boolean insideQuotes = false;
+
+        for (char c : rawOperand.toCharArray()) {
+            if (c == '"') insideQuotes = !insideQuotes;
+            if (!insideQuotes && Character.isWhitespace(c)) continue;
+            builder.append(c);
+        }
+
+        return builder.toString();
     }
 }

@@ -1,0 +1,17 @@
+# Gradle build output directory
+build/
+
+# Gradle local cache and configuration
+.gradle/
+
+# IntelliJ Platform Plugin explicit caches (SDKs and local instances)
+.intellijPlatform/
+
+# Local properties (often contains absolute paths or personal secrets)
+local.properties
+
+# Plugin Sandbox environment (where the test IDE runs)
+build/idea-sandbox/
+
+# Kotlin build cache (if Kotlin is evaluated by Gradle)
+.kotlin/

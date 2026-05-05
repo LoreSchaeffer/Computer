@@ -75,67 +75,87 @@ export function useProjectManager() {
     }, [setChipName, setChipGroup, setChipColor, restoreCanvas, workspaceHandle]);
 
     const saveChip = useCallback(async (): Promise<{ success: boolean, error?: string }> => {
+        // 1. Validation Phase
         for (const node of nodes) {
-            if (node.type === 'logicGate' || node.type === 'latch' || node.type === 'customChip') {
-                const isSource = node.data.typeLabel === 'VCC' || node.data.typeLabel === 'GND';
-                const hasInput = edges.some(e => e.target === node.id);
-                const hasOutput = edges.some(e => e.source === node.id);
+            // Added 'flipflop' to the whitelist of processable components
+            if (node.type === 'logicGate' || node.type === 'latch' || node.type === 'flipflop' || node.type === 'customChip') {
+                const isSource: boolean = node.data.typeLabel === 'VCC' || node.data.typeLabel === 'GND';
+                const hasInput: boolean = edges.some(e => e.target === node.id);
+                const hasOutput: boolean = edges.some(e => e.source === node.id);
 
                 if (isSource) {
-                    if (!hasOutput) return {success: false, error: `The constant source "${node.data.label}" must be connected.`};
+                    if (!hasOutput) {
+                        return {success: false, error: `The constant source "${node.data.label}" must be connected.`};
+                    }
                 } else {
-                    if (!hasInput || !hasOutput) return {success: false, error: `Component "${node.data.label}" needs connections.`};
+                    if (!hasInput || !hasOutput) {
+                        return {success: false, error: `Component "${node.data.label}" needs connections.`};
+                    }
                 }
             }
         }
 
-        const getPinName = (label: string, handle: string | null | undefined, defaultHandle: string) => {
+        // Helper function to resolve dynamic pin names
+        const getPinName = (label: string, handle: string | null | undefined, defaultHandle: string): string => {
             if (!handle || handle === defaultHandle) return label;
-            const match = handle.match(/\d+$/);
+            const match: RegExpMatchArray | null = handle.match(/\d+$/);
             return match ? `${label}${match[0]}` : label;
         };
 
+        // 2. I/O Extraction
         const chipInputs: string[] = [];
         nodes.filter(n => n.type === 'inputPin').forEach(node => {
-            const outputs = (node.data.outputs as string[]) || ['Out'];
+            const outputs: string[] = (node.data.outputs as string[]) || ['Out'];
             outputs.forEach(handle => chipInputs.push(getPinName(node.data.label as string, handle, 'Out')));
         });
 
         const chipOutputs: string[] = [];
         nodes.filter(n => n.type === 'outputPin').forEach(node => {
-            const inputs = (node.data.inputs as string[]) || ['In'];
+            const inputs: string[] = (node.data.inputs as string[]) || ['In'];
             inputs.forEach(handle => chipOutputs.push(getPinName(node.data.label as string, handle, 'In')));
         });
 
-        const nets = new Map<string, string>();
+        // 3. Routing and Netlist Generation
+        const nets: Map<string, string> = new Map<string, string>();
         const internalWires: string[] = [];
 
         edges.forEach(edge => {
-            const sourceKey = `${edge.source}_${edge.sourceHandle || 'Out'}`;
+            const sourceKey: string = `${edge.source}_${edge.sourceHandle || 'Out'}`;
+
             if (!nets.has(sourceKey)) {
                 const sourceNode = nodes.find(n => n.id === edge.source);
-                const isInputPin = sourceNode?.type === 'inputPin';
+                const isInputPin: boolean = sourceNode?.type === 'inputPin';
 
-                const targetEdge = edges.find(e => e.source === edge.source && e.sourceHandle === edge.sourceHandle && nodes.find(nt => nt.id === e.target)?.type === 'outputPin');
-                const targetIsOutput = !!targetEdge;
+                const targetEdge = edges.find(e =>
+                    e.source === edge.source &&
+                    e.sourceHandle === edge.sourceHandle &&
+                    nodes.find(nt => nt.id === e.target)?.type === 'outputPin'
+                );
 
-                if (isInputPin) {
-                    nets.set(sourceKey, getPinName(sourceNode!.data.label as string, edge.sourceHandle, 'Out'));
-                } else if (targetIsOutput) {
+                const targetIsOutput: boolean = !!targetEdge;
+
+                if (isInputPin && sourceNode) {
+                    nets.set(sourceKey, getPinName(sourceNode.data.label as string, edge.sourceHandle, 'Out'));
+                } else if (targetIsOutput && targetEdge) {
                     const outNode = nodes.find(n => n.id === targetEdge.target);
                     if (outNode) {
                         nets.set(sourceKey, getPinName(outNode.data.label as string, targetEdge.targetHandle, 'In'));
                     }
-                } else {
-                    const cleanName = String(sourceNode?.data.label).toLowerCase().replace(/\W/g, '');
-                    const wireName = `wire_${cleanName}_${sourceNode?.id.slice(-4)}${edge.sourceHandle ? '_' + edge.sourceHandle : ''}`;
+                } else if (sourceNode) {
+                    const cleanName: string = String(sourceNode.data.label).toLowerCase().replace(/\W/g, '');
+                    const wireName: string = `wire_${cleanName}_${sourceNode.id.slice(-4)}${edge.sourceHandle ? '_' + edge.sourceHandle : ''}`;
+
                     nets.set(sourceKey, wireName);
-                    if (!internalWires.includes(wireName)) internalWires.push(wireName);
+                    if (!internalWires.includes(wireName)) {
+                        internalWires.push(wireName);
+                    }
                 }
             }
         });
 
-        const components = nodes.filter(n => ['logicGate', 'latch', 'customChip'].includes(n.type!)).map(node => {
+        // 4. Component Mapping
+        // Added 'flipflop' to the mapped components list
+        const components = nodes.filter(n => ['logicGate', 'latch', 'flipflop', 'customChip'].includes(n.type!)).map(node => {
             const inputsRecord: Record<string, string> = {};
             const outputsRecord: Record<string, string[]> = {};
 
@@ -148,7 +168,7 @@ export function useProjectManager() {
                 const outgoingEdges = edges.filter(e => e.source === node.id && e.sourceHandle === pinName);
 
                 if (outgoingEdges.length > 0) {
-                    const targetNames = outgoingEdges.map(edge => {
+                    const targetNames: string[] = outgoingEdges.map(edge => {
                         const targetNode = nodes.find(n => n.id === edge.target);
                         if (targetNode?.type === 'outputPin') {
                             return getPinName(targetNode.data.label as string, edge.targetHandle, 'In');
@@ -170,6 +190,7 @@ export function useProjectManager() {
             };
         });
 
+        // 5. Cleanup Data
         const simplifiedNodes = nodes.map(node => {
             const {
                 values,
@@ -178,9 +199,10 @@ export function useProjectManager() {
                 ...cleanData
             } = node.data as any;
 
-            return {...node, data: cleanData};
+            return { ...node, data: cleanData };
         });
 
+        // 6. Assembly JSON Payload
         const exportData = {
             chipName,
             chipColor,
@@ -197,30 +219,36 @@ export function useProjectManager() {
             }
         };
 
-        const fileName = `${chipName}.json`;
-        const jsonString = JSON.stringify(exportData, null, 2);
+        const fileName: string = `${chipName}.json`;
+        const jsonString: string = JSON.stringify(exportData, null, 2);
 
+        // 7. Write to Disk
         if (workspaceHandle) {
             try {
                 const fileHandle = await workspaceHandle.getFileHandle(fileName, {create: true});
                 const writable = await fileHandle.createWritable();
                 await writable.write(jsonString);
                 await writable.close();
+
                 showToast('success', 'Chip Saved!', `Saved as ${fileName}`);
                 await connectWorkspace();
+
                 return {success: true};
             } catch (err) {
                 console.error("Save error:", err);
             }
         }
 
-        const blob = new Blob([jsonString], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        // Fallback if Workspace is not connected
+        const blob: Blob = new Blob([jsonString], {type: 'application/json'});
+        const url: string = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement('a');
+
         a.href = url;
         a.download = fileName;
         a.click();
         URL.revokeObjectURL(url);
+
         return {success: true};
 
     }, [nodes, edges, chipName, chipColor, chipGroup, workspaceHandle, connectWorkspace, showToast]);

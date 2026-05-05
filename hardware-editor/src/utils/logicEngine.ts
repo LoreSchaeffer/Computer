@@ -17,6 +17,23 @@ export const SEQUENTIAL_LOGIC: Record<string, (inputs: boolean[], currentState: 
         const enable = ins[1];
         const latchedValue = enable ? data : (currentState?.values?.['Q'] || false);
         return {'Q': latchedValue, '!Q': !latchedValue};
+    },
+    'DFlipFlop': (ins, currentState) => {
+        const data: boolean = ins[0];
+        const clock: boolean = ins[1];
+        const enable: boolean = ins[2];
+
+        const prevClock: boolean = currentState?.values?.['prevClock'] || false;
+        const currentQ: boolean = currentState?.values?.['Q'] || false;
+        const isRisingEdge: boolean = clock && !prevClock;
+
+        const nextQ: boolean = (isRisingEdge && enable) ? data : currentQ;
+
+        return {
+            'Q': nextQ,
+            '!Q': !nextQ,
+            'prevClock': clock
+        };
     }
 };
 

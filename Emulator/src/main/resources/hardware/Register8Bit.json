@@ -26,58 +26,15 @@
       "Q7"
     ]
   },
-  "internalWires": [
-    "wire_and_cb5a_Out"
-  ],
+  "internalWires": [],
   "components": [
     {
-      "type": "DLatch",
-      "name": "D-Latch",
-      "inputs": {
-        "D": "D1",
-        "En": "wire_and_cb5a_Out"
-      },
-      "outputs": {
-        "Q": [
-          "Q1"
-        ],
-        "!Q": []
-      }
-    },
-    {
-      "type": "DLatch",
-      "name": "D-Latch",
-      "inputs": {
-        "D": "D3",
-        "En": "wire_and_cb5a_Out"
-      },
-      "outputs": {
-        "Q": [
-          "Q3"
-        ],
-        "!Q": []
-      }
-    },
-    {
-      "type": "DLatch",
-      "name": "D-Latch",
-      "inputs": {
-        "D": "D6",
-        "En": "wire_and_cb5a_Out"
-      },
-      "outputs": {
-        "Q": [
-          "Q6"
-        ],
-        "!Q": []
-      }
-    },
-    {
-      "type": "DLatch",
-      "name": "D-Latch",
+      "type": "DFlipFlop",
+      "name": "D-FlipFlop",
       "inputs": {
         "D": "D0",
-        "En": "wire_and_cb5a_Out"
+        "Clk": "Clk",
+        "En": "En"
       },
       "outputs": {
         "Q": [
@@ -87,11 +44,27 @@
       }
     },
     {
-      "type": "DLatch",
-      "name": "D-Latch",
+      "type": "DFlipFlop",
+      "name": "D-FlipFlop",
+      "inputs": {
+        "D": "D1",
+        "Clk": "Clk",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q1"
+        ],
+        "!Q": []
+      }
+    },
+    {
+      "type": "DFlipFlop",
+      "name": "D-FlipFlop",
       "inputs": {
         "D": "D2",
-        "En": "wire_and_cb5a_Out"
+        "Clk": "Clk",
+        "En": "En"
       },
       "outputs": {
         "Q": [
@@ -101,11 +74,27 @@
       }
     },
     {
-      "type": "DLatch",
-      "name": "D-Latch",
+      "type": "DFlipFlop",
+      "name": "D-FlipFlop",
+      "inputs": {
+        "D": "D3",
+        "Clk": "Clk",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q3"
+        ],
+        "!Q": []
+      }
+    },
+    {
+      "type": "DFlipFlop",
+      "name": "D-FlipFlop",
       "inputs": {
         "D": "D4",
-        "En": "wire_and_cb5a_Out"
+        "Clk": "Clk",
+        "En": "En"
       },
       "outputs": {
         "Q": [
@@ -115,25 +104,12 @@
       }
     },
     {
-      "type": "DLatch",
-      "name": "D-Latch",
-      "inputs": {
-        "D": "D7",
-        "En": "wire_and_cb5a_Out"
-      },
-      "outputs": {
-        "Q": [
-          "Q7"
-        ],
-        "!Q": []
-      }
-    },
-    {
-      "type": "DLatch",
-      "name": "D-Latch",
+      "type": "DFlipFlop",
+      "name": "D-FlipFlop",
       "inputs": {
         "D": "D5",
-        "En": "wire_and_cb5a_Out"
+        "Clk": "Clk",
+        "En": "En"
       },
       "outputs": {
         "Q": [
@@ -143,281 +119,50 @@
       }
     },
     {
-      "type": "AndGate",
-      "name": "AND",
+      "type": "DFlipFlop",
+      "name": "D-FlipFlop",
       "inputs": {
-        "A": "En",
-        "B": "Clk"
+        "D": "D6",
+        "Clk": "Clk",
+        "En": "En"
       },
       "outputs": {
-        "Out": [
-          "wire_and_cb5a_Out"
-        ]
+        "Q": [
+          "Q6"
+        ],
+        "!Q": []
+      }
+    },
+    {
+      "type": "DFlipFlop",
+      "name": "D-FlipFlop",
+      "inputs": {
+        "D": "D7",
+        "Clk": "Clk",
+        "En": "En"
+      },
+      "outputs": {
+        "Q": [
+          "Q7"
+        ],
+        "!Q": []
       }
     }
   ],
   "layout": {
     "nodes": [
       {
-        "id": "node_d759499f-cb8c-4ef2-b6da-8a7f53f943da",
-        "type": "latch",
-        "position": {
-          "x": 520,
-          "y": -130.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "D-Latch",
-          "typeLabel": "DLatch",
-          "inputs": [
-            "D",
-            "En"
-          ],
-          "outputs": [
-            "Q",
-            "!Q"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 99
-        },
-        "dragging": false
-      },
-      {
-        "id": "node_bb15b8f2-7425-4c67-9ccc-5e0482c93376",
-        "type": "latch",
-        "position": {
-          "x": 520,
-          "y": 79.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "D-Latch",
-          "typeLabel": "DLatch",
-          "inputs": [
-            "D",
-            "En"
-          ],
-          "outputs": [
-            "Q",
-            "!Q"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 99
-        },
-        "dragging": false
-      },
-      {
-        "id": "node_0dcbfe4a-5365-481c-b3ec-74a6cb669335",
-        "type": "latch",
-        "position": {
-          "x": 520,
-          "y": 394.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "D-Latch",
-          "typeLabel": "DLatch",
-          "inputs": [
-            "D",
-            "En"
-          ],
-          "outputs": [
-            "Q",
-            "!Q"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 99
-        },
-        "dragging": false
-      },
-      {
-        "id": "node_58970b12-fa65-4e05-a89d-eb738b99a119",
-        "type": "latch",
-        "position": {
-          "x": 520,
-          "y": -235.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "D-Latch",
-          "typeLabel": "DLatch",
-          "inputs": [
-            "D",
-            "En"
-          ],
-          "outputs": [
-            "Q",
-            "!Q"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 99
-        },
-        "dragging": false
-      },
-      {
-        "id": "node_48ad002b-71b8-42aa-ba07-3a0dcc19d05b",
-        "type": "latch",
-        "position": {
-          "x": 520,
-          "y": -25.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "D-Latch",
-          "typeLabel": "DLatch",
-          "inputs": [
-            "D",
-            "En"
-          ],
-          "outputs": [
-            "Q",
-            "!Q"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 99
-        },
-        "dragging": false
-      },
-      {
-        "id": "node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36",
-        "type": "latch",
-        "position": {
-          "x": 520,
-          "y": 184.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "D-Latch",
-          "typeLabel": "DLatch",
-          "inputs": [
-            "D",
-            "En"
-          ],
-          "outputs": [
-            "Q",
-            "!Q"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 99
-        },
-        "dragging": false
-      },
-      {
-        "id": "node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95",
-        "type": "latch",
-        "position": {
-          "x": 520,
-          "y": 499.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "D-Latch",
-          "typeLabel": "DLatch",
-          "inputs": [
-            "D",
-            "En"
-          ],
-          "outputs": [
-            "Q",
-            "!Q"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 99
-        },
-        "dragging": false
-      },
-      {
-        "id": "node_9c2666a8-07b1-4d3e-a95e-55763efa32dd",
-        "type": "latch",
-        "position": {
-          "x": 520,
-          "y": 289.5
-        },
-        "origin": [
-          0.5,
-          0.5
-        ],
-        "selected": false,
-        "data": {
-          "label": "D-Latch",
-          "typeLabel": "DLatch",
-          "inputs": [
-            "D",
-            "En"
-          ],
-          "outputs": [
-            "Q",
-            "!Q"
-          ],
-          "group": "Primitives"
-        },
-        "measured": {
-          "width": 110,
-          "height": 99
-        },
-        "dragging": false
-      },
-      {
         "id": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "type": "inputPin",
         "position": {
-          "x": -20,
-          "y": 204.5
+          "x": 190,
+          "y": 279.5
         },
         "origin": [
           0.5,
           0.5
         ],
-        "selected": false,
+        "selected": true,
         "data": {
           "label": "En",
           "typeLabel": "INPUT",
@@ -438,7 +183,7 @@
         "type": "inputPin",
         "position": {
           "x": 190,
-          "y": 4.5
+          "y": 124.5
         },
         "origin": [
           0.5,
@@ -472,7 +217,7 @@
         "type": "outputPin",
         "position": {
           "x": 805,
-          "y": 109.5
+          "y": 154.5
         },
         "origin": [
           0.5,
@@ -505,8 +250,8 @@
         "id": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
         "type": "inputPin",
         "position": {
-          "x": -20,
-          "y": 294.5
+          "x": 190,
+          "y": -35.5
         },
         "origin": [
           0.5,
@@ -529,11 +274,11 @@
         "dragging": false
       },
       {
-        "id": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
-        "type": "logicGate",
+        "id": "node_8ff75d5d-589e-4397-9832-8d4ada6a5495",
+        "type": "flipflop",
         "position": {
-          "x": 175,
-          "y": 244.5
+          "x": 505,
+          "y": -255.5
         },
         "origin": [
           0.5,
@@ -541,20 +286,246 @@
         ],
         "selected": false,
         "data": {
-          "typeLabel": "AndGate",
-          "label": "AND",
+          "typeLabel": "DFlipFlop",
+          "label": "D-FlipFlop",
           "inputs": [
-            "A",
-            "B"
+            "D",
+            "Clk",
+            "En"
           ],
           "outputs": [
-            "Out"
+            "Q",
+            "!Q"
           ],
           "group": "Primitives"
         },
         "measured": {
           "width": 110,
-          "height": 99
+          "height": 119
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9",
+        "type": "flipflop",
+        "position": {
+          "x": 505,
+          "y": -135.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DFlipFlop",
+          "label": "D-FlipFlop",
+          "inputs": [
+            "D",
+            "Clk",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 119
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_8c16e589-cf35-4fd3-b498-04b8494d3f87",
+        "type": "flipflop",
+        "position": {
+          "x": 505,
+          "y": -15.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DFlipFlop",
+          "label": "D-FlipFlop",
+          "inputs": [
+            "D",
+            "Clk",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 119
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_a457698f-d99b-4228-9a72-4e181462c943",
+        "type": "flipflop",
+        "position": {
+          "x": 505,
+          "y": 104.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DFlipFlop",
+          "label": "D-FlipFlop",
+          "inputs": [
+            "D",
+            "Clk",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 119
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9",
+        "type": "flipflop",
+        "position": {
+          "x": 505,
+          "y": 224.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DFlipFlop",
+          "label": "D-FlipFlop",
+          "inputs": [
+            "D",
+            "Clk",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 119
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9",
+        "type": "flipflop",
+        "position": {
+          "x": 505,
+          "y": 344.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DFlipFlop",
+          "label": "D-FlipFlop",
+          "inputs": [
+            "D",
+            "Clk",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 119
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091",
+        "type": "flipflop",
+        "position": {
+          "x": 505,
+          "y": 464.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DFlipFlop",
+          "label": "D-FlipFlop",
+          "inputs": [
+            "D",
+            "Clk",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 119
+        },
+        "dragging": false
+      },
+      {
+        "id": "node_f74f97a9-460d-4009-bb8d-3d4bac779db7",
+        "type": "flipflop",
+        "position": {
+          "x": 505,
+          "y": 584.5
+        },
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "selected": false,
+        "data": {
+          "typeLabel": "DFlipFlop",
+          "label": "D-FlipFlop",
+          "inputs": [
+            "D",
+            "Clk",
+            "En"
+          ],
+          "outputs": [
+            "Q",
+            "!Q"
+          ],
+          "group": "Primitives"
+        },
+        "measured": {
+          "width": 110,
+          "height": 119
         },
         "dragging": false
       }
@@ -565,11 +536,107 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
+        "source": "node_8ff75d5d-589e-4397-9832-8d4ada6a5495",
+        "sourceHandle": "Q",
+        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
+        "targetHandle": "In0",
+        "id": "xy-edge__node_8ff75d5d-589e-4397-9832-8d4ada6a5495Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn0",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9",
+        "sourceHandle": "Q",
+        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
+        "targetHandle": "In1",
+        "id": "xy-edge__node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn1",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_8c16e589-cf35-4fd3-b498-04b8494d3f87",
+        "sourceHandle": "Q",
+        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
+        "targetHandle": "In2",
+        "id": "xy-edge__node_8c16e589-cf35-4fd3-b498-04b8494d3f87Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn2",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_a457698f-d99b-4228-9a72-4e181462c943",
+        "sourceHandle": "Q",
+        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
+        "targetHandle": "In3",
+        "id": "xy-edge__node_a457698f-d99b-4228-9a72-4e181462c943Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn3",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9",
+        "sourceHandle": "Q",
+        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
+        "targetHandle": "In4",
+        "id": "xy-edge__node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn4",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9",
+        "sourceHandle": "Q",
+        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
+        "targetHandle": "In5",
+        "id": "xy-edge__node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn5",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091",
+        "sourceHandle": "Q",
+        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
+        "targetHandle": "In6",
+        "id": "xy-edge__node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn6",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
+        "source": "node_f74f97a9-460d-4009-bb8d-3d4bac779db7",
+        "sourceHandle": "Q",
+        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
+        "targetHandle": "In7",
+        "id": "xy-edge__node_f74f97a9-460d-4009-bb8d-3d4bac779db7Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn7",
+        "animated": false
+      },
+      {
+        "style": {
+          "strokeWidth": 2,
+          "transition": "stroke 0.2s"
+        },
         "source": "node_35c9248f-0ac7-41c1-b573-feda61b117af",
         "sourceHandle": "Out0",
-        "target": "node_58970b12-fa65-4e05-a89d-eb738b99a119",
+        "target": "node_8ff75d5d-589e-4397-9832-8d4ada6a5495",
         "targetHandle": "D",
-        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut0-node_58970b12-fa65-4e05-a89d-eb738b99a119D",
+        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut0-node_8ff75d5d-589e-4397-9832-8d4ada6a5495D",
         "animated": false
       },
       {
@@ -579,9 +646,9 @@
         },
         "source": "node_35c9248f-0ac7-41c1-b573-feda61b117af",
         "sourceHandle": "Out1",
-        "target": "node_d759499f-cb8c-4ef2-b6da-8a7f53f943da",
+        "target": "node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9",
         "targetHandle": "D",
-        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut1-node_d759499f-cb8c-4ef2-b6da-8a7f53f943daD",
+        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut1-node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9D",
         "animated": false
       },
       {
@@ -591,9 +658,9 @@
         },
         "source": "node_35c9248f-0ac7-41c1-b573-feda61b117af",
         "sourceHandle": "Out2",
-        "target": "node_48ad002b-71b8-42aa-ba07-3a0dcc19d05b",
+        "target": "node_8c16e589-cf35-4fd3-b498-04b8494d3f87",
         "targetHandle": "D",
-        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut2-node_48ad002b-71b8-42aa-ba07-3a0dcc19d05bD",
+        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut2-node_8c16e589-cf35-4fd3-b498-04b8494d3f87D",
         "animated": false
       },
       {
@@ -603,9 +670,9 @@
         },
         "source": "node_35c9248f-0ac7-41c1-b573-feda61b117af",
         "sourceHandle": "Out3",
-        "target": "node_bb15b8f2-7425-4c67-9ccc-5e0482c93376",
+        "target": "node_a457698f-d99b-4228-9a72-4e181462c943",
         "targetHandle": "D",
-        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut3-node_bb15b8f2-7425-4c67-9ccc-5e0482c93376D",
+        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut3-node_a457698f-d99b-4228-9a72-4e181462c943D",
         "animated": false
       },
       {
@@ -615,9 +682,9 @@
         },
         "source": "node_35c9248f-0ac7-41c1-b573-feda61b117af",
         "sourceHandle": "Out4",
-        "target": "node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36",
+        "target": "node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9",
         "targetHandle": "D",
-        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut4-node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36D",
+        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut4-node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9D",
         "animated": false
       },
       {
@@ -627,9 +694,9 @@
         },
         "source": "node_35c9248f-0ac7-41c1-b573-feda61b117af",
         "sourceHandle": "Out5",
-        "target": "node_9c2666a8-07b1-4d3e-a95e-55763efa32dd",
+        "target": "node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9",
         "targetHandle": "D",
-        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut5-node_9c2666a8-07b1-4d3e-a95e-55763efa32ddD",
+        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut5-node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9D",
         "animated": false
       },
       {
@@ -639,9 +706,9 @@
         },
         "source": "node_35c9248f-0ac7-41c1-b573-feda61b117af",
         "sourceHandle": "Out6",
-        "target": "node_0dcbfe4a-5365-481c-b3ec-74a6cb669335",
+        "target": "node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091",
         "targetHandle": "D",
-        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut6-node_0dcbfe4a-5365-481c-b3ec-74a6cb669335D",
+        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut6-node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091D",
         "animated": false
       },
       {
@@ -651,9 +718,9 @@
         },
         "source": "node_35c9248f-0ac7-41c1-b573-feda61b117af",
         "sourceHandle": "Out7",
-        "target": "node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95",
+        "target": "node_f74f97a9-460d-4009-bb8d-3d4bac779db7",
         "targetHandle": "D",
-        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut7-node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95D",
+        "id": "xy-edge__node_35c9248f-0ac7-41c1-b573-feda61b117afOut7-node_f74f97a9-460d-4009-bb8d-3d4bac779db7D",
         "animated": false
       },
       {
@@ -661,11 +728,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_58970b12-fa65-4e05-a89d-eb738b99a119",
-        "sourceHandle": "Q",
-        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
-        "targetHandle": "In0",
-        "id": "xy-edge__node_58970b12-fa65-4e05-a89d-eb738b99a119Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn0",
+        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
+        "sourceHandle": "Out",
+        "target": "node_8ff75d5d-589e-4397-9832-8d4ada6a5495",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_8ff75d5d-589e-4397-9832-8d4ada6a5495Clk",
         "animated": false
       },
       {
@@ -673,11 +740,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_d759499f-cb8c-4ef2-b6da-8a7f53f943da",
-        "sourceHandle": "Q",
-        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
-        "targetHandle": "In1",
-        "id": "xy-edge__node_d759499f-cb8c-4ef2-b6da-8a7f53f943daQ-node_e912960c-1f88-427a-8859-e0ab2832eebdIn1",
+        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
+        "sourceHandle": "Out",
+        "target": "node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9Clk",
         "animated": false
       },
       {
@@ -685,11 +752,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_48ad002b-71b8-42aa-ba07-3a0dcc19d05b",
-        "sourceHandle": "Q",
-        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
-        "targetHandle": "In2",
-        "id": "xy-edge__node_48ad002b-71b8-42aa-ba07-3a0dcc19d05bQ-node_e912960c-1f88-427a-8859-e0ab2832eebdIn2",
+        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
+        "sourceHandle": "Out",
+        "target": "node_8c16e589-cf35-4fd3-b498-04b8494d3f87",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_8c16e589-cf35-4fd3-b498-04b8494d3f87Clk",
         "animated": false
       },
       {
@@ -697,11 +764,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_bb15b8f2-7425-4c67-9ccc-5e0482c93376",
-        "sourceHandle": "Q",
-        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
-        "targetHandle": "In3",
-        "id": "xy-edge__node_bb15b8f2-7425-4c67-9ccc-5e0482c93376Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn3",
+        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
+        "sourceHandle": "Out",
+        "target": "node_a457698f-d99b-4228-9a72-4e181462c943",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_a457698f-d99b-4228-9a72-4e181462c943Clk",
         "animated": false
       },
       {
@@ -709,11 +776,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36",
-        "sourceHandle": "Q",
-        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
-        "targetHandle": "In4",
-        "id": "xy-edge__node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn4",
+        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
+        "sourceHandle": "Out",
+        "target": "node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9Clk",
         "animated": false
       },
       {
@@ -721,11 +788,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_9c2666a8-07b1-4d3e-a95e-55763efa32dd",
-        "sourceHandle": "Q",
-        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
-        "targetHandle": "In5",
-        "id": "xy-edge__node_9c2666a8-07b1-4d3e-a95e-55763efa32ddQ-node_e912960c-1f88-427a-8859-e0ab2832eebdIn5",
+        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
+        "sourceHandle": "Out",
+        "target": "node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9Clk",
         "animated": false
       },
       {
@@ -733,11 +800,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_0dcbfe4a-5365-481c-b3ec-74a6cb669335",
-        "sourceHandle": "Q",
-        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
-        "targetHandle": "In6",
-        "id": "xy-edge__node_0dcbfe4a-5365-481c-b3ec-74a6cb669335Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn6",
+        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
+        "sourceHandle": "Out",
+        "target": "node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091Clk",
         "animated": false
       },
       {
@@ -745,11 +812,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95",
-        "sourceHandle": "Q",
-        "target": "node_e912960c-1f88-427a-8859-e0ab2832eebd",
-        "targetHandle": "In7",
-        "id": "xy-edge__node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95Q-node_e912960c-1f88-427a-8859-e0ab2832eebdIn7",
+        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
+        "sourceHandle": "Out",
+        "target": "node_f74f97a9-460d-4009-bb8d-3d4bac779db7",
+        "targetHandle": "Clk",
+        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_f74f97a9-460d-4009-bb8d-3d4bac779db7Clk",
         "animated": false
       },
       {
@@ -759,35 +826,9 @@
         },
         "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "sourceHandle": "Out",
-        "target": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
-        "targetHandle": "A",
-        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aA",
-        "animated": false,
-        "selected": false
-      },
-      {
-        "style": {
-          "strokeWidth": 2,
-          "transition": "stroke 0.2s"
-        },
-        "source": "node_4f55c86d-5d55-48d7-ace6-54a26b997284",
-        "sourceHandle": "Out",
-        "target": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
-        "targetHandle": "B",
-        "id": "xy-edge__node_4f55c86d-5d55-48d7-ace6-54a26b997284Out-node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aB",
-        "animated": false,
-        "selected": false
-      },
-      {
-        "style": {
-          "strokeWidth": 2,
-          "transition": "stroke 0.2s"
-        },
-        "source": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
-        "sourceHandle": "Out",
-        "target": "node_58970b12-fa65-4e05-a89d-eb738b99a119",
+        "target": "node_f74f97a9-460d-4009-bb8d-3d4bac779db7",
         "targetHandle": "En",
-        "id": "xy-edge__node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aOut-node_58970b12-fa65-4e05-a89d-eb738b99a119En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_f74f97a9-460d-4009-bb8d-3d4bac779db7En",
         "animated": false
       },
       {
@@ -795,11 +836,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "sourceHandle": "Out",
-        "target": "node_d759499f-cb8c-4ef2-b6da-8a7f53f943da",
+        "target": "node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091",
         "targetHandle": "En",
-        "id": "xy-edge__node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aOut-node_d759499f-cb8c-4ef2-b6da-8a7f53f943daEn",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_6fe10e63-8627-4c0e-a15d-0f7a47a5a091En",
         "animated": false
       },
       {
@@ -807,11 +848,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "sourceHandle": "Out",
-        "target": "node_48ad002b-71b8-42aa-ba07-3a0dcc19d05b",
+        "target": "node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9",
         "targetHandle": "En",
-        "id": "xy-edge__node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aOut-node_48ad002b-71b8-42aa-ba07-3a0dcc19d05bEn",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_60d7b5a3-a0d3-4f33-b208-26c2e6c132e9En",
         "animated": false
       },
       {
@@ -819,11 +860,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "sourceHandle": "Out",
-        "target": "node_bb15b8f2-7425-4c67-9ccc-5e0482c93376",
+        "target": "node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9",
         "targetHandle": "En",
-        "id": "xy-edge__node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aOut-node_bb15b8f2-7425-4c67-9ccc-5e0482c93376En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_2061ddeb-5cef-4f63-ba8b-4a87aa8897a9En",
         "animated": false
       },
       {
@@ -831,11 +872,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "sourceHandle": "Out",
-        "target": "node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36",
+        "target": "node_a457698f-d99b-4228-9a72-4e181462c943",
         "targetHandle": "En",
-        "id": "xy-edge__node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aOut-node_29c9ef21-fa4d-4c1d-b004-b08e8676ba36En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_a457698f-d99b-4228-9a72-4e181462c943En",
         "animated": false
       },
       {
@@ -843,11 +884,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "sourceHandle": "Out",
-        "target": "node_9c2666a8-07b1-4d3e-a95e-55763efa32dd",
+        "target": "node_8c16e589-cf35-4fd3-b498-04b8494d3f87",
         "targetHandle": "En",
-        "id": "xy-edge__node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aOut-node_9c2666a8-07b1-4d3e-a95e-55763efa32ddEn",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_8c16e589-cf35-4fd3-b498-04b8494d3f87En",
         "animated": false
       },
       {
@@ -855,11 +896,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "sourceHandle": "Out",
-        "target": "node_0dcbfe4a-5365-481c-b3ec-74a6cb669335",
+        "target": "node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9",
         "targetHandle": "En",
-        "id": "xy-edge__node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aOut-node_0dcbfe4a-5365-481c-b3ec-74a6cb669335En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_6ad3b2e6-c681-4d27-ac8a-94d7f50df1b9En",
         "animated": false
       },
       {
@@ -867,11 +908,11 @@
           "strokeWidth": 2,
           "transition": "stroke 0.2s"
         },
-        "source": "node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5a",
+        "source": "node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0",
         "sourceHandle": "Out",
-        "target": "node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95",
+        "target": "node_8ff75d5d-589e-4397-9832-8d4ada6a5495",
         "targetHandle": "En",
-        "id": "xy-edge__node_c59a01cd-e9e8-46bf-8b60-4a9aced5cb5aOut-node_8fe13c1e-52c8-41de-974c-1d7d0d4c6d95En",
+        "id": "xy-edge__node_0c8f1a9b-6744-41e3-97bf-2dd504e192d0Out-node_8ff75d5d-589e-4397-9832-8d4ada6a5495En",
         "animated": false
       }
     ]

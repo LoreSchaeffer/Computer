@@ -1,2 +1,28 @@
-target/
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IntelliJ IDEA (Global Workspace)
 .idea/
+*.iml
+*.iws
+*.ipr
+*.workspace
+
+# Eclipse / VSCode (Fallback for other developers)
+.metadata/
+.settings/
+.project
+.classpath
+.vscode/
+
+# Global Java temporary files and crash logs
+*.log
+hs_err_pid*
+replay_pid*
