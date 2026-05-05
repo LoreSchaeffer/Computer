@@ -82,6 +82,17 @@
                     <excludedGroups>slow-integration</excludedGroups>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>it.lycoris.j6502.emulator.Bootstrap</mainClass>
+                    <arguments>
+                        <argument>--enable-native-access=ALL-UNNAMED</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

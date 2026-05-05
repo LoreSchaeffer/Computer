@@ -16,10 +16,7 @@ import java.awt.image.DataBufferInt;
  * Optimized for high-performance direct buffer manipulation using standard ARGB pixels.
  */
 public class LycoWindow extends JFrame {
-
     private static final int PIXEL_SCALE = 8;
-    private static final int FRAMES_PER_SECOND = 60;
-    private static final int FRAME_TIME_MS = 1000 / FRAMES_PER_SECOND;
 
     private final TileGraphicsPpu ppu;
     private final Keyboard keyboard;
@@ -47,7 +44,6 @@ public class LycoWindow extends JFrame {
 
         this.setupUserInterface();
         this.setupInputHandling();
-        this.startRenderLoop();
     }
 
     private void setupUserInterface() {
@@ -101,18 +97,12 @@ public class LycoWindow extends JFrame {
         });
     }
 
-    private void startRenderLoop() {
-        Timer renderTimer = new Timer(FRAME_TIME_MS, _ -> {
-            this.updateScreenBuffer();
-            this.repaint();
-        });
-        renderTimer.start();
-    }
-
     /**
-     * Retrieves the latest fully-rendered frame from the PPU's Double Buffer.
+     * Triggered externally by the Precision Emulator Loop.
+     * Fetches the completed frame from the hardware double-buffer and schedules a UI repaint.
      */
-    private void updateScreenBuffer() {
+    public void renderFrame() {
         this.ppu.copyFrameTo(this.displayPixels);
+        this.repaint();
     }
 }

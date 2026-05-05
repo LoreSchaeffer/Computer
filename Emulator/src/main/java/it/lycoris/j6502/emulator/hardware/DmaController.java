@@ -14,6 +14,7 @@ public class DmaController implements BusDevice {
     private static final Logger LOG = LoggerFactory.getLogger(DmaController.class);
     private static final int DMA_REGISTER_ADDRESS = 0x4014;
 
+    private final int debugLevel;
     private final SystemBus systemBus;
     private final TileGraphicsPpu ppu;
     private Cpu cpu;
@@ -21,14 +22,16 @@ public class DmaController implements BusDevice {
     /**
      * Initializes the DMA unit.
      *
-     * @param systemBus The system bus to read memory pages from.
-     * @param cpu       The CPU to suspend during the transfer.
-     * @param ppu       The target PPU containing the OAM.
+     * @param systemBus  The system bus to read memory pages from.
+     * @param cpu        The CPU to suspend during the transfer.
+     * @param ppu        The target PPU containing the OAM.
+     * @param debugLevel The verbosity level for debug logging (-1 = none, higher values = more verbose).
      */
-    public DmaController(SystemBus systemBus, Cpu cpu, TileGraphicsPpu ppu) {
+    public DmaController(SystemBus systemBus, Cpu cpu, TileGraphicsPpu ppu, int debugLevel) {
         this.systemBus = systemBus;
         this.cpu = cpu;
         this.ppu = ppu;
+        this.debugLevel = debugLevel;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class DmaController implements BusDevice {
             // E.g., writing $02 copies the page $0200 - $02FF.
             int pageAddress = (value & 0xFF) << 8;
 
-            LOG.debug("DMA Transfer initiated. Copying memory page ${} to PPU OAM.", String.format("%04X", pageAddress));
+            if (LOG.isDebugEnabled() && debugLevel > 0) LOG.debug("DMA Transfer initiated. Copying memory page ${} to PPU OAM.", String.format("%04X", pageAddress));
 
             for (int offset = 0; offset < 256; offset++) {
                 int dataByte = this.systemBus.read(pageAddress + offset);

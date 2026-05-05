@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 public class Motherboard {
     private static final Logger LOG = LoggerFactory.getLogger(Motherboard.class);
 
+    private final int debugLevel;
+
     private final SystemBus bus;
     private final Cpu cpu;
     private final Ram ram;
@@ -24,7 +26,9 @@ public class Motherboard {
     /**
      * Initializes the motherboard, soldering all components to the system bus.
      */
-    public Motherboard(int targetFrequencyHz) {
+    public Motherboard(int targetFrequencyHz, int debugLevel) {
+        this.debugLevel = debugLevel;
+
         this.bus = new SystemBus();
         this.instructionSet = new InstructionSet();
 
@@ -40,7 +44,7 @@ public class Motherboard {
         this.rom = new Rom(0x8000, new int[0x8000]);
         this.joypad = new Joypad(0x4016);
 
-        DmaController dmaController = new DmaController(this.bus, null, this.ppu);
+        DmaController dmaController = new DmaController(this.bus, null, this.ppu, debugLevel);
 
         // --------------------------------------------------------------------
         // BUS ATTACHMENT (Priority Order: Specific I/O first, Broad Memory last)
@@ -115,7 +119,7 @@ public class Motherboard {
         return this.joypad;
     }
 
-    public InstructionSet instructionSet() {
-        return this.instructionSet;
+    public int debugLevel() {
+        return this.debugLevel;
     }
 }

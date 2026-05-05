@@ -1,23 +1,20 @@
 ; ==============================================================================
-; Lyco-8 Hardware Diagnostic Test Suite v3.0
+; Lyco-8 Hardware Diagnostic Test Suite v4.0 (VBlank Synced)
 ; ==============================================================================
 
-* = $8000                               ; Entry point in Main RAM
+* = $8000                               ; Entry point in Main ROM
 
 ; --- Memory Mapped I/O Constants ---
-PPU_BASE        = $2000                 ; Graphics Video RAM Start
+CHR_RAM         = $2000                 ; Tile Pattern RAM (4BPP)
+NAMETABLE       = $3000                 ; Screen Grid (128 bytes: 16 columns * 8 rows)
+PPU_CTRL        = $3080                 ; PPU Control Register
+PPU_STATUS      = $3081                 ; PPU Status Register (Bit 7 = VBlank)
 KEYBOARD_IN     = $4000                 ; Keyboard Input (ASCII)
 
 ; --- APU Registers ---
 APU_P1_FREQ_L   = $5000
 APU_P1_FREQ_H   = $5001
 APU_P1_VOL      = $5002
-APU_P2_FREQ_L   = $5004
-APU_P2_FREQ_H   = $5005
-APU_P2_VOL      = $5006
-APU_TRI_FREQ_L  = $5008
-APU_TRI_FREQ_H  = $5009
-APU_TRI_VOL     = $500A
 APU_NOI_PER     = $500C
 APU_NOI_VOL     = $500D
 
@@ -30,7 +27,7 @@ TERMINAL_OUT    = $F000                 ; Console Terminal Output
 ; ==============================================================================
 MSG_WELCOME:
     .byte "===================================", $0A
-    .byte " LYCO-8 DIAGNOSTICS v3.0", $0A
+    .byte " LYCO-8 DIAGNOSTICS v4.0", $0A
     .byte "===================================", $0A, 0
 
 MSG_CPU:     .byte "[TEST 1] CPU ALU & Stack......... ", 0
@@ -190,18 +187,30 @@ PRINT_PPU:
     JMP PRINT_PPU
 
 PPU_EXEC:
+    ; 1. Load Solid Red into Tile 1 (32 bytes at CHR_RAM + 32)
     LDX #$00
-PPU_LOOP:
-    LDA #$02
-    STA PPU_BASE, X
-    LDA #$05
-    STA PPU_BASE + 128, X
-    LDA #$06
-    STA PPU_BASE + 256, X
-    LDA #$07
-    STA PPU_BASE + 384, X
+    LDA #$22                    ; Color 2 (Red) for Left & Right pixels
+LOAD_TILE:
+    STA CHR_RAM + 32, X
     INX
+    CPX #32
+    BNE LOAD_TILE
+
+    ; 2. Enable NMI generation on VBlank
+    LDA #$80
+    STA PPU_CTRL
+
+    ; 3. Fill the Nametable (128 bytes) with Tile 1
+    LDX #$00
+    LDA #$01                    ; Tile ID 1
+PPU_LOOP:
+    STA NAMETABLE, X
+    INX
+    CPX #128                    ; 16x8 Screen = 128 Tiles
     BNE PPU_LOOP
+
+    ; 4. Hold the image on screen for exactly 1 Second
+    JSR DELAY_1_SEC
 
 ; ==============================================================================
 ; TEST 3: APU 4-CHANNEL AUDIO SWEEP
@@ -216,35 +225,42 @@ PRINT_APU:
     JMP PRINT_APU
 
 APU_EXEC:
+    ; Square Wave Test
     LDA #$B8
     STA APU_P1_FREQ_L
     LDA #$01
     STA APU_P1_FREQ_H
     LDA #$0F
     STA APU_P1_VOL
-    JSR DELAY_ROUTINE
+
+    JSR DELAY_1_SEC
+
     LDA #$00
     STA APU_P1_VOL
 
+    ; Noise Channel Test
     LDA #$10
     STA APU_NOI_PER
     LDA #$0F
     STA APU_NOI_VOL
-    JSR DELAY_ROUTINE
+
+    JSR DELAY_1_SEC
+
     LDA #$00
     STA APU_NOI_VOL
 
     JMP DO_KB_TEST
 
-DELAY_ROUTINE:
-    LDY #$80
-DELAY_OUTER:
-    LDX #$FF
-DELAY_INNER:
-    DEX
-    BNE DELAY_INNER
+; ==============================================================================
+; SUBROUTINE: Frequency-Independent Delay (Exactly 1 Second)
+; ==============================================================================
+DELAY_1_SEC:
+    LDY #60                     ; Wait for 60 VBlank frames (1 second at 60Hz)
+VBLANK_WAIT:
+    LDA PPU_STATUS              ; Reading PPU_STATUS automatically clears bit 7
+    BPL VBLANK_WAIT             ; Branch if positive (Bit 7 is 0, VBlank not active)
     DEY
-    BNE DELAY_OUTER
+    BNE VBLANK_WAIT
     RTS
 
 ; ==============================================================================
@@ -263,7 +279,7 @@ KB_POLL:
     LDA KEYBOARD_IN
     BEQ KB_POLL
 
-    CMP #$1B
+    CMP #$1B                    ; ESC Key
     BNE CONTINUE_KB
     JMP HALT_SYS_OK
 CONTINUE_KB:
@@ -292,4 +308,12 @@ PRINT_HALT_OK:
     JMP PRINT_HALT_OK
 
 DO_BRK:
-    BRK
+    BRK                         ; Trigger System Halt
+
+; ==============================================================================
+; HARDWARE VECTORS (Zero-padded to 32KB by the Assembler)
+; ==============================================================================
+* = $FFFA
+    .BYTE $00, $80              ; NMI Vector (Not used by diagnostic, defaults to RESET)
+    .BYTE $00, $80              ; Reset Vector ($8000)
+    .BYTE $00, $80              ; IRQ/BRK Vector ($8000)

@@ -54,7 +54,8 @@ public class Assembler {
 
                 if (token.mnemonic().startsWith(".")) {
                     if (token.mnemonic().equals(".BYTE")) {
-                        List<Byte> bytes = this.directiveParser.parseByteDirective(token.operand());
+                        // FIX: Passing the symbol table context to the parser
+                        List<Byte> bytes = this.directiveParser.parseByteDirective(token.operand(), this.symbolTable);
                         this.programCounter += bytes.size();
                     }
                     continue;
@@ -112,7 +113,8 @@ public class Assembler {
 
             if (token.mnemonic().startsWith(".")) {
                 if (token.mnemonic().equals(".BYTE")) {
-                    List<Byte> bytes = this.directiveParser.parseByteDirective(token.operand());
+                    // FIX: Passing the symbol table context to the parser
+                    List<Byte> bytes = this.directiveParser.parseByteDirective(token.operand(), this.symbolTable);
                     for (Byte rawByte : bytes) {
                         binaryOutput.write(rawByte & 0xFF);
                     }
