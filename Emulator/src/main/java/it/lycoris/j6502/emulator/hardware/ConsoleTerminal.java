@@ -1,19 +1,25 @@
 package it.lycoris.j6502.emulator.hardware;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * A Memory-Mapped I/O device representing a basic text terminal.
- * Writing an ASCII value to its address prints the character to the standard output.
+ * A memory-mapped character output device.
+ * Writing an ASCII byte to its mapped address prints the character to the standard output,
+ * acting as a textual monitor or teletype (TTY).
  */
 public class ConsoleTerminal implements BusDevice {
+    private static final Logger LOG = LoggerFactory.getLogger(ConsoleTerminal.class);
     private final int mappedAddress;
 
     /**
-     * Initializes the terminal bound to a specific single memory address.
+     * Initializes the terminal device.
      *
-     * @param mappedAddress The 16-bit address used to trigger terminal output.
+     * @param mappedAddress The memory address where the CPU will write ASCII characters.
      */
     public ConsoleTerminal(int mappedAddress) {
         this.mappedAddress = mappedAddress;
+        LOG.info("Console Terminal mapped at address ${}", String.format("%04X", mappedAddress));
     }
 
     @Override
@@ -28,8 +34,10 @@ public class ConsoleTerminal implements BusDevice {
 
     @Override
     public void write(int address, int value) {
-        char character = (char) (value & 0xFF);
-        System.out.print(character);
-        System.out.flush();
+        if (address == this.mappedAddress) {
+            char asciiCharacter = (char) (value & 0xFF);
+            System.out.print(asciiCharacter);
+            System.out.flush();
+        }
     }
 }

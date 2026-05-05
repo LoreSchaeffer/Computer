@@ -15,25 +15,22 @@ public class Motherboard {
 
     private final int debugLevel;
 
-    private final SystemBus bus;
+    private final SystemBus bus = new SystemBus();
+    private final InstructionSet instructionSet = new InstructionSet();
+
     private final Cpu cpu;
     private final Ram ram;
     private final TileGraphicsPpu ppu;
     private final Apu apu;
     private final Keyboard keyboard;
     private final Joypad joypad;
-    private final ConsoleTerminal terminal;
     private final Rom rom;
-    private final InstructionSet instructionSet;
 
     /**
      * Initializes the motherboard, soldering all components to the system bus.
      */
     public Motherboard(EmulationMode emulationMode, int targetFrequencyHz, int debugLevel) {
         this.debugLevel = debugLevel;
-
-        this.bus = new SystemBus();
-        this.instructionSet = new InstructionSet();
 
         // --------------------------------------------------------------------
         // COMPONENT INITIALIZATION & MEMORY MAP
@@ -43,7 +40,6 @@ public class Motherboard {
         this.ppu = new TileGraphicsPpu(0x2000, 0x3FFF, targetFrequencyHz);
         this.keyboard = new Keyboard(0x4000);
         this.apu = new Apu(0x5000);
-        this.terminal = new ConsoleTerminal(0xF000);
         this.rom = new Rom(0x8000, new int[0x8000]);
         this.joypad = new Joypad(0x4016);
 
@@ -53,7 +49,6 @@ public class Motherboard {
         // BUS ATTACHMENT (Priority Order: Specific I/O first, Broad Memory last)
         // --------------------------------------------------------------------
 
-        this.bus.attachDevice(this.terminal);
         this.bus.attachDevice(this.keyboard);
         this.bus.attachDevice(this.joypad);
         this.bus.attachDevice(dmaController);
@@ -62,6 +57,9 @@ public class Motherboard {
 
         this.bus.attachDevice(this.ram);
         this.bus.attachDevice(this.rom);
+
+        FontInjector fontInjector = new FontInjector();
+        fontInjector.injectFont("fonts/default.png", this.bus, 1, 6);
 
         // --------------------------------------------------------------------
         // CPU INITIALIZATION

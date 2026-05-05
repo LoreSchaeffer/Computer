@@ -15,8 +15,8 @@ import java.awt.image.DataBufferInt;
  * It provides the rendering canvas for the Tile-Based PPU and captures keyboard inputs.
  * Optimized for high-performance direct buffer manipulation using standard ARGB pixels.
  */
-public class LycoWindow extends JFrame {
-    private static final int PIXEL_SCALE = 8;
+public class Display extends JFrame {
+    private static final int PIXEL_SCALE = 4;
 
     private final TileGraphicsPpu ppu;
     private final Keyboard keyboard;
@@ -30,7 +30,7 @@ public class LycoWindow extends JFrame {
      * @param ppu      The Tile-Based Picture Processing Unit responsible for rendering.
      * @param keyboard The memory-mapped Keyboard device to capture user inputs.
      */
-    public LycoWindow(TileGraphicsPpu ppu, Keyboard keyboard) {
+    public Display(TileGraphicsPpu ppu, Keyboard keyboard) {
         this.ppu = ppu;
         this.keyboard = keyboard;
 

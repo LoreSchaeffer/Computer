@@ -6,7 +6,7 @@ import it.lycoris.j6502.emulator.core.InstructionSet;
 import it.lycoris.j6502.emulator.core.Motherboard;
 import it.lycoris.j6502.emulator.core.PrecisionEmulatorLoop;
 import it.lycoris.j6502.emulator.ui.HostGamepadPoller;
-import it.lycoris.j6502.emulator.ui.LycoWindow;
+import it.lycoris.j6502.emulator.ui.Display;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -98,7 +98,7 @@ public class Bootstrap {
             motherboard.loadProgram(origin, program);
             LOG.info("Program loaded into memory ({} bytes)", program.length);
 
-            LycoWindow window = new LycoWindow(motherboard.ppu(), motherboard.keyboard());
+            Display window = new Display(motherboard.ppu(), motherboard.keyboard());
             SwingUtilities.invokeLater(() -> window.setVisible(true));
 
             HostGamepadPoller gamepadPoller = new HostGamepadPoller(motherboard.joypad());

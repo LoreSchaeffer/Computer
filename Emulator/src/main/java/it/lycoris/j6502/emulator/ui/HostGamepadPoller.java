@@ -38,7 +38,7 @@ public class HostGamepadPoller {
         this.isRunning = true;
 
         Thread.ofVirtual()
-                .name("Input4J-Polling-Thread")
+                .name("Gamepad")
                 .start(this::pollLoop);
 
         LOG.info("Host Gamepad poller started successfully via input4j.");
@@ -63,7 +63,7 @@ public class HostGamepadPoller {
                     .orElse(null);
 
             if (device == null) {
-                LOG.warn("No physical input devices found by input4j. Hardware joypad will not be mapped.");
+                LOG.info("No physical input devices found by input4j. Hardware joypad will not be mapped.");
             } else {
                 LOG.info("Gamepad detected: {}. Mapping event listeners...", device.getName());
 

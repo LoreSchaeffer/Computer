@@ -8,12 +8,12 @@ import it.lycoris.j6502.emulator.core.cpu.Cpu;
  * and hardware VBlank NMI generation synchronized with dynamic CPU clock speeds.
  */
 public class TileGraphicsPpu implements BusDevice {
-    public static final int SCREEN_WIDTH_PIXELS = 128;
-    public static final int SCREEN_HEIGHT_PIXELS = 64;
-
-    public static final int TILES_X = 16;
-    public static final int TILES_Y = 8;
+    public static final int TILES_X = 32;
+    public static final int TILES_Y = 24;
     public static final int TILE_SIZE_BYTES = 32;
+
+    public static final int SCREEN_WIDTH_PIXELS = TILES_X * 8;
+    public static final int SCREEN_HEIGHT_PIXELS = TILES_Y * 8;
 
     private static final int OAM_SIZE = 256;
     private static final int MAX_SPRITES = 64;
