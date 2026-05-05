@@ -46,5 +46,38 @@ public class InstructionSet {
         );
     }
 
-    // TODO Add a print method to dump the instruction set in a human-readable format (in a table)
+    /**
+     * Prints a 16x16 grid representing the standard 6502 opcode matrix to the system console.
+     * Rows represent the high nibble (0x0 to 0xF) and columns represent the low nibble (x0 to xF).
+     */
+    public void printOpcodeMatrix() {
+        StringBuilder matrixBuilder = new StringBuilder();
+
+        matrixBuilder.append("\n=== 6502 OPCODE MATRIX ===\n");
+        matrixBuilder.append(String.format("%-4s", ""));
+
+        for (int column = 0; column <= 0xF; column++) {
+            matrixBuilder.append(String.format("| x%-10X", column));
+        }
+        matrixBuilder.append("|\n");
+
+        for (int row = 0; row <= 0xF; row++) {
+            matrixBuilder.append(String.format("%-4X", row));
+
+            for (int column = 0; column <= 0xF; column++) {
+                int opcode = (row << 4) | column;
+
+                if (this.registry.containsKey(opcode)) {
+                    OpcodeMetadata metadata = this.registry.get(opcode);
+                    matrixBuilder.append(String.format("| %-11s", metadata.mnemonic()));
+                } else {
+                    matrixBuilder.append(String.format("| %-11s", ""));
+                }
+            }
+            matrixBuilder.append("|\n");
+        }
+
+        matrixBuilder.append("==========================\n");
+        LOG.info("{}", matrixBuilder);
+    }
 }

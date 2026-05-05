@@ -152,6 +152,32 @@ public class Cpu {
         return this.readAddressOutPins();
     }
 
+    /**
+     * Pushes an 8-bit value onto the hardware stack and decrements the Stack Pointer.
+     *
+     * @param value The 8-bit value to push.
+     */
+    public void pushStack(int value) {
+        this.writeSystemBus(0x0100 | this.getStackPointer(), value);
+        this.datapath.DecSP = true;
+        this.pulseClock();
+        this.datapath.DecSP = false;
+        this.datapath.evaluateCombinational();
+    }
+
+    /**
+     * Increments the Stack Pointer and pulls an 8-bit value from the hardware stack.
+     *
+     * @return The 8-bit value pulled from the stack.
+     */
+    public int pullStack() {
+        this.datapath.IncSP = true;
+        this.pulseClock();
+        this.datapath.IncSP = false;
+        this.datapath.evaluateCombinational();
+        return this.readSystemBus(0x0100 | this.getStackPointer());
+    }
+
     public int getStatusRegister() {
         return this.statusRegister;
     }

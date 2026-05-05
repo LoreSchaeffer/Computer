@@ -1,8 +1,8 @@
 package it.lycoris.j6502.emulator.instructions.microcode;
 
+import it.lycoris.j6502.emulator.core.Cpu;
 import it.lycoris.j6502.emulator.instructions.InstructionGroup;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
-import it.lycoris.j6502.emulator.core.Cpu;
 import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;
@@ -15,51 +15,31 @@ public class RegisterTransferGroup implements InstructionGroup {
 
     @Override
     public void install(Map<Integer, OpcodeMetadata> registry) {
-        registry.put(0xAA, new OpcodeMetadata("TAX", this::executeTax));
-        registry.put(0x8A, new OpcodeMetadata("TXA", this::executeTxa));
-        registry.put(0xA8, new OpcodeMetadata("TAY", this::executeTay));
-        registry.put(0x98, new OpcodeMetadata("TYA", this::executeTya));
+        registry.put(0xAA, new OpcodeMetadata("TAX", cpu -> this.transfer(cpu, cpu.getAccumulator(), true, false, false)));
+        registry.put(0xA8, new OpcodeMetadata("TAY", cpu -> this.transfer(cpu, cpu.getAccumulator(), false, true, false)));
+        registry.put(0x8A, new OpcodeMetadata("TXA", cpu -> this.transfer(cpu, cpu.getRegisterX(), false, false, true)));
+        registry.put(0x98, new OpcodeMetadata("TYA", cpu -> this.transfer(cpu, cpu.getRegisterY(), false, false, true)));
+        registry.put(0xBA, new OpcodeMetadata("TSX", cpu -> this.transfer(cpu, cpu.getStackPointer(), true, false, false)));
+
+        // TXS strictly transfers X to SP without modifying N or Z flags
+        registry.put(0x9A, new OpcodeMetadata("TXS", cpu -> {
+            MOS6502 datapath = cpu.getDatapath();
+            cpu.assertDataBus(cpu.getRegisterX());
+            datapath.LoadSP = true;
+            cpu.pulseClock();
+            datapath.LoadSP = false;
+            datapath.evaluateCombinational();
+        }));
     }
 
-    // ========================================================================
-    // HARDWARE EXECUTION LOGIC
-    // ========================================================================
-
-    private void executeTax(Cpu cpu) {
-        int value = cpu.getAccumulator();
-        this.transferToRegister(cpu, value, "LoadX");
-    }
-
-    private void executeTxa(Cpu cpu) {
-        int value = cpu.getRegisterX();
-        this.transferToRegister(cpu, value, "LoadA");
-    }
-
-    private void executeTay(Cpu cpu) {
-        int value = cpu.getAccumulator();
-        this.transferToRegister(cpu, value, "LoadY");
-    }
-
-    private void executeTya(Cpu cpu) {
-        int value = cpu.getRegisterY();
-        this.transferToRegister(cpu, value, "LoadA");
-    }
-
-    /**
-     * Helper to route data to a specific register via the datapath.
-     */
-    private void transferToRegister(Cpu cpu, int data, String loadPin) {
+    private void transfer(Cpu cpu, int value, boolean loadX, boolean loadY, boolean loadA) {
         MOS6502 datapath = cpu.getDatapath();
-        cpu.assertDataBus(data);
+        cpu.assertDataBus(value);
+        if (loadA) datapath.BypassALU = true;
 
-        switch (loadPin) {
-            case "LoadX" -> datapath.LoadX = true;
-            case "LoadY" -> datapath.LoadY = true;
-            case "LoadA" -> {
-                datapath.LoadA = true;
-                datapath.BypassALU = true;
-            }
-        }
+        datapath.LoadX = loadX;
+        datapath.LoadY = loadY;
+        datapath.LoadA = loadA;
 
         cpu.pulseClock();
 
@@ -69,6 +49,6 @@ public class RegisterTransferGroup implements InstructionGroup {
         datapath.BypassALU = false;
         datapath.evaluateCombinational();
 
-        cpu.forceZeroAndNegativeFlags(data);
+        cpu.forceZeroAndNegativeFlags(value);
     }
 }

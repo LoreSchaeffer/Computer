@@ -26,6 +26,7 @@ public class LoadStoreGroup implements InstructionGroup {
         registry.put(0xB1, new OpcodeMetadata("LDA ($zp),Y", cpu -> this.loadA(cpu, cpu.readSystemBus(this.resolveIndirectIndexedY(cpu)))));
 
         // --- LDX (Load X Register) ---
+        registry.put(0x96, new OpcodeMetadata("STX $zp,Y", cpu -> cpu.writeSystemBus(this.resolveZeroPageY(cpu), cpu.getRegisterX())));
         registry.put(0xA2, new OpcodeMetadata("LDX #", cpu -> this.loadX(cpu, this.fetchImmediate(cpu))));
         registry.put(0xA6, new OpcodeMetadata("LDX $zp", cpu -> this.loadX(cpu, cpu.readSystemBus(this.resolveZeroPage(cpu)))));
         registry.put(0xB6, new OpcodeMetadata("LDX $zp,Y", cpu -> this.loadX(cpu, cpu.readSystemBus(this.resolveZeroPageY(cpu)))));
@@ -33,6 +34,7 @@ public class LoadStoreGroup implements InstructionGroup {
         registry.put(0xBE, new OpcodeMetadata("LDX $abs,Y", cpu -> this.loadX(cpu, cpu.readSystemBus(this.resolveAbsoluteY(cpu)))));
 
         // --- LDY (Load Y Register) ---
+        registry.put(0x94, new OpcodeMetadata("STY $zp,X", cpu -> cpu.writeSystemBus(this.resolveZeroPageX(cpu), cpu.getRegisterY())));
         registry.put(0xA0, new OpcodeMetadata("LDY #", cpu -> this.loadY(cpu, this.fetchImmediate(cpu))));
         registry.put(0xA4, new OpcodeMetadata("LDY $zp", cpu -> this.loadY(cpu, cpu.readSystemBus(this.resolveZeroPage(cpu)))));
         registry.put(0xB4, new OpcodeMetadata("LDY $zp,X", cpu -> this.loadY(cpu, cpu.readSystemBus(this.resolveZeroPageX(cpu)))));

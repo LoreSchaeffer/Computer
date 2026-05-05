@@ -3,6 +3,7 @@ package it.lycoris.j6502.emulator;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import it.lycoris.j6502.emulator.core.EmulatorRunner;
+import it.lycoris.j6502.emulator.core.InstructionSet;
 import it.lycoris.j6502.emulator.ui.LycoWindow;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
@@ -27,6 +28,7 @@ public class Bootstrap {
         OptionSpec<String> originOpt = parser.acceptsAll(List.of("origin", "o"), "Start address in hex (default: 8000)").withOptionalArg().defaultsTo("8000");
         OptionSpec<Integer> stepsOpt = parser.acceptsAll(List.of("steps", "s"), "Max execution steps (default: infinite)").withOptionalArg().ofType(Integer.class).defaultsTo(-1);
         OptionSpec<Integer> freqOpt = parser.acceptsAll(List.of("freq", "f"), "Target Frequency in Hz (e.g. 20000). Default: 0 (Uncapped)").withOptionalArg().ofType(Integer.class).defaultsTo(0);
+        OptionSpec<Void> instructionSetOpt = parser.acceptsAll(List.of("instructions", "is"), "Print a table with all supported instructions");
         OptionSpec<Void> debugOpt = parser.acceptsAll(List.of("debug", "d"), "Launch debug mode");
 
         try {
@@ -34,6 +36,12 @@ public class Bootstrap {
 
             if (options.has(helpOpt)) {
                 parser.printHelpOn(System.out);
+                return;
+            }
+
+            if (options.has(instructionSetOpt)) {
+                InstructionSet instructionSet = new InstructionSet();
+                instructionSet.printOpcodeMatrix();
                 return;
             }
 
