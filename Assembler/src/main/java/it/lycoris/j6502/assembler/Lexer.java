@@ -27,45 +27,50 @@ public class Lexer {
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
                 TokenLine token = this.tokenizeLine(line, lineNumber);
-                if (!token.isEmpty()) tokens.add(token);
+                if (!token.isEmpty()) {
+                    tokens.add(token);
+                }
             }
         }
 
-        LOG.info("Lexing completed: found {} lines", tokens.size());
+        LOG.info("Lexing completed: found {} valid lines", tokens.size());
         return tokens;
     }
 
     public TokenLine tokenizeLine(String rawLine, int lineNumber) {
-        String cleanLine = rawLine;
+        // Sanitize invisible Non-Breaking Spaces often caused by browser copy-pasting
+        String cleanLine = rawLine.replace('\u00A0', ' ');
 
         // 1. Safe comment removal (ignores ';' inside strings)
         int commentIndex = -1;
         boolean inQuotes = false;
         for (int i = 0; i < cleanLine.length(); i++) {
-            char c = cleanLine.charAt(i);
-            if (c == '"') inQuotes = !inQuotes;
-            if (!inQuotes && c == ';') {
+            char currentChar = cleanLine.charAt(i);
+            if (currentChar == '"') inQuotes = !inQuotes;
+            if (!inQuotes && currentChar == ';') {
                 commentIndex = i;
                 break;
             }
         }
 
-        if (commentIndex != -1) cleanLine = cleanLine.substring(0, commentIndex);
+        if (commentIndex != -1) {
+            cleanLine = cleanLine.substring(0, commentIndex);
+        }
 
         cleanLine = cleanLine.trim();
-        if (cleanLine.isEmpty()) return new TokenLine(null, null, null, lineNumber, rawLine);
+        if (cleanLine.isEmpty()) {
+            return new TokenLine(null, null, null, lineNumber, rawLine);
+        }
 
         String label = null;
-        String mnemonic = null;
-        String operand = null;
 
         // 2. Safe label extraction (ignores ':' inside string literals)
         int colonIndex = -1;
         inQuotes = false;
         for (int i = 0; i < cleanLine.length(); i++) {
-            char c = cleanLine.charAt(i);
-            if (c == '"') inQuotes = !inQuotes;
-            if (!inQuotes && c == ':') {
+            char currentChar = cleanLine.charAt(i);
+            if (currentChar == '"') inQuotes = !inQuotes;
+            if (!inQuotes && currentChar == ':') {
                 colonIndex = i;
                 break;
             }
@@ -76,15 +81,36 @@ public class Lexer {
             cleanLine = cleanLine.substring(colonIndex + 1).trim();
         }
 
-        if (cleanLine.isEmpty()) return new TokenLine(label, null, null, lineNumber, rawLine);
+        if (cleanLine.isEmpty()) {
+            return new TokenLine(label, null, null, lineNumber, rawLine);
+        }
 
-        // 3. Split Mnemonic and Operand safely
+        // 3. Robust Equate Check (Explicit '=' parsing)
+        int equalsIndex = -1;
+        inQuotes = false;
+        for (int i = 0; i < cleanLine.length(); i++) {
+            char c = cleanLine.charAt(i);
+            if (c == '"') inQuotes = !inQuotes;
+            if (!inQuotes && c == '=') {
+                equalsIndex = i;
+                break;
+            }
+        }
+
+        // Prevent treating .BYTE values containing '=' as equates
+        if (equalsIndex != -1 && !cleanLine.toUpperCase().startsWith(".BYTE")) {
+            String mnemonic = cleanLine.substring(0, equalsIndex).trim().toUpperCase();
+            String operand = "=" + cleanLine.substring(equalsIndex + 1).trim();
+            return new TokenLine(label, mnemonic, operand, lineNumber, rawLine);
+        }
+
+        // 4. Standard Instruction (Mnemonic + Operand)
         String[] parts = cleanLine.split("\\s+", 2);
-        mnemonic = parts[0].toUpperCase();
+        String mnemonic = parts[0].toUpperCase();
+        String operand = null;
 
         if (parts.length > 1) {
-            operand = parts[1].trim();
-            operand = this.sanitizeOperand(operand);
+            operand = this.sanitizeOperand(parts[1].trim());
         }
 
         return new TokenLine(label, mnemonic, operand, lineNumber, rawLine);

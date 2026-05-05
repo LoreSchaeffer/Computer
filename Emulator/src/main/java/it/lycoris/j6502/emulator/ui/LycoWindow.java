@@ -1,7 +1,7 @@
 package it.lycoris.j6502.emulator.ui;
 
-import it.lycoris.j6502.emulator.hardware.GraphicsPpu;
 import it.lycoris.j6502.emulator.hardware.Keyboard;
+import it.lycoris.j6502.emulator.hardware.TileGraphicsPpu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,16 +11,17 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 /**
- * The main graphical user interface for the Lyco-8.
- * It renders the PPU framebuffer and captures physical keyboard inputs.
- * Optimized for high-performance direct buffer manipulation.
+ * The main graphical user interface for the Lyco-8 emulator.
+ * It provides the rendering canvas for the Tile-Based PPU and captures keyboard inputs.
+ * Optimized for high-performance direct buffer manipulation using standard ARGB pixels.
  */
 public class LycoWindow extends JFrame {
+
     private static final int PIXEL_SCALE = 8;
     private static final int FRAMES_PER_SECOND = 60;
     private static final int FRAME_TIME_MS = 1000 / FRAMES_PER_SECOND;
 
-    private final GraphicsPpu ppu;
+    private final TileGraphicsPpu ppu;
     private final Keyboard keyboard;
 
     private final BufferedImage screenImage;
@@ -46,16 +47,21 @@ public class LycoWindow extends JFrame {
     };
 
     /**
-     * Initializes the console window.
+     * Initializes the emulator console window.
      *
-     * @param ppu      The Graphics Picture Processing Unit holding the VRAM.
-     * @param keyboard The memory-mapped Keyboard device to feed inputs into.
+     * @param ppu      The Tile-Based Picture Processing Unit responsible for rendering.
+     * @param keyboard The memory-mapped Keyboard device to capture user inputs.
      */
-    public LycoWindow(GraphicsPpu ppu, Keyboard keyboard) {
+    public LycoWindow(TileGraphicsPpu ppu, Keyboard keyboard) {
         this.ppu = ppu;
         this.keyboard = keyboard;
 
-        this.screenImage = new BufferedImage(GraphicsPpu.SCREEN_WIDTH, GraphicsPpu.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        this.screenImage = new BufferedImage(
+                TileGraphicsPpu.SCREEN_WIDTH_PIXELS,
+                TileGraphicsPpu.SCREEN_HEIGHT_PIXELS,
+                BufferedImage.TYPE_INT_RGB
+        );
+
         this.displayPixels = ((DataBufferInt) this.screenImage.getRaster().getDataBuffer()).getData();
 
         this.setupUserInterface();
@@ -77,14 +83,17 @@ public class LycoWindow extends JFrame {
                         screenImage,
                         0,
                         0,
-                        GraphicsPpu.SCREEN_WIDTH * PIXEL_SCALE,
-                        GraphicsPpu.SCREEN_HEIGHT * PIXEL_SCALE,
+                        TileGraphicsPpu.SCREEN_WIDTH_PIXELS * PIXEL_SCALE,
+                        TileGraphicsPpu.SCREEN_HEIGHT_PIXELS * PIXEL_SCALE,
                         null
                 );
             }
         };
 
-        renderPanel.setPreferredSize(new Dimension(GraphicsPpu.SCREEN_WIDTH * PIXEL_SCALE, GraphicsPpu.SCREEN_HEIGHT * PIXEL_SCALE));
+        renderPanel.setPreferredSize(new Dimension(
+                TileGraphicsPpu.SCREEN_WIDTH_PIXELS * PIXEL_SCALE,
+                TileGraphicsPpu.SCREEN_HEIGHT_PIXELS * PIXEL_SCALE
+        ));
         renderPanel.setBackground(Color.BLACK);
 
         this.add(renderPanel);
@@ -119,18 +128,10 @@ public class LycoWindow extends JFrame {
         renderTimer.start();
     }
 
+    /**
+     * Delegates the pixel decoding and rendering logic to the PPU.
+     */
     private void updateScreenBuffer() {
-        int[] videoRam = this.ppu.getVram();
-
-        for (int index = 0; index < videoRam.length; index++) {
-            int colorByte = videoRam[index];
-
-            if (colorByte == 0xFF) {
-                this.displayPixels[index] = 0xFFFFFFFF;
-            } else {
-                int safePaletteIndex = colorByte & 0x0F;
-                this.displayPixels[index] = this.hexPalette[safePaletteIndex];
-            }
-        }
+        this.ppu.renderToBuffer(this.displayPixels, this.hexPalette);
     }
 }

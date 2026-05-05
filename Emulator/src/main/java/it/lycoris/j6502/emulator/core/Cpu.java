@@ -19,6 +19,9 @@ public class Cpu {
     private long totalClockCycles;
     private int statusRegister = 0x20;
 
+    private boolean nmiLineActive = false;
+    private boolean irqLineActive = false;
+
     /**
      * Initializes the CPU, connects it to the motherboard bus, and instantiates
      * the gate-level datapath.
@@ -70,9 +73,22 @@ public class Cpu {
      * and Execute phases managed via microcode signals.
      */
     public void step() {
-        // --- FETCH PHASE ---
-        int currentPc = this.readAddressOutPins();
-        int opcode = this.bus.read(currentPc);
+        // --- 1. HARDWARE INTERRUPT POLLING PHASE ---
+        if (this.nmiLineActive) {
+            this.nmiLineActive = false;
+            this.serviceHardwareInterrupt(0xFFFA);
+            return; // Interrupt serviced, skip normal instruction fetch
+        }
+
+        if (this.irqLineActive && !this.isFlagSet('I')) {
+            this.irqLineActive = false;
+            this.serviceHardwareInterrupt(0xFFFE);
+            return; // Interrupt serviced, skip normal instruction fetch
+        }
+
+        // --- 2. NORMAL FETCH PHASE ---
+        int currentProgramCounter = this.readAddressOutPins();
+        int opcode = this.bus.read(currentProgramCounter);
 
         this.setDataInPins(opcode);
         this.datapath.LoadIR = true;
@@ -83,11 +99,10 @@ public class Cpu {
         this.datapath.LoadIR = false;
         this.datapath.IncPC = false;
 
-        // --- DECODE & EXECUTE PHASE ---
+        // --- 3. DECODE & EXECUTE PHASE ---
         int latchedOpcode = this.readOpcodePins();
         OpcodeMetadata metadata = this.instructionSet.get(latchedOpcode);
 
-        // Execute the hardware-level microcode mapped to this opcode
         metadata.logic().execute(this);
     }
 
@@ -366,6 +381,57 @@ public class Cpu {
         this.datapath.SelB1 = false;
 
         this.datapath.evaluateCombinational();
+    }
+
+    /**
+     * Triggers a Non-Maskable Interrupt (NMI).
+     * Usually asserted by the Picture Processing Unit (PPU) during the Vertical Blanking interval.
+     */
+    public void triggerNmi() {
+        this.nmiLineActive = true;
+    }
+
+    /**
+     * Asserts the Interrupt Request (IRQ) line.
+     * Will be serviced by the CPU only if the Interrupt Disable (I) flag is clear.
+     */
+    public void triggerIrq() {
+        this.irqLineActive = true;
+    }
+
+    /**
+     * Simulates the exact 6502 hardware interrupt sequence.
+     * Pushes the Program Counter and Status Register to the stack, sets the Interrupt Disable flag,
+     * and jumps to the specified vector address.
+     *
+     * @param vectorAddress The memory address containing the interrupt handler pointer (0xFFFA or 0xFFFE).
+     */
+    private void serviceHardwareInterrupt(int vectorAddress) {
+        int currentProgramCounter = this.getProgramCounter();
+
+        // Push PC High Byte and Low Byte
+        this.pushStack((currentProgramCounter >> 8) & 0xFF);
+        this.pushStack(currentProgramCounter & 0xFF);
+
+        // Push Status Register
+        // Hardware interrupts push the status register with the B-flag (bit 4) cleared to 0.
+        // Bit 5 remains strictly 1.
+        int statusToPush = (this.getStatusRegister() & 0xEF) | 0x20;
+        this.pushStack(statusToPush);
+
+        // Set the Interrupt Disable flag to prevent nested IRQs
+        this.forceFlag('I', true);
+
+        // Fetch the new Program Counter from the vector
+        int lowByte = this.readSystemBus(vectorAddress);
+        int highByte = this.readSystemBus(vectorAddress + 1);
+        int interruptHandlerAddress = (highByte << 8) | lowByte;
+
+        this.jump(interruptHandlerAddress);
+
+        // Hardware interrupts consume 7 clock cycles
+        this.pulseClock();
+        this.pulseClock();
     }
 
     public long getTotalClockCycles() {

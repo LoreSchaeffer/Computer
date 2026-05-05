@@ -33,7 +33,7 @@ public class EmulatorRunner {
         LOG.info("Initializing Lyco-8 Gate-Level Emulator...");
         LOG.debug("Debug mode enabled: Verbose CPU logging enabled");
 
-        this.motherboard = new Motherboard();
+        this.motherboard = new Motherboard(targetFrequencyHz);
         this.startAddress = startAddress;
         this.maxSteps = maxSteps;
         this.targetFrequencyHz = targetFrequencyHz;
@@ -68,12 +68,12 @@ public class EmulatorRunner {
      *
      * @param program The compiled machine code.
      */
-    public void loadProgramAndRun(@NotNull byte[] program) {
-        LOG.info("Injecting program into emulated RAM at address ${} ({} bytes)", String.format("%04X", this.startAddress), program.length);
+    public void loadProgramAndRun(byte[] program) {
+        LOG.info("Injecting program into emulated ROM at address ${} ({} bytes)", String.format("%04X", this.startAddress), program.length);
         this.motherboard.loadProgram(this.startAddress, program);
 
         Thread.ofVirtual()
-                .name("CPU")
+                .name("CPU-Execution-Thread")
                 .start(this::run);
     }
 
@@ -107,12 +107,15 @@ public class EmulatorRunner {
                 this.logCpuTrace(state, opcode, metadata.mnemonic());
             }
 
-            if (this.checkHaltConditions(opcode, programCounter, bus)) {
-                break;
-            }
+            if (this.checkHaltConditions(opcode)) break;
+
+            long cyclesBeforeStep = cpu.getTotalClockCycles();
 
             cpu.step();
             stepCounter++;
+
+            long cyclesConsumed = cpu.getTotalClockCycles() - cyclesBeforeStep;
+            this.motherboard.ppu().tick((int) cyclesConsumed, cpu);
 
             if (this.targetFrequencyHz > 0) {
                 nextInstructionTime += (long) nanosPerInstruction;
@@ -140,27 +143,15 @@ public class EmulatorRunner {
     /**
      * Evaluates specific opcodes to determine if the CPU should halt execution.
      *
-     * @param opcode         The next opcode to execute.
-     * @param programCounter The current Program Counter address.
-     * @param bus            The system memory bus.
+     * @param opcode The next opcode to execute.
      * @return true if a halt condition is met, false otherwise.
      */
-    private boolean checkHaltConditions(int opcode, int programCounter, SystemBus bus) {
+    private boolean checkHaltConditions(int opcode) {
         // Halt on BRK
         if (opcode == 0x00) {
             System.out.flush();
             LOG.info(">>> BRK instruction reached (0x00). Halting execution gracefully.");
             return true;
-        }
-
-        // Halt on infinite jump loop (JMP to self)
-        if (opcode == 0x4C) {
-            int targetAddress = bus.read(programCounter + 1) | (bus.read(programCounter + 2) << 8);
-            if (targetAddress == programCounter) {
-                System.out.flush();
-                LOG.info(">>> Infinite Loop detected (JMP to self). Halting execution gracefully.");
-                return true;
-            }
         }
 
         return false;

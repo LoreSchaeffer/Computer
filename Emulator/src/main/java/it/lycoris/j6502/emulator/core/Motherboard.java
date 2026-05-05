@@ -13,7 +13,7 @@ public class Motherboard {
     private final SystemBus bus;
     private final Cpu cpu;
     private final Ram ram;
-    private final GraphicsPpu ppu;
+    private final TileGraphicsPpu ppu;
     private final Apu apu;
     private final Keyboard keyboard;
     private final ConsoleTerminal terminal;
@@ -23,7 +23,7 @@ public class Motherboard {
     /**
      * Initializes the motherboard, soldering all components to the system bus.
      */
-    public Motherboard() {
+    public Motherboard(int targetFrequencyHz) {
         this.bus = new SystemBus();
         this.instructionSet = new InstructionSet();
 
@@ -34,7 +34,7 @@ public class Motherboard {
         // 8KB RAM: 0x0000 to 0x1FFF (Covers Zero Page and Stack)
         this.ram = new Ram(0x0000, 0x2000);
         // PPU Registers: 0x2000 to 0x3FFF
-        this.ppu = new GraphicsPpu(0x2000, 0x3FFF);
+        this.ppu = new TileGraphicsPpu(0x2000, 0x3FFF, targetFrequencyHz);
         // Keyboard I/O: 0x4000
         this.keyboard = new Keyboard(0x4000);
         // APU Registers: 0x5000 to 0x500F
@@ -101,7 +101,7 @@ public class Motherboard {
         return this.bus;
     }
 
-    public GraphicsPpu ppu() {
+    public TileGraphicsPpu ppu() {
         return this.ppu;
     }
 
