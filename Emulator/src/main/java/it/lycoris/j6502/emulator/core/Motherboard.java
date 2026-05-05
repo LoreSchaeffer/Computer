@@ -1,5 +1,8 @@
 package it.lycoris.j6502.emulator.core;
 
+import it.lycoris.j6502.emulator.core.cpu.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
+import it.lycoris.j6502.emulator.core.cpu.HighLevelCpu;
 import it.lycoris.j6502.emulator.hardware.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +29,7 @@ public class Motherboard {
     /**
      * Initializes the motherboard, soldering all components to the system bus.
      */
-    public Motherboard(int targetFrequencyHz, int debugLevel) {
+    public Motherboard(EmulationMode emulationMode, int targetFrequencyHz, int debugLevel) {
         this.debugLevel = debugLevel;
 
         this.bus = new SystemBus();
@@ -64,7 +67,13 @@ public class Motherboard {
         // CPU INITIALIZATION
         // --------------------------------------------------------------------
 
-        this.cpu = new Cpu(this.bus, this.instructionSet);
+        if (emulationMode == EmulationMode.HIGH_LEVEL) {
+            this.cpu = new HighLevelCpu(this.bus);
+            LOG.info("System booted using High-Level Emulation (HLE) engine.");
+        } else {
+            this.cpu = new GateLevelCpu(this.bus, this.instructionSet);
+            LOG.info("System booted using Gate-Level (Cycle-Accurate) engine.");
+        }
 
         dmaController.setCpu(this.cpu);
 
@@ -121,5 +130,10 @@ public class Motherboard {
 
     public int debugLevel() {
         return this.debugLevel;
+    }
+
+    public enum EmulationMode {
+        GATE_LEVEL,
+        HIGH_LEVEL
     }
 }

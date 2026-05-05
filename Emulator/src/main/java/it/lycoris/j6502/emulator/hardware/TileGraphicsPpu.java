@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.hardware;
 
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.Cpu;
 
 /**
  * A Picture Processing Unit implementing a retro Tile-Based rendering architecture.

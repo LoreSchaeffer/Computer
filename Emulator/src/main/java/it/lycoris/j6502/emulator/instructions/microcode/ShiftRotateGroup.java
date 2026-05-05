@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.instructions.microcode;
 
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 import it.lycoris.j6502.emulator.instructions.InstructionGroup;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 
@@ -46,19 +46,19 @@ public class ShiftRotateGroup implements InstructionGroup {
     // ADDRESS FETCHING
     // ========================================================================
 
-    private int fetchZeroPageAddress(Cpu cpu) {
+    private int fetchZeroPageAddress(GateLevelCpu cpu) {
         return cpu.fetchNextByte();
     }
 
-    private int fetchZeroPageXAddress(Cpu cpu) {
+    private int fetchZeroPageXAddress(GateLevelCpu cpu) {
         return (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
     }
 
-    private int fetchAbsoluteAddress(Cpu cpu) {
+    private int fetchAbsoluteAddress(GateLevelCpu cpu) {
         return cpu.fetchNextAddress();
     }
 
-    private int fetchAbsoluteXAddress(Cpu cpu) {
+    private int fetchAbsoluteXAddress(GateLevelCpu cpu) {
         return (cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF;
     }
 
@@ -66,14 +66,14 @@ public class ShiftRotateGroup implements InstructionGroup {
     // HARDWARE OPERATIONS
     // ========================================================================
 
-    private void aslAccumulator(Cpu cpu) {
+    private void aslAccumulator(GateLevelCpu cpu) {
         int value = cpu.getAccumulator();
         cpu.forceFlag('C', (value & 0x80) != 0); // Bit 7 shifted into Carry
         int result = (value << 1) & 0xFF;
         this.storeAccumulator(cpu, result);
     }
 
-    private void aslMemory(Cpu cpu, int address) {
+    private void aslMemory(GateLevelCpu cpu, int address) {
         int value = cpu.readSystemBus(address);
         cpu.forceFlag('C', (value & 0x80) != 0);
         int result = (value << 1) & 0xFF;
@@ -81,14 +81,14 @@ public class ShiftRotateGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(result);
     }
 
-    private void lsrAccumulator(Cpu cpu) {
+    private void lsrAccumulator(GateLevelCpu cpu) {
         int value = cpu.getAccumulator();
         cpu.forceFlag('C', (value & 0x01) != 0); // Bit 0 shifted into Carry
         int result = (value >> 1) & 0xFF;
         this.storeAccumulator(cpu, result);
     }
 
-    private void lsrMemory(Cpu cpu, int address) {
+    private void lsrMemory(GateLevelCpu cpu, int address) {
         int value = cpu.readSystemBus(address);
         cpu.forceFlag('C', (value & 0x01) != 0);
         int result = (value >> 1) & 0xFF;
@@ -96,7 +96,7 @@ public class ShiftRotateGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(result);
     }
 
-    private void rolAccumulator(Cpu cpu) {
+    private void rolAccumulator(GateLevelCpu cpu) {
         int value = cpu.getAccumulator();
         int carryIn = cpu.isFlagSet('C') ? 1 : 0;
         cpu.forceFlag('C', (value & 0x80) != 0);
@@ -104,7 +104,7 @@ public class ShiftRotateGroup implements InstructionGroup {
         this.storeAccumulator(cpu, result);
     }
 
-    private void rolMemory(Cpu cpu, int address) {
+    private void rolMemory(GateLevelCpu cpu, int address) {
         int value = cpu.readSystemBus(address);
         int carryIn = cpu.isFlagSet('C') ? 1 : 0;
         cpu.forceFlag('C', (value & 0x80) != 0);
@@ -113,7 +113,7 @@ public class ShiftRotateGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(result);
     }
 
-    private void rorAccumulator(Cpu cpu) {
+    private void rorAccumulator(GateLevelCpu cpu) {
         int value = cpu.getAccumulator();
         int carryIn = cpu.isFlagSet('C') ? 0x80 : 0x00;
         cpu.forceFlag('C', (value & 0x01) != 0);
@@ -121,7 +121,7 @@ public class ShiftRotateGroup implements InstructionGroup {
         this.storeAccumulator(cpu, result);
     }
 
-    private void rorMemory(Cpu cpu, int address) {
+    private void rorMemory(GateLevelCpu cpu, int address) {
         int value = cpu.readSystemBus(address);
         int carryIn = cpu.isFlagSet('C') ? 0x80 : 0x00;
         cpu.forceFlag('C', (value & 0x01) != 0);
@@ -130,7 +130,7 @@ public class ShiftRotateGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(result);
     }
 
-    private void storeAccumulator(Cpu cpu, int value) {
+    private void storeAccumulator(GateLevelCpu cpu, int value) {
         cpu.assertDataBus(value);
         cpu.getDatapath().BypassALU = true;
         cpu.getDatapath().LoadA = true;

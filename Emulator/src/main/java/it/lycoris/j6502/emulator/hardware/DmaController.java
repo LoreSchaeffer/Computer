@@ -1,7 +1,8 @@
 package it.lycoris.j6502.emulator.hardware;
 
-import it.lycoris.j6502.emulator.core.Cpu;
 import it.lycoris.j6502.emulator.core.SystemBus;
+import it.lycoris.j6502.emulator.core.cpu.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ public class DmaController implements BusDevice {
      * @param ppu        The target PPU containing the OAM.
      * @param debugLevel The verbosity level for debug logging (-1 = none, higher values = more verbose).
      */
-    public DmaController(SystemBus systemBus, Cpu cpu, TileGraphicsPpu ppu, int debugLevel) {
+    public DmaController(SystemBus systemBus, GateLevelCpu cpu, TileGraphicsPpu ppu, int debugLevel) {
         this.systemBus = systemBus;
         this.cpu = cpu;
         this.ppu = ppu;

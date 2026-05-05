@@ -32,6 +32,7 @@ public class Bootstrap {
         OptionSpec<File> inputOpt = parser.acceptsAll(List.of("input", "i"), "The input .bin file to emulate").withRequiredArg().ofType(File.class);
         OptionSpec<String> originOpt = parser.acceptsAll(List.of("origin", "o"), "Start address in hex (default: 8000)").withOptionalArg().defaultsTo("8000");
         OptionSpec<Integer> freqOpt = parser.acceptsAll(List.of("freq", "f"), "Target Frequency in Hz (e.g. 20000). Default: 0 (Uncapped)").withOptionalArg().ofType(Integer.class).defaultsTo(0);
+        OptionSpec<Motherboard.EmulationMode> emulationModeOpt = parser.acceptsAll(List.of("mode", "m"), "Select the emulation mode (GATE_LEVEL or HIGH_LEVEL)").withRequiredArg().ofType(Motherboard.EmulationMode.class).defaultsTo(Motherboard.EmulationMode.HIGH_LEVEL);
         OptionSpec<Void> instructionSetOpt = parser.acceptsAll(List.of("instructions", "s"), "Print a table with all supported instructions");
         OptionSpec<Integer> debugOpt = parser.acceptsAll(List.of("debug", "d"), "Launch debug mode").withOptionalArg().ofType(Integer.class).defaultsTo(0);
 
@@ -53,6 +54,7 @@ public class Bootstrap {
             int debugLevel = options.has(debugOpt) ? options.valueOf(debugOpt) : -1;
             int targetFrequency = options.valueOf(freqOpt);
             int origin = 0x8000;
+            Motherboard.EmulationMode emulationMode = options.valueOf(emulationModeOpt);
 
             try {
                 origin = Integer.parseInt(options.valueOf(originOpt), 16);
@@ -66,7 +68,7 @@ public class Bootstrap {
                 context.getLogger("it.lycoris.j6502.emulator").setLevel(Level.DEBUG);
             }
 
-            Motherboard motherboard = new Motherboard(targetFrequency, debugLevel);
+            Motherboard motherboard = new Motherboard(emulationMode, targetFrequency, debugLevel);
 
             byte[] program;
             if (options.has(inputOpt)) {

@@ -2,7 +2,7 @@ package it.lycoris.j6502.emulator.instructions.microcode;
 
 import it.lycoris.j6502.emulator.instructions.InstructionGroup;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;
@@ -57,7 +57,7 @@ public class ArithmeticGroup implements InstructionGroup {
     // LOGIC EXECUTION WITH BCD SUPPORT
     // ========================================================================
 
-    private void adc(Cpu cpu, int value) {
+    private void adc(GateLevelCpu cpu, int value) {
         int accumulator = cpu.getAccumulator();
         int carryIn = cpu.isFlagSet('C') ? 1 : 0;
         int binarySum = accumulator + value + carryIn;
@@ -96,7 +96,7 @@ public class ArithmeticGroup implements InstructionGroup {
         this.latchAccumulator(cpu, finalResult);
     }
 
-    private void sbc(Cpu cpu, int value) {
+    private void sbc(GateLevelCpu cpu, int value) {
         int accumulator = cpu.getAccumulator();
         int carryIn = cpu.isFlagSet('C') ? 1 : 0;
         int invertedValue = (~value) & 0xFF;
@@ -135,7 +135,7 @@ public class ArithmeticGroup implements InstructionGroup {
         this.latchAccumulator(cpu, finalResult);
     }
 
-    private void latchAccumulator(Cpu cpu, int result) {
+    private void latchAccumulator(GateLevelCpu cpu, int result) {
         MOS6502 datapath = cpu.getDatapath();
         cpu.assertDataBus(result);
         datapath.BypassALU = true;
@@ -146,7 +146,7 @@ public class ArithmeticGroup implements InstructionGroup {
         datapath.evaluateCombinational();
     }
 
-    private void executeInx(Cpu cpu) {
+    private void executeInx(GateLevelCpu cpu) {
         MOS6502 datapath = cpu.getDatapath();
         datapath.IncX = true;
         cpu.pulseClock();
@@ -155,7 +155,7 @@ public class ArithmeticGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(cpu.getRegisterX());
     }
 
-    private void executeDex(Cpu cpu) {
+    private void executeDex(GateLevelCpu cpu) {
         MOS6502 datapath = cpu.getDatapath();
         datapath.DecX = true;
         cpu.pulseClock();
@@ -164,7 +164,7 @@ public class ArithmeticGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(cpu.getRegisterX());
     }
 
-    private void executeIny(Cpu cpu) {
+    private void executeIny(GateLevelCpu cpu) {
         MOS6502 datapath = cpu.getDatapath();
         datapath.IncY = true;
         cpu.pulseClock();
@@ -173,7 +173,7 @@ public class ArithmeticGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(cpu.getRegisterY());
     }
 
-    private void executeDey(Cpu cpu) {
+    private void executeDey(GateLevelCpu cpu) {
         MOS6502 datapath = cpu.getDatapath();
         datapath.DecY = true;
         cpu.pulseClock();
@@ -182,14 +182,14 @@ public class ArithmeticGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(cpu.getRegisterY());
     }
 
-    private void incMem(Cpu cpu, int address) {
+    private void incMem(GateLevelCpu cpu, int address) {
         int value = cpu.readSystemBus(address);
         int result = (value + 1) & 0xFF;
         cpu.writeSystemBus(address, result);
         cpu.forceZeroAndNegativeFlags(result);
     }
 
-    private void decMem(Cpu cpu, int address) {
+    private void decMem(GateLevelCpu cpu, int address) {
         int value = cpu.readSystemBus(address);
         int result = (value - 1) & 0xFF;
         cpu.writeSystemBus(address, result);
@@ -200,38 +200,38 @@ public class ArithmeticGroup implements InstructionGroup {
     // ADDRESS FETCHING
     // ========================================================================
 
-    private int fetchImmediate(Cpu cpu) {
+    private int fetchImmediate(GateLevelCpu cpu) {
         return cpu.fetchNextByte();
     }
 
-    private int fetchZeroPage(Cpu cpu) {
+    private int fetchZeroPage(GateLevelCpu cpu) {
         return cpu.readSystemBus(cpu.fetchNextByte());
     }
 
-    private int fetchZeroPageX(Cpu cpu) {
+    private int fetchZeroPageX(GateLevelCpu cpu) {
         return cpu.readSystemBus((cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF);
     }
 
-    private int fetchAbsolute(Cpu cpu) {
+    private int fetchAbsolute(GateLevelCpu cpu) {
         return cpu.readSystemBus(cpu.fetchNextAddress());
     }
 
-    private int fetchAbsoluteX(Cpu cpu) {
+    private int fetchAbsoluteX(GateLevelCpu cpu) {
         return cpu.readSystemBus((cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF);
     }
 
-    private int fetchAbsoluteY(Cpu cpu) {
+    private int fetchAbsoluteY(GateLevelCpu cpu) {
         return cpu.readSystemBus((cpu.fetchNextAddress() + cpu.getRegisterY()) & 0xFFFF);
     }
 
-    private int fetchIndexedIndirectX(Cpu cpu) {
+    private int fetchIndexedIndirectX(GateLevelCpu cpu) {
         int zpAddress = (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
         int lowByte = cpu.readSystemBus(zpAddress);
         int highByte = cpu.readSystemBus((zpAddress + 1) & 0xFF);
         return cpu.readSystemBus((highByte << 8) | lowByte);
     }
 
-    private int fetchIndirectIndexedY(Cpu cpu) {
+    private int fetchIndirectIndexedY(GateLevelCpu cpu) {
         int zpAddress = cpu.fetchNextByte();
         int lowByte = cpu.readSystemBus(zpAddress);
         int highByte = cpu.readSystemBus((zpAddress + 1) & 0xFF);
@@ -239,19 +239,19 @@ public class ArithmeticGroup implements InstructionGroup {
         return cpu.readSystemBus((baseAddress + cpu.getRegisterY()) & 0xFFFF);
     }
 
-    private int resolveZeroPage(Cpu cpu) {
+    private int resolveZeroPage(GateLevelCpu cpu) {
         return cpu.fetchNextByte();
     }
 
-    private int resolveZeroPageX(Cpu cpu) {
+    private int resolveZeroPageX(GateLevelCpu cpu) {
         return (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
     }
 
-    private int resolveAbsolute(Cpu cpu) {
+    private int resolveAbsolute(GateLevelCpu cpu) {
         return cpu.fetchNextAddress();
     }
 
-    private int resolveAbsoluteX(Cpu cpu) {
+    private int resolveAbsoluteX(GateLevelCpu cpu) {
         return (cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF;
     }
 }

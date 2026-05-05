@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.instructions.microcode;
 
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 import it.lycoris.j6502.emulator.instructions.InstructionGroup;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 import it.lycoris.j6502.hardware.generated.MOS6502;
@@ -32,7 +32,7 @@ public class RegisterTransferGroup implements InstructionGroup {
         }));
     }
 
-    private void transfer(Cpu cpu, int value, boolean loadX, boolean loadY, boolean loadA) {
+    private void transfer(GateLevelCpu cpu, int value, boolean loadX, boolean loadY, boolean loadA) {
         MOS6502 datapath = cpu.getDatapath();
         cpu.assertDataBus(value);
         if (loadA) datapath.BypassALU = true;

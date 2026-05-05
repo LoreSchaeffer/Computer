@@ -1,5 +1,7 @@
-package it.lycoris.j6502.emulator.core;
+package it.lycoris.j6502.emulator.core.cpu;
 
+import it.lycoris.j6502.emulator.core.InstructionSet;
+import it.lycoris.j6502.emulator.core.SystemBus;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 import it.lycoris.j6502.hardware.generated.MOS6502;
 import org.slf4j.Logger;
@@ -10,8 +12,8 @@ import org.slf4j.LoggerFactory;
  * Acts as the hardware Control Unit (microcode sequencer), driving the
  * auto-generated gate-level MOS6502 datapath by asserting control pins.
  */
-public class Cpu {
-    private static final Logger LOG = LoggerFactory.getLogger(Cpu.class);
+public class GateLevelCpu implements Cpu {
+    private static final Logger LOG = LoggerFactory.getLogger(GateLevelCpu.class);
 
     private final SystemBus bus;
     private final MOS6502 datapath;
@@ -30,7 +32,7 @@ public class Cpu {
      * @param bus            The system bus connecting RAM, ROM, and peripherals.
      * @param instructionSet The registry containing microcode logic for all opcodes.
      */
-    public Cpu(SystemBus bus, InstructionSet instructionSet) {
+    public GateLevelCpu(SystemBus bus, InstructionSet instructionSet) {
         this.bus = bus;
         this.instructionSet = instructionSet;
         this.datapath = new MOS6502();

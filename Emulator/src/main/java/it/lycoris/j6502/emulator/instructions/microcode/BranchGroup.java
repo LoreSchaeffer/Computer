@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.instructions.microcode;
 
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 import it.lycoris.j6502.emulator.instructions.InstructionGroup;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 
@@ -24,7 +24,7 @@ public class BranchGroup implements InstructionGroup {
         registry.put(0x70, new OpcodeMetadata("BVS", cpu -> this.branch(cpu, cpu.isFlagSet('V'))));
     }
 
-    private void branch(Cpu cpu, boolean condition) {
+    private void branch(GateLevelCpu cpu, boolean condition) {
         byte offset = (byte) cpu.fetchNextByte();
         if (condition) {
             int newProgramCounter = (cpu.getProgramCounter() + offset) & 0xFFFF;

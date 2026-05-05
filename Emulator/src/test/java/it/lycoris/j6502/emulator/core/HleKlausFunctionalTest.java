@@ -1,7 +1,7 @@
 package it.lycoris.j6502.emulator.core;
 
 import it.lycoris.j6502.emulator.core.cpu.CpuState;
-import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
+import it.lycoris.j6502.emulator.core.cpu.HighLevelCpu;
 import it.lycoris.j6502.emulator.hardware.Ram;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,51 +23,59 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Enterprise Integration Test suite for the 6502 CPU core.
+ * Enterprise Integration Test suite for the High-Level 6502 CPU core.
  * Executes the Klaus2m5 functional test binary in a headless,
- * maximum-performance environment.
+ * maximum-performance environment to validate HLE accuracy.
  */
-@Tag("slow-integration")
-public class KlausFunctionalTest {
-    private static final Logger LOG = LoggerFactory.getLogger(KlausFunctionalTest.class);
+@Tag("fast-integration")
+public class HleKlausFunctionalTest {
+    private static final Logger LOG = LoggerFactory.getLogger(HleKlausFunctionalTest.class);
+
     private static final int SUCCESS_ADDRESS = 0x3469;
     private static final int KLAUS_START_ADDRESS = 0x0400;
     private static final int MAXIMUM_CYCLES = 100_000_000;
     private static final int TRACE_BUFFER_SIZE = 20;
 
     private SystemBus systemBus;
-    private GateLevelCpu cpu;
+    private HighLevelCpu cpu;
     private Ram memory;
-    private InstructionSet instructionSet;
+
+    private InstructionSet instructionMetadataRegistry;
     private Map<Integer, String> assemblyListingMap;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         this.systemBus = new SystemBus();
-        this.memory = new Ram(0x0000, 0x10000); // Flat 64KB memory
+        this.memory = new Ram(0x0000, 0x10000); // Flat 64KB memory space
         this.systemBus.attachDevice(this.memory);
 
-        instructionSet = new InstructionSet();
-        this.cpu = new GateLevelCpu(this.systemBus, instructionSet);
+        this.cpu = new HighLevelCpu(this.systemBus);
+        this.instructionMetadataRegistry = new InstructionSet();
 
         this.assemblyListingMap = this.loadAssemblyListing("6502_functional_test.lst");
     }
 
     @Test
-    @DisplayName("Execute Klaus2m5 6502 Functional Test Suite")
+    @DisplayName("Execute Klaus2m5 6502 Functional Test Suite (HLE Engine)")
     public void executeKlausFunctionalTest() {
         this.loadBinaryToMemory("6502_functional_test.bin", 0x0000);
 
-        this.cpu.jump(KLAUS_START_ADDRESS);
+        this.cpu.reset();
+
+        int lowByte = KLAUS_START_ADDRESS & 0xFF;
+        int highByte = (KLAUS_START_ADDRESS >> 8) & 0xFF;
+        this.systemBus.write(0xFFFC, lowByte);
+        this.systemBus.write(0xFFFD, highByte);
+        this.cpu.reset();
 
         int previousProgramCounter = -1;
         long executionSteps = 0L;
-        long heartbeatThreshold = 1_000_000L;
+        long heartbeatThreshold = 10_000_000L;
         long startTimeMillis = System.currentTimeMillis();
 
         Deque<String> traceBuffer = new ArrayDeque<>(TRACE_BUFFER_SIZE);
 
-        LOG.info("Starting Klaus2m5 functional test. This may take several minutes...");
+        LOG.info("Starting Klaus2m5 functional test on High-Level CPU engine...");
 
         while (executionSteps < MAXIMUM_CYCLES) {
             int currentProgramCounter = this.cpu.getProgramCounter();
@@ -76,13 +84,15 @@ public class KlausFunctionalTest {
             this.recordTrace(traceBuffer, currentOpcode);
 
             if (executionSteps > 0 && executionSteps % heartbeatThreshold == 0) {
-                long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000L;
-                LOG.info("Executed {} million instructions in {} seconds.", (executionSteps / 1_000_000L), elapsedTimeSeconds);
+                long elapsedTimeMillis = System.currentTimeMillis() - startTimeMillis;
+                LOG.info("Executed {} million instructions in {} ms.", (executionSteps / 1_000_000L), elapsedTimeMillis);
             }
 
+            // The Klaus test signals success or failure by trapping itself in an infinite loop
             if (currentProgramCounter == previousProgramCounter) {
                 if (currentProgramCounter == SUCCESS_ADDRESS) {
-                    LOG.info("SUCCESS! Reached target trap address.");
+                    long totalTimeMillis = System.currentTimeMillis() - startTimeMillis;
+                    LOG.info("SUCCESS! Reached target trap address in {} ms.", totalTimeMillis);
                     assertEquals(SUCCESS_ADDRESS, currentProgramCounter, "Klaus test successfully completed.");
                     return;
                 } else {
@@ -95,7 +105,7 @@ public class KlausFunctionalTest {
             try {
                 this.cpu.step();
             } catch (Exception exception) {
-                this.failWithTrace("Hardware exception during execution: " + exception.getMessage(), currentProgramCounter, executionSteps, traceBuffer);
+                this.failWithTrace("Java exception during native execution: " + exception.getMessage(), currentProgramCounter, executionSteps, traceBuffer);
             }
 
             executionSteps++;
@@ -111,10 +121,12 @@ public class KlausFunctionalTest {
      * @param currentOpcode The opcode currently fetched.
      */
     private void recordTrace(Deque<String> traceBuffer, int currentOpcode) {
-        if (traceBuffer.size() >= TRACE_BUFFER_SIZE) traceBuffer.removeFirst();
+        if (traceBuffer.size() >= TRACE_BUFFER_SIZE) {
+            traceBuffer.removeFirst();
+        }
 
         CpuState state = this.cpu.snapshot();
-        OpcodeMetadata metadata = this.instructionSet.get(currentOpcode);
+        OpcodeMetadata metadata = this.instructionMetadataRegistry.get(currentOpcode);
         String mnemonic = (metadata != null) ? metadata.mnemonic() : "UNKNOWN";
 
         traceBuffer.addLast(state.toTraceString(currentOpcode, mnemonic));
@@ -134,7 +146,7 @@ public class KlausFunctionalTest {
     private void failWithTrace(String reason, int trapAddress, long executionSteps, Deque<String> traceBuffer) {
         StringBuilder errorMessageBuilder = new StringBuilder();
         errorMessageBuilder.append("Klaus test failed! ").append(reason).append("\n");
-        errorMessageBuilder.append("Cycle: ").append(executionSteps).append("\n\n");
+        errorMessageBuilder.append("Step: ").append(executionSteps).append("\n\n");
 
         errorMessageBuilder.append("--- TARGET ASSEMBLY LISTING ---\n");
         String listingSource = this.assemblyListingMap.getOrDefault(trapAddress, "[No assembly source found for this address in the listing file]");

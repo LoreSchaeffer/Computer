@@ -1,4 +1,4 @@
-package it.lycoris.j6502.emulator.core;
+package it.lycoris.j6502.emulator.core.cpu;
 
 import org.jetbrains.annotations.NotNull;
 

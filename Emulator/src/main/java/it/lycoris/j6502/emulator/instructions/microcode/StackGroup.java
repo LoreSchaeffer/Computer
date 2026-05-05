@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.instructions.microcode;
 
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 import it.lycoris.j6502.emulator.instructions.InstructionGroup;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 import it.lycoris.j6502.hardware.generated.MOS6502;
@@ -21,7 +21,7 @@ public class StackGroup implements InstructionGroup {
         registry.put(0x28, new OpcodeMetadata("PLP", cpu -> cpu.setStatusRegister((cpu.pullStack() & 0xEF) | 0x20)));
     }
 
-    private void pullAccumulator(Cpu cpu) {
+    private void pullAccumulator(GateLevelCpu cpu) {
         int value = cpu.pullStack();
         MOS6502 datapath = cpu.getDatapath();
         cpu.assertDataBus(value);

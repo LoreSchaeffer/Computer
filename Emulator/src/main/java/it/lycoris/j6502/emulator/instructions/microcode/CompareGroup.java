@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.instructions.microcode;
 
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 import it.lycoris.j6502.emulator.instructions.InstructionGroup;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
 
@@ -42,7 +42,7 @@ public class CompareGroup implements InstructionGroup {
      * @param registerValue The 8-bit unsigned value from the internal register (A, X, or Y).
      * @param memoryValue   The 8-bit unsigned value fetched from memory.
      */
-    private void compare(Cpu cpu, int registerValue, int memoryValue) {
+    private void compare(GateLevelCpu cpu, int registerValue, int memoryValue) {
         int difference = registerValue - memoryValue;
 
         cpu.forceFlag('C', registerValue >= memoryValue);
@@ -54,31 +54,31 @@ public class CompareGroup implements InstructionGroup {
     // ADDRESSING MODE FETCH ABSTRACTIONS
     // ========================================================================
 
-    private int fetchImmediate(Cpu cpu) {
+    private int fetchImmediate(GateLevelCpu cpu) {
         return cpu.fetchNextByte();
     }
 
-    private int fetchZeroPage(Cpu cpu) {
+    private int fetchZeroPage(GateLevelCpu cpu) {
         return cpu.readSystemBus(cpu.fetchNextByte());
     }
 
-    private int fetchZeroPageX(Cpu cpu) {
+    private int fetchZeroPageX(GateLevelCpu cpu) {
         return cpu.readSystemBus((cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF);
     }
 
-    private int fetchAbsolute(Cpu cpu) {
+    private int fetchAbsolute(GateLevelCpu cpu) {
         return cpu.readSystemBus(cpu.fetchNextAddress());
     }
 
-    private int fetchAbsoluteX(Cpu cpu) {
+    private int fetchAbsoluteX(GateLevelCpu cpu) {
         return cpu.readSystemBus((cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF);
     }
 
-    private int fetchAbsoluteY(Cpu cpu) {
+    private int fetchAbsoluteY(GateLevelCpu cpu) {
         return cpu.readSystemBus((cpu.fetchNextAddress() + cpu.getRegisterY()) & 0xFFFF);
     }
 
-    private int fetchIndexedIndirectX(Cpu cpu) {
+    private int fetchIndexedIndirectX(GateLevelCpu cpu) {
         int zpAddress = (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
         int lowByte = cpu.readSystemBus(zpAddress);
         int highByte = cpu.readSystemBus((zpAddress + 1) & 0xFF);
@@ -86,7 +86,7 @@ public class CompareGroup implements InstructionGroup {
         return cpu.readSystemBus(effectiveAddress);
     }
 
-    private int fetchIndirectIndexedY(Cpu cpu) {
+    private int fetchIndirectIndexedY(GateLevelCpu cpu) {
         int zpAddress = cpu.fetchNextByte();
         int lowByte = cpu.readSystemBus(zpAddress);
         int highByte = cpu.readSystemBus((zpAddress + 1) & 0xFF);

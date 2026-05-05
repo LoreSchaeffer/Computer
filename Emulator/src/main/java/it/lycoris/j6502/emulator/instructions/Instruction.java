@@ -1,6 +1,6 @@
 package it.lycoris.j6502.emulator.instructions;
 
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 
 /**
  * Functional interface representing a single CPU instruction execution sequence.
@@ -14,5 +14,5 @@ public interface Instruction {
      *
      * @param cpu The target CPU executing the instruction.
      */
-    void execute(Cpu cpu);
+    void execute(GateLevelCpu cpu);
 }

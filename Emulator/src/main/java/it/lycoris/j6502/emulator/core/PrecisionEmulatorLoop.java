@@ -1,5 +1,6 @@
 package it.lycoris.j6502.emulator.core;
 
+import it.lycoris.j6502.emulator.core.cpu.Cpu;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -2,7 +2,7 @@ package it.lycoris.j6502.emulator.instructions.microcode;
 
 import it.lycoris.j6502.emulator.instructions.InstructionGroup;
 import it.lycoris.j6502.emulator.instructions.OpcodeMetadata;
-import it.lycoris.j6502.emulator.core.Cpu;
+import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
 import it.lycoris.j6502.hardware.generated.MOS6502;
 
 import java.util.Map;
@@ -61,42 +61,42 @@ public class LoadStoreGroup implements InstructionGroup {
     // ADDRESSING MODE RESOLUTION
     // ========================================================================
 
-    private int fetchImmediate(Cpu cpu) {
+    private int fetchImmediate(GateLevelCpu cpu) {
         return cpu.fetchNextByte();
     }
 
-    private int resolveZeroPage(Cpu cpu) {
+    private int resolveZeroPage(GateLevelCpu cpu) {
         return cpu.fetchNextByte();
     }
 
-    private int resolveZeroPageX(Cpu cpu) {
+    private int resolveZeroPageX(GateLevelCpu cpu) {
         return (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
     }
 
-    private int resolveZeroPageY(Cpu cpu) {
+    private int resolveZeroPageY(GateLevelCpu cpu) {
         return (cpu.fetchNextByte() + cpu.getRegisterY()) & 0xFF;
     }
 
-    private int resolveAbsolute(Cpu cpu) {
+    private int resolveAbsolute(GateLevelCpu cpu) {
         return cpu.fetchNextAddress();
     }
 
-    private int resolveAbsoluteX(Cpu cpu) {
+    private int resolveAbsoluteX(GateLevelCpu cpu) {
         return (cpu.fetchNextAddress() + cpu.getRegisterX()) & 0xFFFF;
     }
 
-    private int resolveAbsoluteY(Cpu cpu) {
+    private int resolveAbsoluteY(GateLevelCpu cpu) {
         return (cpu.fetchNextAddress() + cpu.getRegisterY()) & 0xFFFF;
     }
 
-    private int resolveIndexedIndirectX(Cpu cpu) {
+    private int resolveIndexedIndirectX(GateLevelCpu cpu) {
         int zpAddress = (cpu.fetchNextByte() + cpu.getRegisterX()) & 0xFF;
         int lowByte = cpu.readSystemBus(zpAddress);
         int highByte = cpu.readSystemBus((zpAddress + 1) & 0xFF);
         return (highByte << 8) | lowByte;
     }
 
-    private int resolveIndirectIndexedY(Cpu cpu) {
+    private int resolveIndirectIndexedY(GateLevelCpu cpu) {
         int zpAddress = cpu.fetchNextByte();
         int lowByte = cpu.readSystemBus(zpAddress);
         int highByte = cpu.readSystemBus((zpAddress + 1) & 0xFF);
@@ -108,7 +108,7 @@ public class LoadStoreGroup implements InstructionGroup {
     // HARDWARE EXECUTION LOGIC
     // ========================================================================
 
-    private void loadA(Cpu cpu, int value) {
+    private void loadA(GateLevelCpu cpu, int value) {
         MOS6502 datapath = cpu.getDatapath();
 
         cpu.assertDataBus(value);
@@ -124,7 +124,7 @@ public class LoadStoreGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(value);
     }
 
-    private void loadX(Cpu cpu, int value) {
+    private void loadX(GateLevelCpu cpu, int value) {
         MOS6502 datapath = cpu.getDatapath();
 
         cpu.assertDataBus(value);
@@ -138,7 +138,7 @@ public class LoadStoreGroup implements InstructionGroup {
         cpu.forceZeroAndNegativeFlags(value);
     }
 
-    private void loadY(Cpu cpu, int value) {
+    private void loadY(GateLevelCpu cpu, int value) {
         MOS6502 datapath = cpu.getDatapath();
 
         cpu.assertDataBus(value);
