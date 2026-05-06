@@ -50,10 +50,10 @@ public class TileGraphicsPpu implements BusDevice {
 
     private static final int CHR_RAM_OFFSET = 0x0000;
     private static final int NAMETABLE_OFFSET = 0x1000;
-    private static final int PPU_CTRL_REG = 0x1080;
-    private static final int PPU_STATUS_REG = 0x1081;
-    private static final int OAM_ADDR_REG = 0x1082;
-    private static final int OAM_DATA_REG = 0x1083;
+    private static final int PPU_CTRL_REG = 0x1300;
+    private static final int PPU_STATUS_REG = 0x1301;
+    private static final int OAM_ADDR_REG = 0x1302;
+    private static final int OAM_DATA_REG = 0x1303;
 
     /**
      * Initializes the PPU with a dynamic frequency target to ensure 60Hz NMI triggers.

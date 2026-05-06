@@ -1,14 +1,14 @@
 ; ==============================================================================
-; Lyco-8 Native OS Video Driver
+; Lyco-8 Native OS Video Driver (32x24 Resolution)
 ; Direct memory-mapped text rendering on the TileGraphicsPpu
 ; ==============================================================================
 
 * = $8000                       ; ROM Entry Point
 
 ; --- Memory Mapped I/O ---
-KEYBOARD_IN     = $4000         ; Read ASCII input here (0x00 if no key pressed)
-PPU_NAMETABLE   = $3000         ; Video RAM (16x8 grid, 128 bytes total)
-PPU_CTRL        = $3080         ; PPU Control Register
+KEYBOARD_IN     = $4000         ; Read ASCII input here (0x00 if no key pressed)[cite: 12]
+PPU_NAMETABLE   = $3000         ; Video RAM (32x24 grid, 768 bytes total)[cite: 12]
+PPU_CTRL        = $3300         ; PPU Control Register (Ora in zona sicura!)
 
 ; --- Zero Page Variables ---
 CURSOR_POINTER  = $00           ; 16-bit pointer to the current screen position
@@ -49,7 +49,7 @@ PRINT_BOOT_MSG:
 BOOT_DONE:
     JSR PRINT_NEW_PROMPT        ; Print "> "
 
-    ; Enable PPU rendering (Ensure screen refreshes)
+    ; Enable PPU rendering and Hardware NMI (VBlank)
     LDA #$80
     STA PPU_CTRL
 
@@ -86,17 +86,17 @@ HALT_SYSTEM:
 ; ==============================================================================
 
 ; ------------------------------------------------------------------------------
-; CLEAR_SCREEN: Fills the 128 bytes of the Nametable with Space characters
+; CLEAR_SCREEN: Fills the 768 bytes of the Nametable (32x24) with Spaces
 ; ------------------------------------------------------------------------------
 CLEAR_SCREEN:
     LDA #ASCII_SPACE
     LDY #$00
 CLEAR_LOOP:
-    STA PPU_NAMETABLE, Y            ; Pulisce da $3000 a $30FF (256 byte)
-    STA PPU_NAMETABLE + $0100, Y    ; Pulisce da $3100 a $31FF (256 byte)
-    STA PPU_NAMETABLE + $0200, Y    ; Pulisce da $3200 a $32FF (256 byte)
+    STA PPU_NAMETABLE, Y            ; Clear from $3000 to $30FF (256 bytes)
+    STA PPU_NAMETABLE + $0100, Y    ; Clear from $3100 to $31FF (256 bytes)
+    STA PPU_NAMETABLE + $0200, Y    ; Clear from $3200 to $32FF (256 bytes)
     INY
-    BNE CLEAR_LOOP                  ; Continua finché Y non torna a 0 (overflow a 256)
+    BNE CLEAR_LOOP                  ; Continue until Y wraps to 0
     RTS
 
 ; ------------------------------------------------------------------------------
@@ -110,8 +110,8 @@ PRINT_NEW_PROMPT:
     RTS
 
 ; ------------------------------------------------------------------------------
-; PRINT_CHAR: Prints a single character and advances the memory cursor
-; Handles Line Feeds by advancing the pointer to the next multiple of 16
+; PRINT_CHAR: Prints a single character and advances the memory cursor.
+; Handles Line Feeds by advancing the pointer to the next multiple of 32.
 ; ------------------------------------------------------------------------------
 PRINT_CHAR:
     CMP #ASCII_LF               ; Is it a Line Feed?
@@ -127,31 +127,72 @@ PRINT_CHAR:
     INC CURSOR_POINTER + 1
 
 CHECK_WRAP:
-    ; Se il cursore raggiunge $3300 (fine dello schermo: $3000 + $0300)
+    ; Check if cursor has reached or exceeded $3300 (End of 32x24 screen)
     LDA CURSOR_POINTER + 1
     CMP #$33
-    BNE EXIT_PRINT
+    BNE EXIT_PRINT              ; If high byte is not $33, we are still on screen
 
-    ; Screen overflow rilevato: riporta il cursore in alto a sinistra ($3000)
-    LDA #$00
+    ; Screen overflow detected! We must scroll the entire screen up.
+    JSR SCROLL_UP
+
+    ; After scrolling, place the cursor at the start of the LAST row ($32E0)
+    LDA #$E0
     STA CURSOR_POINTER
-    LDA #$30
+    LDA #$32
     STA CURSOR_POINTER + 1
 
 EXIT_PRINT:
     RTS
 
 HANDLE_LF:
-    ; Avanza il cursore alla prossima riga (multiplo di 32 = $20)
+    ; Advance cursor to the start of the next line (multiple of 32 = $20)
     LDA CURSOR_POINTER
-    AND #$E0                    ; Azzera i 5 bit più bassi (da 0 a 31)
+    AND #$E0                    ; Clear the lower 5 bits (0 to 31)
     CLC
-    ADC #$20                    ; Aggiunge 32 ($20)
+    ADC #$20                    ; Add 32 ($20)
     STA CURSOR_POINTER
 
-    BCC CHECK_WRAP              ; Se non c'è riporto, controlla il fondo dello schermo
-    INC CURSOR_POINTER + 1      ; Riporto sul byte alto
+    BCC CHECK_WRAP              ; If addition didn't overflow, check wrapping
+    INC CURSOR_POINTER + 1      ; Carry over to high byte
     JMP CHECK_WRAP
+
+; ------------------------------------------------------------------------------
+; SCROLL_UP: Shifts the entire screen up by one row (32 bytes)
+; and clears the bottom row with space characters.
+; Screen is at $3000 - $32FF.
+; ------------------------------------------------------------------------------
+SCROLL_UP:
+    LDY #$00
+
+@COPY_BLOCK_1:
+    LDA $3020, Y                ; Read from row 1 onwards
+    STA $3000, Y                ; Write to row 0 onwards
+    INY
+    BNE @COPY_BLOCK_1           ; Copy first 256 bytes
+
+@COPY_BLOCK_2:
+    LDA $3120, Y
+    STA $3100, Y
+    INY
+    BNE @COPY_BLOCK_2           ; Copy next 256 bytes
+
+@COPY_BLOCK_3:
+    LDA $3220, Y
+    STA $3200, Y
+    INY
+    CPY #$E0                    ; Copy last 224 bytes (736 total)
+    BNE @COPY_BLOCK_3
+
+    ; Clear the last line (from $32E0 to $32FF) with spaces
+    LDY #$00
+    LDA #ASCII_SPACE
+@CLEAR_LAST_LINE:
+    STA $32E0, Y
+    INY
+    CPY #$20                    ; Clear exactly 32 characters
+    BNE @CLEAR_LAST_LINE
+
+    RTS
 
 ; ==============================================================================
 ; DATA SECTION
@@ -161,9 +202,21 @@ MSG_BOOT:
     .BYTE "READY", ASCII_LF, 0
 
 ; ==============================================================================
+; HARDWARE INTERRUPT HANDLERS
+; ==============================================================================
+NMI_HANDLER:
+    ; Triggered 60 times a second by the PPU (VBlank)
+    ; Safely return execution to the interrupted code
+    RTI
+
+IRQ_HANDLER:
+    ; Triggered by external hardware (timers, sound chips)
+    RTI
+
+; ==============================================================================
 ; HARDWARE VECTORS
 ; ==============================================================================
 * = $FFFA
-    .BYTE $00, $80              ; NMI Vector
-    .BYTE $00, $80              ; Reset Vector
-    .BYTE $00, $80              ; IRQ/BRK Vector
+    .WORD NMI_HANDLER           ; $FFFA/B: NMI Vector
+    .WORD RESET                 ; $FFFC/D: Reset Vector
+    .WORD IRQ_HANDLER           ; $FFFE/F: IRQ/BRK Vector

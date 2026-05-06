@@ -89,6 +89,10 @@ public class Display extends JFrame {
 
                 if (keyCode == KeyEvent.VK_ESCAPE) {
                     keyboard.pressKey(0x1B);
+                } else if (keyCode == KeyEvent.VK_ENTER) {
+                    keyboard.pressKey(0x0D);
+                } else if (keyCode == KeyEvent.VK_BACK_SPACE) {
+                    keyboard.pressKey(0x08);
                 } else {
                     char keyChar = Character.toUpperCase(event.getKeyChar());
                     if (keyChar >= 32 && keyChar <= 126) keyboard.pressKey(keyChar);

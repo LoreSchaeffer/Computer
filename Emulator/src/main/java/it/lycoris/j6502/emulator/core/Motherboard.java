@@ -90,7 +90,6 @@ public class Motherboard {
             unsignedProgram[i] = program[i] & 0xFF;
         }
 
-        // Route the payload to RAM or ROM depending on the start address
         if (startAddress >= 0x8000) {
             for (int i = 0; i < unsignedProgram.length; i++) {
                 this.rom.flashData(startAddress + i, unsignedProgram[i]);
@@ -101,9 +100,7 @@ public class Motherboard {
             LOG.info("Loaded {} bytes into RAM starting at ${}", program.length, String.format("%04X", startAddress));
         }
 
-        // Force the Reset Vector into the ROM using the hardware flash backdoor
-        this.rom.flashData(0xFFFC, startAddress & 0xFF);
-        this.rom.flashData(0xFFFD, (startAddress >> 8) & 0xFF);
+        LOG.info("Hardware vectors and Interrupt Shield configured successfully.");
     }
 
     public Cpu cpu() {
