@@ -1,130 +1,141 @@
 grammar LycoScript;
 
-// ========================================================================
-// PARSER RULES (Syntax Definition)
-// ========================================================================
+// =============================================================================
+// PARSER RULES (Syntax)
+// These rules define the logical structure of the code.
+// Rule names must begin with a lowercase letter.
+// =============================================================================
 
-/**
- * The root of our LycoScript program.
- * A program is a sequence of declarations ending with the End Of File (EOF).
- */
+// The entry point of a LycoScript file.
+// A program is a sequence of zero or more statements, followed by the End Of File.
 program: declaration* EOF;
 
 declaration
-    : constantDecl
-    | variableDecl
-    | functionDecl
+    : structDeclaration
+    | functionDeclaration
+    | globalVariableDeclaration
     ;
 
-/**
- * Constants are resolved at compile-time and map to Assembly Equates.
- * Example: const pointer SCREEN = $2000;
- */
-constantDecl: 'const' type IDENTIFIER '=' expression ';';
+structDeclaration
+    : 'struct' identifier '{' structField* '}' ';'          # StructDef
+    ;
 
-/**
- * Variables are 8-bit or 16-bit memory locations (typically Zero Page).
- * Example: byte color = $05;
- */
-variableDecl: type IDENTIFIER ('=' expression)? ';';
+structField
+    : type identifier ';'                                   # StructSimpleField
+    | type identifier '[' NUMBER ']' ';'                    # StructArrayField
+    ;
 
-/**
- * Functions support parameters and a code block.
- * Example: void main() { ... }
- */
-functionDecl: type IDENTIFIER '(' parameterList? ')' block;
+functionDeclaration
+    : (type | 'void') identifier '(' paramList? ')' '{' statement* '}' # FuncDef
+    ;
 
-parameterList: parameter (',' parameter)*;
-parameter: type IDENTIFIER;
+paramList
+    : type identifier (',' type identifier)*
+    ;
 
-/**
- * Supported data types.
- * byte: 8-bit unsigned integer (0-255).
- * pointer: 16-bit memory address.
- * void: Used only for function return types.
- */
-type: 'byte' | 'pointer' | 'void';
-
-/**
- * A block of code enclosed in braces. Defines a new variable scope.
- */
-block: '{' statement* '}';
+globalVariableDeclaration
+    : 'const'? type identifier '=' expression ';'           # GlobalVarDecl
+    | type identifier '[' NUMBER ']' ';'                    # GlobalArrayDecl
+    ;
 
 statement
-    : variableDecl
-    | assignmentStatement
-    | ifStatement
-    | whileStatement
-    | functionCallStatement
-    | returnStatement
-    | block
+    // Local Variables
+    : 'const'? type identifier '=' expression ';'           # LocalVarDecl
+    | type identifier '[' NUMBER ']' ';'                    # LocalArrayDecl
+
+    // Assignments
+    | identifier '=' expression ';'                         # VarAssignment
+    | identifier '[' expression ']' '=' expression ';'      # ArrayAssignment
+    | identifier '.' identifier '=' expression ';'          # StructFieldAssignment
+    | '*' identifier '=' expression ';'                     # PointerAssignment
+
+    // Control Flow
+    | 'while' '(' expression ')' '{' statement* '}'                                 # WhileLoop
+        | 'for' '(' forInit? ';' expression? ';' forUpdate? ')' '{' statement* '}'  # ForLoop
+        | 'for' '(' type identifier ':' identifier ')' '{' statement* '}'           # ForEachLoop
+    | 'if' '(' expression ')' '{' statement* '}' ('else' '{' statement* '}')?       # IfElseBlock
+
+    // Function calls and returns
+    | identifier '(' argList? ')' ';'                       # FunctionCallStmt
+    | 'return' expression? ';'                              # ReturnStmt
     ;
 
-/**
- * Assignments handle direct variables and pointer dereferencing.
- * Direct: a = 5;
- * Pointer: SCREEN[0] = $FF;
- */
-assignmentStatement
-    : IDENTIFIER '=' expression ';'
-    | IDENTIFIER '[' expression ']' '=' expression ';'
+forInit
+    : type identifier '=' expression
+    | identifier '=' expression
     ;
 
-functionCallStatement: functionCall ';';
+forUpdate
+    : identifier '=' expression
+    ;
 
-ifStatement: 'if' '(' expression ')' block ('else' block)?;
+argList
+    : expression (',' expression)*
+    ;
 
-whileStatement: 'while' '(' expression ')' block;
-
-returnStatement: 'return' expression? ';';
-
-/**
- * Expressions with operator precedence.
- * ANTLR4 implicitly handles precedence based on the order of rules (top is highest).
- */
 expression
-    : IDENTIFIER '[' expression ']'                                  # PointerAccessExpr
-    | functionCall                                                   # FunctionCallExpr
-    | ('-' | '!') expression                                         # UnaryExpr
-    | expression ('*' | '/') expression                              # MulDivExpr
-    | expression ('+' | '-') expression                              # AddSubExpr
-    | expression ('==' | '!=' | '<' | '>' | '<=' | '>=') expression  # RelationalExpr
-    | expression ('&' | '|' | '^') expression                        # BitwiseExpr
-    | IDENTIFIER                                                     # IdExpr
-    | NUMBER                                                         # NumberExpr
-    | HEX_NUMBER                                                     # HexExpr
-    | CHAR_LITERAL                                                   # CharExpr
-    | STRING_LITERAL                                                 # StringExpr
-    | '(' expression ')'                                             # ParenExpr
+    // Function Call in Expression (e.g., x = getRandom();)
+    : identifier '(' argList? ')'                           # FunctionCallExpr
+
+    // Struct and Array Access
+    | identifier '.' identifier                             # StructFieldAccessExpr
+    | identifier '[' expression ']'                         # ArrayAccessExpr
+
+    // Unary Operators (Pointers & Logic)
+    | '&' identifier                                        # AddressOfExpr
+    | '*' identifier                                        # DereferenceExpr
+    | '!' expression                                        # LogicalNotExpr
+    | '~' expression                                        # BitwiseNotExpr
+
+    // Math Operations (Precedence rules apply top to bottom)
+    | left=expression op=('*' | '/') right=expression       # MathMulDivExpr
+    | left=expression op=('+' | '-') right=expression       # MathAddSubExpr
+
+    // Bitwise Shift
+    | left=expression op=('<<' | '>>') right=expression     # BitwiseShiftExpr
+
+    // Relational (Comparison)
+    | left=expression op=('<' | '<=' | '>' | '>=') right=expression # RelationalExpr
+    | left=expression op=('==' | '!=') right=expression     # EqualityExpr
+
+    // Bitwise Logic
+    | left=expression '&' right=expression                  # BitwiseAndExpr
+    | left=expression '^' right=expression                  # BitwiseXorExpr
+    | left=expression '|' right=expression                  # BitwiseOrExpr
+
+    // Literals and Variables
+    | NUMBER                                                # NumberExpr
+    | HEX_NUMBER                                            # HexNumberExpr
+    | STRING_LITERAL                                        # StringExpr
+    | CHAR_LITERAL                                          # CharExpr
+    | TRUE                                                  # BooleanTrueExpr
+    | FALSE                                                 # BooleanFalseExpr
+    | identifier                                            # IdentifierExpr
+    | '(' expression ')'                                    # ParenthesisExpr
     ;
 
-functionCall: IDENTIFIER '(' argumentList? ')';
-argumentList: expression (',' expression)*;
+// Supported data types. For a 6502 CPU, an 8-bit 'byte' is highly recommended.
+type: 'int' | 'byte' | 'boolean' | 'char' | 'string' | type '*';
 
-// ========================================================================
-// LEXER RULES (Tokenization)
-// ========================================================================
+identifier: ID;
 
-// Keywords
-CONST: 'const';
-BYTE: 'byte';
-POINTER: 'pointer';
-VOID: 'void';
-IF: 'if';
-ELSE: 'else';
-WHILE: 'while';
-RETURN: 'return';
+// =============================================================================
+// LEXER RULES (Tokens)
+// These rules define the vocabulary of the language.
+// Rule names must begin with an UPPERCASE letter.
+// =============================================================================
 
-// Identifiers (Variables and Function names)
-IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+ID: [a-zA-Z_] [a-zA-Z0-9_]*;
 
-// Numeric and String Literals
-NUMBER: [0-9]+;
-HEX_NUMBER: '$' [0-9a-fA-F]+;
+TRUE: 'true';
+FALSE: 'false';
+
+STRING_LITERAL: '"' (~["\r\n\\] | '\\' .)* '"';
 CHAR_LITERAL: '\'' . '\'';
-STRING_LITERAL: '"' ~["]* '"';
 
-// Whitespace and Comments (Ignored by the parser)
-WS: [ \t\r\n]+ -> channel(HIDDEN);
-LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);
-BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
+HEX_NUMBER: '0' [xX] [0-9a-fA-F]+;
+NUMBER: [0-9]+;
+
+WS: [ \t\r\n]+ -> skip;
+LINE_COMMENT: '//' ~[\r\n]* -> skip;
+BLOCK_COMMENT: '/*' .*? '*/' -> skip;
