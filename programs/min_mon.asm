@@ -11,24 +11,24 @@
 KEYBOARD_IN     = $4000
 PPU_NAMETABLE   = $3000
 PPU_CTRL        = $3300
+VFS_COMMAND     = $4100         ; Virtual File System interface
 
-; --- Variabili Zero Page (Libere da EhBASIC) ---
+; --- Zero Page Variables (Guaranteed free by EhBASIC) ---
 CURSOR_POINTER  = $E0
-BLINK_COUNTER   = $E2           ; Timer per il lampeggio (0-30)
-CURSOR_STATE    = $E3           ; 0 = spento, 1 = acceso
-CHAR_UNDER_CUR  = $E4           ; Salva il carattere sotto il cursore
+BLINK_COUNTER   = $E2           ; Timer for blinking cursor
+CURSOR_STATE    = $E3           ; 0 = off, 1 = on
+CHAR_UNDER_CUR  = $E4           ; Memory for the character covered by the cursor
+CHAR_TO_PRINT   = $E5           ; Safe backup for Accumulator
+SAVE_X          = $E6           ; Safe backup for X register
+SAVE_Y          = $E7           ; Safe backup for Y register
 
-CHAR_TO_PRINT   = $E5           ; Backup sicuro per l'Accumulatore
-SAVE_X          = $E6           ; Backup sicuro per il registro X
-SAVE_Y          = $E7           ; Backup sicuro per il registro Y
-
-; --- Costanti ASCII ---
-ASCII_BS        = $08           ; Backspace
-ASCII_CR        = $0D
-ASCII_LF        = $0A
-ASCII_PROMPT    = $3E
-ASCII_SPACE     = $20
-ASCII_CURSOR    = $5F           ; Underscore '_'
+; --- ASCII Constants ---
+ASCII_BS        = $08           ; Backspace (Sent by EhBASIC)
+ASCII_CR        = $0D           ; Carriage Return
+ASCII_LF        = $0A           ; Line Feed
+ASCII_PROMPT    = $3E           ; ">"
+ASCII_SPACE     = $20           ; " "
+ASCII_CURSOR    = $5F           ; "_" (Cursor symbol)
 
 .segment "BIOS"
 
@@ -37,7 +37,7 @@ RES_vec:
     LDX #$FF
     TXS
 
-    ; --- INIZIALIZZAZIONE HARDWARE LYCO-8 ---
+    ; --- LYCO-8 HARDWARE INITIALIZATION ---
     JSR CLEAR_SCREEN
     LDA #$00
     STA CURSOR_POINTER
@@ -52,7 +52,7 @@ RES_vec:
     STA PPU_CTRL
     ; ----------------------------------------
 
-    ; FONDAMENTALE: Copia solo i 4 vettori, NON tutto il codice!
+    ; VITAL: Copy only the 4 pointers, NOT the entire code block!
     LDY #END_VECS-LAB_vec
 LAB_stlp:
     LDA LAB_vec-1,Y
@@ -71,7 +71,7 @@ LAB_nokey:
     JSR V_INPT
     BCC LAB_nokey
 
-    AND #$DF            ; Forza maiuscole
+    AND #$DF            ; Force uppercase
     CMP #'W'
     BEQ LAB_dowarm
 
@@ -87,36 +87,36 @@ LAB_dowarm:
 ; LYCO-8 HARDWARE ABSTRACTION LAYER (HAL)
 ; ==============================================================================
 
-; --- OUTPUT A SCHERMO ---
+; --- SCREEN OUTPUT ---
 ACIAout:
-    ; Salvataggio antiproiettile in Zero Page
+    ; Bulletproof Zero Page backup
     STA CHAR_TO_PRINT
     STX SAVE_X
     STY SAVE_Y
 
-    ; Prima di stampare o muoversi, spegne il cursore per non lasciare scie
+    ; Temporarily turn off cursor before printing
     JSR ERASE_CURSOR
 
     LDA CHAR_TO_PRINT
-    CMP #ASCII_CR       ; Ignora CR
+    CMP #ASCII_CR       ; Ignore CR
     BEQ @SKIP
-    CMP #ASCII_BS       ; Intercetta Backspace
+    CMP #ASCII_BS       ; Intercept Backspace
     BEQ @BACKSPACE
 
-    JSR PRINT_CHAR      ; Stampa normale
+    JSR PRINT_CHAR      ; Otherwise, print normally
     JMP @SKIP
 
 @BACKSPACE:
     JSR HANDLE_BACKSPACE
 
 @SKIP:
-    ; Ripristino antiproiettile
+    ; Bulletproof restore from Zero Page
     LDX SAVE_X
     LDY SAVE_Y
     LDA CHAR_TO_PRINT
     RTS
 
-; --- INPUT TASTIERA ---
+; --- KEYBOARD INPUT ---
 ACIAin:
     LDA KEYBOARD_IN
     BEQ LAB_nobyw
@@ -125,12 +125,29 @@ ACIAin:
 
 LAB_nobyw:
     CLC
-no_load:
-no_save:
+    RTS
+
+; --- VFS HOST CALLS ---
+DO_LOAD:
+    LDA #$01            ; 0x01 = Comando LOAD per Java
+    STA VFS_COMMAND     ; La CPU va in pausa qui finché non chiudi il File Selector!
+
+    ; Handshake: Legge la risposta di Java
+    LDA VFS_COMMAND
+    CMP #$FF            ; Se Java ha risposto con FF, ha iniettato un binario e serve un riavvio!
+    BEQ LAB_dowarm      ; Salta al Warm Start (riavvia l'OS senza cancellare la RAM)
+
+    CLC                 ; Altrimenti, se era testo, torna normalmente al BASIC
+    RTS
+
+DO_SAVE:
+    LDA #$02
+    STA VFS_COMMAND
+    CLC
     RTS
 
 ; ==============================================================================
-; DRIVER VIDEO LYCO-8
+; LYCO-8 VIDEO DRIVER
 ; ==============================================================================
 
 ERASE_CURSOR:
@@ -138,29 +155,30 @@ ERASE_CURSOR:
     BEQ @DONE
     LDA #$00
     STA CURSOR_STATE
-    STA BLINK_COUNTER       ; Resetta il timer
+    STA BLINK_COUNTER       ; Reset timer
     LDY #$00
     LDA CHAR_UNDER_CUR
-    STA (CURSOR_POINTER), Y ; Ripristina il carattere originale
+    STA (CURSOR_POINTER), Y ; Restore original character
 @DONE:
     RTS
 
 HANDLE_BACKSPACE:
-    ; Evita di cancellare oltre l'inizio dello schermo ($3000)
+    ; Prevent erasing past the start of VRAM ($3000)
     LDA CURSOR_POINTER + 1
     CMP #$30
     BNE @DO_BACKSPACE
     LDA CURSOR_POINTER
     BEQ @DONE
+
 @DO_BACKSPACE:
-    ; Decrementa il cursore a 16-bit
+    ; Retreat pointer by 1 step (16-bit)
     LDA CURSOR_POINTER
     BNE @NO_WRAP
     DEC CURSOR_POINTER + 1
 @NO_WRAP:
     DEC CURSOR_POINTER
 
-    ; Cancella il carattere scrivendo uno spazio
+    ; Overwrite old character with whitespace
     LDA #ASCII_SPACE
     LDY #$00
     STA (CURSOR_POINTER), Y
@@ -239,14 +257,14 @@ SCROLL_UP:
     RTS
 
 ; ==============================================================================
-; VETTORI DI SISTEMA EHBASIC E INTERRUPT
+; EHBASIC SYSTEM VECTORS & HARDWARE INTERRUPTS
 ; ==============================================================================
 LAB_vec:
     .word   ACIAin
     .word   ACIAout
-    .word   no_load
-    .word   no_save
-END_VECS:               ; FONDAMENTALE: Il limite della copia in RAM!
+    .word   DO_LOAD         ; Linked to Virtual File System Host hook
+    .word   DO_SAVE         ; Linked to Virtual File System Host hook
+END_VECS:                   ; VITAL: Boundary limit for RAM copy!
 
 IRQ_CODE:
     PHA
@@ -258,16 +276,17 @@ IRQ_CODE:
     RTI
 
 NMI_CODE:
+    ; Minimal stack save for Interrupt duration only
     PHA
     TXA
     PHA
     TYA
     PHA
 
-    ; --- LOGICA CURSORE LAMPEGGIANTE ---
+    ; --- BLINKING CURSOR LOGIC ---
     INC BLINK_COUNTER
     LDA BLINK_COUNTER
-    CMP #30              ; Lampeggia ogni 30 frame (mezzo secondo)
+    CMP #30              ; Timer: blink every half second (at 60 FPS)
     BNE @SKIP_BLINK
 
     LDA #$00
@@ -281,15 +300,15 @@ NMI_CODE:
 @TURN_ON:
     LDY #$00
     LDA (CURSOR_POINTER), Y
-    STA CHAR_UNDER_CUR
+    STA CHAR_UNDER_CUR       ; Save character under cursor
     LDA #ASCII_CURSOR
-    STA (CURSOR_POINTER), Y
+    STA (CURSOR_POINTER), Y  ; Draw "_"
     JMP @SKIP_BLINK
 
 @TURN_OFF:
     LDY #$00
     LDA CHAR_UNDER_CUR
-    STA (CURSOR_POINTER), Y
+    STA (CURSOR_POINTER), Y  ; Remove "_"
 
 @SKIP_BLINK:
     PLA
@@ -298,7 +317,7 @@ NMI_CODE:
     TAX
     PLA
 
-    ; Logica originale NMI di EhBASIC
+    ; Original EhBASIC NMI logic
     PHA
     LDA NmiBase
     LSR
@@ -310,10 +329,10 @@ NMI_CODE:
 END_CODE:
 
 LAB_mess:
-    .byte   $0D,$0A,"LYCO-8 BASIC [C]OLD/[W]ARM ?",$00
+    .byte   $0D,$0A,"LYCO-8 EHBASIC [C]OLD/[W]ARM ?",$00
 
 .segment "VECTORS"
-    ; FONDAMENTALE: Puntiamo i vettori direttamente in ROM, salvando la RAM!
+    ; Pointing hardware vectors safely to ROM
     .word   NMI_CODE
     .word   RES_vec
     .word   IRQ_CODE

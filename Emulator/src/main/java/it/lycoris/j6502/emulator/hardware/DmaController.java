@@ -1,5 +1,6 @@
 package it.lycoris.j6502.emulator.hardware;
 
+import it.lycoris.j6502.emulator.core.MemoryMap;
 import it.lycoris.j6502.emulator.core.SystemBus;
 import it.lycoris.j6502.emulator.core.cpu.Cpu;
 import it.lycoris.j6502.emulator.core.cpu.GateLevelCpu;
@@ -13,11 +14,10 @@ import org.slf4j.LoggerFactory;
  */
 public class DmaController implements BusDevice {
     private static final Logger LOG = LoggerFactory.getLogger(DmaController.class);
-    private static final int DMA_REGISTER_ADDRESS = 0x4014;
 
     private final int debugLevel;
     private final SystemBus systemBus;
-    private final TileGraphicsPpu ppu;
+    private final Ppu ppu;
     private Cpu cpu;
 
     /**
@@ -28,7 +28,7 @@ public class DmaController implements BusDevice {
      * @param ppu        The target PPU containing the OAM.
      * @param debugLevel The verbosity level for debug logging (-1 = none, higher values = more verbose).
      */
-    public DmaController(SystemBus systemBus, GateLevelCpu cpu, TileGraphicsPpu ppu, int debugLevel) {
+    public DmaController(SystemBus systemBus, GateLevelCpu cpu, Ppu ppu, int debugLevel) {
         this.systemBus = systemBus;
         this.cpu = cpu;
         this.ppu = ppu;
@@ -37,7 +37,7 @@ public class DmaController implements BusDevice {
 
     @Override
     public boolean accepts(int address) {
-        return address == DMA_REGISTER_ADDRESS;
+        return address == MemoryMap.DMA_REGISTER;
     }
 
     @Override
@@ -47,9 +47,7 @@ public class DmaController implements BusDevice {
 
     @Override
     public void write(int address, int value) {
-        if (address == DMA_REGISTER_ADDRESS) {
-            // The value written determines the high byte (page) of RAM to copy.
-            // E.g., writing $02 copies the page $0200 - $02FF.
+        if (address == MemoryMap.DMA_REGISTER) {
             int pageAddress = (value & 0xFF) << 8;
 
             if (LOG.isDebugEnabled() && debugLevel > 0) LOG.debug("DMA Transfer initiated. Copying memory page ${} to PPU OAM.", String.format("%04X", pageAddress));
@@ -59,14 +57,7 @@ public class DmaController implements BusDevice {
                 this.ppu.writeOamDataDirectly(dataByte);
             }
 
-            // A DMA transfer natively costs 512 clock cycles on the 6502
-            // (1 read cycle + 1 write cycle per byte).
-            this.cpu.suspendCycles(512);
+            this.cpu.suspendCycles(513);
         }
-    }
-
-    public DmaController setCpu(Cpu cpu) {
-        this.cpu = cpu;
-        return this;
     }
 }

@@ -19,7 +19,7 @@ public class SystemBus {
      *
      * @param device The hardware component to attach.
      */
-    public void attachDevice(BusDevice device) {
+    public void registerDevice(BusDevice device) {
         this.devices.add(device);
     }
 

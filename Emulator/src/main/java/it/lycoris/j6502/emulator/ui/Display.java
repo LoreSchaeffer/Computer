@@ -1,7 +1,7 @@
 package it.lycoris.j6502.emulator.ui;
 
 import it.lycoris.j6502.emulator.hardware.Keyboard;
-import it.lycoris.j6502.emulator.hardware.TileGraphicsPpu;
+import it.lycoris.j6502.emulator.hardware.Ppu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +18,7 @@ import java.awt.image.DataBufferInt;
 public class Display extends JFrame {
     private static final int PIXEL_SCALE = 4;
 
-    private final TileGraphicsPpu ppu;
+    private final Ppu ppu;
     private final Keyboard keyboard;
 
     private final BufferedImage screenImage;
@@ -30,13 +30,13 @@ public class Display extends JFrame {
      * @param ppu      The Tile-Based Picture Processing Unit responsible for rendering.
      * @param keyboard The memory-mapped Keyboard device to capture user inputs.
      */
-    public Display(TileGraphicsPpu ppu, Keyboard keyboard) {
+    public Display(Ppu ppu, Keyboard keyboard) {
         this.ppu = ppu;
         this.keyboard = keyboard;
 
         this.screenImage = new BufferedImage(
-                TileGraphicsPpu.SCREEN_WIDTH_PIXELS,
-                TileGraphicsPpu.SCREEN_HEIGHT_PIXELS,
+                Ppu.SCREEN_WIDTH_PIXELS,
+                Ppu.SCREEN_HEIGHT_PIXELS,
                 BufferedImage.TYPE_INT_RGB
         );
 
@@ -60,16 +60,16 @@ public class Display extends JFrame {
                         screenImage,
                         0,
                         0,
-                        TileGraphicsPpu.SCREEN_WIDTH_PIXELS * PIXEL_SCALE,
-                        TileGraphicsPpu.SCREEN_HEIGHT_PIXELS * PIXEL_SCALE,
+                        Ppu.SCREEN_WIDTH_PIXELS * PIXEL_SCALE,
+                        Ppu.SCREEN_HEIGHT_PIXELS * PIXEL_SCALE,
                         null
                 );
             }
         };
 
         renderPanel.setPreferredSize(new Dimension(
-                TileGraphicsPpu.SCREEN_WIDTH_PIXELS * PIXEL_SCALE,
-                TileGraphicsPpu.SCREEN_HEIGHT_PIXELS * PIXEL_SCALE
+                Ppu.SCREEN_WIDTH_PIXELS * PIXEL_SCALE,
+                Ppu.SCREEN_HEIGHT_PIXELS * PIXEL_SCALE
         ));
         renderPanel.setBackground(Color.BLACK);
 
@@ -88,7 +88,7 @@ public class Display extends JFrame {
                 int keyCode = event.getKeyCode();
 
                 if (keyCode == KeyEvent.VK_ESCAPE) {
-                    keyboard.pressKey(0x1B);
+                    keyboard.pressKey(0x03);
                 } else if (keyCode == KeyEvent.VK_ENTER) {
                     keyboard.pressKey(0x0D);
                 } else if (keyCode == KeyEvent.VK_BACK_SPACE) {
@@ -106,7 +106,12 @@ public class Display extends JFrame {
      * Fetches the completed frame from the hardware double-buffer and schedules a UI repaint.
      */
     public void renderFrame() {
-        this.ppu.copyFrameTo(this.displayPixels);
+        int[] sourcePixels = this.ppu.getPixels();
+        System.arraycopy(sourcePixels, 0, this.displayPixels, 0, this.displayPixels.length);
         this.repaint();
+    }
+
+    public void updateTitleWithFps(double fps) {
+        SwingUtilities.invokeLater(() -> this.setTitle(String.format("Lyco-8 Emulator - FPS: %.1f", fps)));
     }
 }

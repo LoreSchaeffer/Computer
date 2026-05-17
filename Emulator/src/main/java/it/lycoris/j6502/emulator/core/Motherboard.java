@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Represents the main board of the emulator, connecting the CPU to memory and peripherals.
+ * Refactored to wire components using the centralized MemoryMap blueprint.
  */
 public class Motherboard {
     private static final Logger LOG = LoggerFactory.getLogger(Motherboard.class);
@@ -20,62 +21,74 @@ public class Motherboard {
 
     private final Cpu cpu;
     private final Ram ram;
-    private final TileGraphicsPpu ppu;
+    private final Ppu ppu;
     private final Apu apu;
     private final Keyboard keyboard;
     private final Joypad joypad;
     private final Rom rom;
+    private final DmaController dmaController;
+    private final VirtualFileSystem vfs;
 
     /**
-     * Initializes the motherboard, soldering all components to the system bus.
+     * Initializes the motherboard and permanently solders components using the static MemoryMap layout.
+     *
+     * @param emulationMode     High-Level or Gate-Level selection.
+     * @param debugLevel        Logging verbosity level.
+     * @param firmware          The 32KB system binary injected via the host bootstrap loader.
      */
-    public Motherboard(EmulationMode emulationMode, int targetFrequencyHz, int debugLevel) {
+    public Motherboard(EmulationMode emulationMode, int debugLevel, int[] firmware) {
         this.debugLevel = debugLevel;
 
         // --------------------------------------------------------------------
         // COMPONENT INITIALIZATION & MEMORY MAP
         // --------------------------------------------------------------------
 
-        this.ram = new Ram(0x0000, 0x2000);
-        this.ppu = new TileGraphicsPpu(0x2000, 0x3FFF, targetFrequencyHz);
-        this.keyboard = new Keyboard(0x4000);
-        this.apu = new Apu(0x5000);
-        this.rom = new Rom(0x8000, new int[0x8000]);
-        this.joypad = new Joypad(0x4016);
+        this.ram = new Ram(MemoryMap.RAM_START, MemoryMap.RAM_SIZE);
+        this.rom = new Rom(MemoryMap.ROM_START, firmware);
 
-        DmaController dmaController = new DmaController(this.bus, null, this.ppu, debugLevel);
-
-        // --------------------------------------------------------------------
-        // BUS ATTACHMENT (Priority Order: Specific I/O first, Broad Memory last)
-        // --------------------------------------------------------------------
-
-        this.bus.attachDevice(this.keyboard);
-        this.bus.attachDevice(this.joypad);
-        this.bus.attachDevice(dmaController);
-        this.bus.attachDevice(this.ppu);
-        this.bus.attachDevice(this.apu);
-
-        this.bus.attachDevice(this.ram);
-        this.bus.attachDevice(this.rom);
-
-        FontInjector fontInjector = new FontInjector();
-        fontInjector.injectFont("fonts/default.png", this.bus, 1, 6);
+        this.ppu = new Ppu(MemoryMap.PPU_START, MemoryMap.PPU_END);
+        this.apu = new Apu(MemoryMap.APU_START);
+        this.keyboard = new Keyboard(MemoryMap.KEYBOARD_IN);
+        this.joypad = new Joypad(MemoryMap.JOYPAD_IN);
+        this.vfs = new VirtualFileSystem(this.ram, this.keyboard);
 
         // --------------------------------------------------------------------
         // CPU INITIALIZATION
         // --------------------------------------------------------------------
 
-        if (emulationMode == EmulationMode.HIGH_LEVEL) {
-            this.cpu = new HighLevelCpu(this.bus);
-            LOG.info("System booted using High-Level Emulation (HLE) engine.");
-        } else {
-            this.cpu = new GateLevelCpu(this.bus, this.instructionSet);
+        if (emulationMode == EmulationMode.GATE_LEVEL) {
+            GateLevelCpu gateCpu = new GateLevelCpu(bus, instructionSet);
+            this.cpu = gateCpu;
+
+            this.dmaController = new DmaController(bus, gateCpu, ppu, debugLevel);
+            this.bus.registerDevice(this.dmaController);
+
             LOG.info("System booted using Gate-Level (Cycle-Accurate) engine.");
+        } else {
+            this.cpu = new HighLevelCpu(bus);
+            this.dmaController = null;
+
+            LOG.info("System booted using High-Level Emulation (HLE) engine.");
         }
 
-        dmaController.setCpu(this.cpu);
+        this.ppu.connectCpu(cpu);
 
-        LOG.info("Motherboard initialized successfully. DMA, Joypad, and legacy Keyboard are fully mapped.");
+        // --------------------------------------------------------------------
+        // BUS ATTACHMENT
+        // --------------------------------------------------------------------
+
+        this.bus.registerDevice(this.ram);
+        this.bus.registerDevice(this.ppu);
+        this.bus.registerDevice(this.apu);
+        this.bus.registerDevice(this.keyboard);
+        this.bus.registerDevice(this.joypad);
+        this.bus.registerDevice(this.rom);
+        this.bus.registerDevice(this.vfs);
+
+        CharRom charRom = new CharRom();
+        charRom.injectFont("/fonts/default.png", this.ppu);
+
+        LOG.info("Motherboard initialized successfully.");
     }
 
     /**
@@ -111,7 +124,7 @@ public class Motherboard {
         return this.bus;
     }
 
-    public TileGraphicsPpu ppu() {
+    public Ppu ppu() {
         return this.ppu;
     }
 

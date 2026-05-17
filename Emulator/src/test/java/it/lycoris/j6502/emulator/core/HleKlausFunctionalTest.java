@@ -47,7 +47,7 @@ public class HleKlausFunctionalTest {
     public void setUp() {
         this.systemBus = new SystemBus();
         this.memory = new Ram(0x0000, 0x10000); // Flat 64KB memory space
-        this.systemBus.attachDevice(this.memory);
+        this.systemBus.registerDevice(this.memory);
 
         this.cpu = new HighLevelCpu(this.systemBus);
         this.instructionMetadataRegistry = new InstructionSet();

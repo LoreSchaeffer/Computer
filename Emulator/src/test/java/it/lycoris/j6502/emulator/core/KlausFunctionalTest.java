@@ -45,7 +45,7 @@ public class KlausFunctionalTest {
     void setUp() {
         this.systemBus = new SystemBus();
         this.memory = new Ram(0x0000, 0x10000); // Flat 64KB memory
-        this.systemBus.attachDevice(this.memory);
+        this.systemBus.registerDevice(this.memory);
 
         instructionSet = new InstructionSet();
         this.cpu = new GateLevelCpu(this.systemBus, instructionSet);

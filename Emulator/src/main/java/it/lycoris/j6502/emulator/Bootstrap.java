@@ -5,8 +5,8 @@ import ch.qos.logback.classic.LoggerContext;
 import it.lycoris.j6502.emulator.core.InstructionSet;
 import it.lycoris.j6502.emulator.core.Motherboard;
 import it.lycoris.j6502.emulator.core.PrecisionEmulatorLoop;
-import it.lycoris.j6502.emulator.ui.HostGamepadPoller;
 import it.lycoris.j6502.emulator.ui.Display;
+import it.lycoris.j6502.emulator.ui.HostGamepadPoller;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -68,8 +68,6 @@ public class Bootstrap {
                 context.getLogger("it.lycoris.j6502.emulator").setLevel(Level.DEBUG);
             }
 
-            Motherboard motherboard = new Motherboard(emulationMode, targetFrequency, debugLevel);
-
             byte[] program;
             if (options.has(inputOpt)) {
                 File binFile = options.valueOf(inputOpt);
@@ -95,8 +93,13 @@ public class Bootstrap {
                 }
             }
 
-            motherboard.loadProgram(origin, program);
-            LOG.info("Program loaded into memory ({} bytes)", program.length);
+            int[] unsignedProgram = new int[program.length];
+            for (int i = 0; i < program.length; i++) {
+                unsignedProgram[i] = program[i] & 0xFF;
+            }
+
+            Motherboard motherboard = new Motherboard(emulationMode, debugLevel, unsignedProgram);
+            motherboard.cpu().reset();
 
             Display window = new Display(motherboard.ppu(), motherboard.keyboard());
             SwingUtilities.invokeLater(() -> window.setVisible(true));
@@ -106,10 +109,12 @@ public class Bootstrap {
             Runtime.getRuntime().addShutdownHook(new Thread(gamepadPoller::stop));
 
             PrecisionEmulatorLoop loop = new PrecisionEmulatorLoop(
+                    motherboard,
+                    window::renderFrame,
+                    window::updateTitleWithFps,
                     TARGET_FPS,
                     CPU_FREQUENCY_HZ,
-                    motherboard,
-                    window::renderFrame
+                    debugLevel
             );
             loop.start();
         } catch (OptionException e) {

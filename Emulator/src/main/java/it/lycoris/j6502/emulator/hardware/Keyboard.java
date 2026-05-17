@@ -1,5 +1,6 @@
 package it.lycoris.j6502.emulator.hardware;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -11,6 +12,8 @@ public class Keyboard implements BusDevice {
     private final int mappedAddress;
     // Ensures thread-safety as the GUI event-dispatch thread writes here while the CPU thread reads
     private final AtomicInteger lastKeyPressed;
+
+    private final ConcurrentLinkedQueue<Integer> macroQueue = new ConcurrentLinkedQueue<>();
 
     /**
      * Initializes the keyboard device bound to a specific memory address.
@@ -29,6 +32,7 @@ public class Keyboard implements BusDevice {
 
     @Override
     public int read(int address) {
+        if (!this.macroQueue.isEmpty()) return this.macroQueue.poll();
         return this.lastKeyPressed.getAndSet(0x00);
     }
 
@@ -44,5 +48,12 @@ public class Keyboard implements BusDevice {
      */
     public void pressKey(int keyCode) {
         this.lastKeyPressed.set(keyCode & 0xFF);
+    }
+
+    public void injectText(String text) {
+        for (char c : text.toCharArray()) {
+            if (c == '\n') this.macroQueue.add(0x0D);
+            else if (c != '\r') this.macroQueue.add((int) c);
+        }
     }
 }
