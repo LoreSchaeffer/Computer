@@ -6,7 +6,8 @@
 .segment "BSS"
 CURSOR_X:     .res 1
 CURSOR_Y:     .res 1
-LEADING_ZERO: .res 1  ; Flag used during number printing
+LEADING_ZERO: .res 1
+PUTCHAR_SAVE_Y: .res 1
 
 ; Temporary pointers in Zero Page used for 16-bit math
 VRAM_PTR = $14 ; Uses $14 and $15
@@ -198,6 +199,8 @@ FUNC_printInt:
 ; Prints the character in Accumulator and advances cursor
 ; ------------------------------------------
 _putchar:
+    STY PUTCHAR_SAVE_Y
+
     PHA                 ; Save the character to the stack
     JSR _calc_vram_ptr  ; Calculate VRAM pointer based on CURSOR_X and CURSOR_Y
     PLA                 ; Restore the character
@@ -212,6 +215,7 @@ _putchar:
     BNE @done
     JSR FUNC_printNewLine
 @done:
+    LDY PUTCHAR_SAVE_Y
     RTS
 
 ; ------------------------------------------

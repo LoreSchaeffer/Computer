@@ -42,7 +42,7 @@ echo "[3/4] Assembling Standard Library and Custom User Assembly (Recursive)..."
 STDLIB_OBJS=""
 
 # Compilation of Standard Library
-for f in stdlib/assembly/*.asm; do
+for f in stdlib/asm/*.asm; do
     if [ -f "$f" ]; then
         base=$(basename "$f" .asm)
         obj="$BUILD_DIR/${base}.o"

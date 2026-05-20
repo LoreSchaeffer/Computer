@@ -161,6 +161,17 @@ FUNC_rand:
     ROR A               ; Rotate right, catching the bit from HI
     STA RAND_SEED_LO
 
-    BCC @no_eor         ; If the bit that fell out was 0, skip the XOR
+    BCC @no_eor         ; Se il bit uscito è 0, salta l'XOR (salta a @no_eor)
 
-    ; The bit was 1, apply the
+    ; The bit was 1, apply the polynomial mask ($B400)
+    LDA RAND_SEED_HI
+    EOR #$B4
+    STA RAND_SEED_HI
+
+@no_eor:
+    ; Move the new seed to the return registers
+    LDA RAND_SEED_LO
+    STA $10
+    LDA RAND_SEED_HI
+    STA $11
+    RTS

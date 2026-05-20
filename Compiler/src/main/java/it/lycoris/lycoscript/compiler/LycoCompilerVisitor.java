@@ -7,7 +7,9 @@ import it.lycoris.lycoscript.compiler.symtab.Symbol;
 import it.lycoris.lycoscript.compiler.symtab.SymbolTable;
 import it.lycoris.lycoscript.compiler.symtab.SymbolType;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
     private final SymbolTable symTab = new SymbolTable();
@@ -19,8 +21,7 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
 
     @Override
     public Void visitProgram(LycoScriptParser.ProgramContext ctx) {
-        cg.emitComment("--- Auto-generated LycoScript Compiler Output ---");
-        cg.emit(".segment \"CODE\"");
+        Set<String> externalImports = new LinkedHashSet<>();
 
         // --- PASS 1: Forward Declarations for Functions ---
         for (LycoScriptParser.DeclarationContext declCtx : ctx.declaration()) {
@@ -34,7 +35,13 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
                     for (int i = 0; i < funcCtx.paramList().identifier().size(); i++) {
                         String paramName = funcCtx.paramList().identifier(i).getText();
                         String pType = funcCtx.paramList().type(i).getText();
-                        SymbolType symType = pType.equals("int") ? SymbolType.INT : SymbolType.BYTE;
+
+                        SymbolType symType;
+                        if (pType.equals("int")) symType = SymbolType.INT;
+                        else if (pType.equals("string")) symType = SymbolType.STRING;
+                        else if (pType.endsWith("*")) symType = SymbolType.POINTER;
+                        else symType = SymbolType.BYTE;
+
                         symTab.defineParameter(funcName, paramName, symType);
                     }
                 }
@@ -44,33 +51,69 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
 
                 symTab.defineFunction(funcName, assemblyLabel);
 
+                externalImports.add(assemblyLabel);
+
                 if (nativeCtx.paramList() != null) {
                     int nativeZpAddress = 0x10;
                     for (int i = 0; i < nativeCtx.paramList().identifier().size(); i++) {
                         String paramName = nativeCtx.paramList().identifier(i).getText();
                         String pType = nativeCtx.paramList().type(i).getText();
-                        SymbolType symType = pType.equals("int") ? SymbolType.INT : SymbolType.BYTE;
 
-                        // We bypass defineParameter to force the Zero Page address manually
+                        SymbolType symType;
+                        if (pType.equals("int")) symType = SymbolType.INT;
+                        else if (pType.equals("string")) symType = SymbolType.STRING;
+                        else if (pType.endsWith("*")) symType = SymbolType.POINTER;
+                        else symType = SymbolType.BYTE;
+
                         Symbol paramSymbol = new Symbol(paramName, symType, nativeZpAddress, false, 0, null, 1);
                         symTab.getFunctionParameters(funcName).add(paramSymbol);
 
-                        // Increment Zero Page pointer (2 bytes for int/string, 1 byte for byte/boolean)
                         nativeZpAddress += (symType == SymbolType.INT || symType == SymbolType.STRING || symType == SymbolType.POINTER) ? 2 : 1;
                     }
                 }
             }
         }
 
-        // Bootloader: Jump to user's main function securely
-        cg.emitComment("System Boot");
+        cg.emitComment("--- Auto-generated LycoScript Compiler Output ---");
+
+        if (!externalImports.isEmpty()) {
+            for (String extImport : externalImports) {
+                cg.emit(".import " + extImport);
+            }
+            cg.emit("");
+        }
+
+        cg.emit(".segment \"CODE\"");
+
+        cg.emitLabel("BOOT");
+
+        cg.emitComment("System BIOS: Hardware Initialization");
+        // Routine inline per pulire la VRAM senza dipendere da librerie esterne
+        cg.emit("    LDA #$20            ; Carica il carattere 'Spazio' (0x20)");
+        cg.emit("    LDY #$00");
+        cg.emit("@BIOS_CLEAR_VRAM:");
+        cg.emit("    STA $3000, Y        ; Pulisce il primo terzo dello schermo");
+        cg.emit("    STA $3100, Y        ; Pulisce il secondo terzo");
+        cg.emit("    STA $3200, Y        ; Pulisce l'ultimo terzo");
+        cg.emit("    INY");
+        cg.emit("    BNE @BIOS_CLEAR_VRAM");
+        cg.emit("");
+
+        cg.emitComment("Jump to User Code");
         cg.emitJumpToSubroutine("FUNC_main");
+
         cg.emitComment("End of Execution (Infinite loop to halt CPU safely)");
         cg.emitLabel("HALT");
         cg.jump("HALT");
 
         // --- PASS 2: Actual Code Generation ---
         super.visitProgram(ctx);
+
+        cg.emit("");
+        cg.emit(".segment \"VECTORS\"");
+        cg.emit(".word 0         ; NMI Vector");
+        cg.emit(".word BOOT      ; RESET Vector");
+        cg.emit(".word 0         ; IRQ Vector");
 
         return null;
     }
@@ -814,7 +857,8 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
 
                 cg.emitComment("Passing argument to " + paramSymbol.getName());
 
-                if (paramSymbol.getType() == SymbolType.INT) {
+                // FIX: Gestisce sia INT, che STRING, che POINTER come valori a 16-bit!
+                if (paramSymbol.getType() == SymbolType.INT || paramSymbol.getType() == SymbolType.STRING || paramSymbol.getType() == SymbolType.POINTER) {
                     switch (exprCtx) {
                         case LycoScriptParser.NumberExprContext numCtx -> {
                             int val = Integer.parseInt(numCtx.NUMBER().getText());
@@ -851,8 +895,13 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
                         case null, default -> {
                             visit(exprCtx);
                             cg.storeAccumulatorAbsolute(paramSymbol.getAddress());
-                            cg.loadAccumulatorImmediate(0);
-                            cg.storeAccumulatorAbsolute(paramSymbol.getAddress() + 1);
+
+                            if (paramSymbol.getType() == SymbolType.STRING || paramSymbol.getType() == SymbolType.POINTER) {
+                                cg.emit("STX $" + String.format("%02X", paramSymbol.getAddress() + 1));
+                            } else {
+                                cg.loadAccumulatorImmediate(0);
+                                cg.storeAccumulatorAbsolute(paramSymbol.getAddress() + 1);
+                            }
                         }
                     }
                 } else {

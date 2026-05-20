@@ -55,8 +55,8 @@ echo [3/4] Assembling Standard Library and Custom User Assembly (Recursive)...
 set STDLIB_OBJS=
 
 :: Compilation of Standard Library
-if exist stdlib\assembly\*.asm (
-    for %%f in (stdlib\assembly\*.asm) do (
+if exist stdlib\asm\*.asm (
+    for %%f in (stdlib\asm\*.asm) do (
         ca65 "%%f" -o "build\%%~nf.o"
         if !ERRORLEVEL! NEQ 0 exit /b !ERRORLEVEL!
         set STDLIB_OBJS=!STDLIB_OBJS! "build\%%~nf.o"
