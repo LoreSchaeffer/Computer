@@ -1,37 +1,56 @@
 package it.lycoris.lycoscript.idea.highlighting;
 
 import com.intellij.lexer.LexerBase;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import it.lycoris.lycoscript.compiler.parser.LycoScriptLexer;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 
-/**
- * Adapts the ANTLR4 Lexer from the compiler library to the IntelliJ Platform Lexer interface.
- * Implements strict index bound checking for end-of-file (EOF) scenarios.
- */
-public class LycoScriptLexerAdapter extends LexerBase {
+import java.util.Set;
 
-    private final LycoScriptLexer antlrLexer;
+public class LycoScriptLexerAdapter extends LexerBase {
+    private LycoScriptLexer antlrLexer;
     private Token currentToken;
     private CharSequence buffer;
-    private int startOffset;
     private int endOffset;
 
-    public LycoScriptLexerAdapter() {
-        this.antlrLexer = new LycoScriptLexer(CharStreams.fromString(""));
-    }
+    private static final Set<String> KEYWORDS = Set.of(
+            "struct",
+            "void",
+            "const",
+            "while",
+            "for",
+            "if",
+            "else",
+            "return",
+            "int",
+            "byte",
+            "boolean",
+            "char",
+            "string",
+            "true",
+            "false",
+            "import",
+            "native"
+    );
 
     @Override
     public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         this.buffer = buffer;
-        this.startOffset = startOffset;
         this.endOffset = endOffset;
 
-        String textToLex = buffer.subSequence(startOffset, endOffset).toString();
-        this.antlrLexer.setInputStream(CharStreams.fromString(textToLex));
+        antlrLexer = new LycoScriptLexer(CharStreams.fromString(buffer.toString()));
 
-        this.advance();
+        do {
+            advance();
+        } while (currentToken != null && getTokenStart() < startOffset);
+    }
+
+    @Override
+    public void advance() {
+        currentToken = antlrLexer.nextToken();
+        if (currentToken.getType() == Token.EOF || getTokenStart() >= endOffset) currentToken = null;
     }
 
     @Override
@@ -41,42 +60,44 @@ public class LycoScriptLexerAdapter extends LexerBase {
 
     @Override
     public IElementType getTokenType() {
-        if (this.currentToken == null || this.currentToken.getType() == Token.EOF) {
-            return null;
+        if (currentToken == null) return null;
+
+        int type = currentToken.getType();
+
+        if (type == LycoScriptLexer.STRING_LITERAL || type == LycoScriptLexer.CHAR_LITERAL) return LycoScriptTokenTypes.STRING;
+        if (type == LycoScriptLexer.NUMBER || type == LycoScriptLexer.HEX_NUMBER) return LycoScriptTokenTypes.NUMBER;
+        if (type == LycoScriptLexer.LINE_COMMENT || type == LycoScriptLexer.BLOCK_COMMENT) return LycoScriptTokenTypes.COMMENT;
+        if (type == LycoScriptLexer.WS) return TokenType.WHITE_SPACE;
+        if (type == LycoScriptLexer.ANY_OTHER) return LycoScriptTokenTypes.BAD_CHARACTER;
+
+        String text = currentToken.getText();
+
+        if (type == LycoScriptLexer.ID) {
+            if (KEYWORDS.contains(text)) return LycoScriptTokenTypes.KEYWORD;
+            return LycoScriptTokenTypes.IDENTIFIER;
         }
-        return LycoScriptTokenTypes.getElementType(this.currentToken.getType());
+
+        if (KEYWORDS.contains(text)) return LycoScriptTokenTypes.KEYWORD;
+        return LycoScriptTokenTypes.OPERATOR;
     }
 
     @Override
     public int getTokenStart() {
-        // Fallback to startOffset if token is null to prevent out-of-bounds exceptions
-        if (this.currentToken == null) {
-            return this.startOffset;
-        }
-        return this.startOffset + this.currentToken.getStartIndex();
+        return currentToken.getStartIndex();
     }
 
     @Override
     public int getTokenEnd() {
-        // Fallback to endOffset if token is null to prevent out-of-bounds exceptions
-        if (this.currentToken == null) {
-            return this.endOffset;
-        }
-        return this.startOffset + this.currentToken.getStopIndex() + 1;
-    }
-
-    @Override
-    public void advance() {
-        this.currentToken = this.antlrLexer.nextToken();
+        return currentToken.getStopIndex() + 1;
     }
 
     @Override
     public CharSequence getBufferSequence() {
-        return this.buffer;
+        return buffer;
     }
 
     @Override
     public int getBufferEnd() {
-        return this.endOffset;
+        return endOffset;
     }
 }

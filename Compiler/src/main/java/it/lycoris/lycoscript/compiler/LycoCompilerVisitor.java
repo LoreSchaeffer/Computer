@@ -28,7 +28,6 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
                 String funcName = funcCtx.identifier().getText();
                 String assemblyLabel = "FUNC_" + funcName;
 
-                // Define function and pre-allocate its parameter addresses
                 symTab.defineFunction(funcName, assemblyLabel);
 
                 if (funcCtx.paramList() != null) {
@@ -36,8 +35,28 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
                         String paramName = funcCtx.paramList().identifier(i).getText();
                         String pType = funcCtx.paramList().type(i).getText();
                         SymbolType symType = pType.equals("int") ? SymbolType.INT : SymbolType.BYTE;
-
                         symTab.defineParameter(funcName, paramName, symType);
+                    }
+                }
+            } else if (declCtx.getChild(0) instanceof LycoScriptParser.NativeFuncDefContext nativeCtx) {
+                String funcName = nativeCtx.identifier().getText();
+                String assemblyLabel = "FUNC_" + funcName;
+
+                symTab.defineFunction(funcName, assemblyLabel);
+
+                if (nativeCtx.paramList() != null) {
+                    int nativeZpAddress = 0x10;
+                    for (int i = 0; i < nativeCtx.paramList().identifier().size(); i++) {
+                        String paramName = nativeCtx.paramList().identifier(i).getText();
+                        String pType = nativeCtx.paramList().type(i).getText();
+                        SymbolType symType = pType.equals("int") ? SymbolType.INT : SymbolType.BYTE;
+
+                        // We bypass defineParameter to force the Zero Page address manually
+                        Symbol paramSymbol = new Symbol(paramName, symType, nativeZpAddress, false, 0, null, 1);
+                        symTab.getFunctionParameters(funcName).add(paramSymbol);
+
+                        // Increment Zero Page pointer (2 bytes for int/string, 1 byte for byte/boolean)
+                        nativeZpAddress += (symType == SymbolType.INT || symType == SymbolType.STRING || symType == SymbolType.POINTER) ? 2 : 1;
                     }
                 }
             }
@@ -53,6 +72,11 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
         // --- PASS 2: Actual Code Generation ---
         super.visitProgram(ctx);
 
+        return null;
+    }
+
+    @Override
+    public Void visitImportStatement(LycoScriptParser.ImportStatementContext ctx) {
         return null;
     }
 
@@ -443,6 +467,11 @@ public class LycoCompilerVisitor extends LycoScriptBaseVisitor<Void> {
     public Void visitFunctionCallExpr(LycoScriptParser.FunctionCallExprContext ctx) {
         String funcName = ctx.identifier().getText();
         generateFunctionCall(funcName, ctx.argList());
+        return null;
+    }
+
+    @Override
+    public Void visitNativeFuncDef(LycoScriptParser.NativeFuncDefContext ctx) {
         return null;
     }
 

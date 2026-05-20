@@ -1,0 +1,12 @@
+// ==========================================
+// Array Operations Library (arrays.lh)
+// ==========================================
+
+// Copy 'length' bytes from the 'src' array to 'dst' array.
+native void arrayCopy(byte* src, byte* dest, byte length);
+
+// Fill an array with a specific value (useful to clean maps or screens)
+native void arrayFill(byte* arr, byte value, byte length);
+
+// Find a value in the array and return it's index (or -1 / 255 if not found)
+native byte arrayIndexOf(byte* arr, byte value, byte length);

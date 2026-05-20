@@ -1,0 +1,38 @@
+// ==========================================
+// Standard Audio Library (audio.lh)
+// ==========================================
+
+// Plays a tone on the first Pulse (Square) channel.
+// freq: 16-bit frequency in Hz
+// volume: 0 (mute) to 15 (max)
+native void playPulse1(int freq, byte volume);
+
+// Instantly mutes the first Pulse channel
+native void stopPulse1();
+
+// Plays a tone on the second Pulse (Square) channel.
+// freq: 16-bit frequency in Hz
+// volume: 0 (mute) to 15 (max)
+native void playPulse2(int freq, byte volume);
+
+// Instantly mutes the second Pulse channel
+native void stopPulse2();
+
+// Plays a tone on the Triangle channel (often used for basslines).
+// freq: 16-bit frequency in Hz
+// volume: 0 (mute) to 15 (max)
+native void playTriangle(int freq, byte volume);
+
+// Instantly mutes the Triangle channel
+native void stopTriangle();
+
+// Plays a sound on the Noise channel (used for percussion/effects).
+// period: 8-bit interval for the noise generator shift register
+// volume: 0 (mute) to 15 (max)
+native void playNoise(byte period, byte volume);
+
+// Instantly mutes the Noise channel
+native void stopNoise();
+
+// Instantly mutes all audio channels.
+native void stopAudio();

@@ -8,7 +8,9 @@ grammar LycoScript;
 
 // The entry point of a LycoScript file.
 // A program is a sequence of zero or more statements, followed by the End Of File.
-program: declaration* EOF;
+program: importStatement* declaration* EOF;
+
+importStatement: 'import' STRING_LITERAL ';' ;
 
 declaration
     : structDeclaration
@@ -26,7 +28,8 @@ structField
     ;
 
 functionDeclaration
-    : (type | 'void') identifier '(' paramList? ')' '{' statement* '}' # FuncDef
+    : 'native' (type | 'void') identifier '(' paramList? ')' ';'           # NativeFuncDef
+    | (type | 'void') identifier '(' paramList? ')' '{' statement* '}'     # FuncDef
     ;
 
 paramList
@@ -136,6 +139,7 @@ CHAR_LITERAL: '\'' . '\'';
 HEX_NUMBER: '0' [xX] [0-9a-fA-F]+;
 NUMBER: [0-9]+;
 
-WS: [ \t\r\n]+ -> skip;
-LINE_COMMENT: '//' ~[\r\n]* -> skip;
-BLOCK_COMMENT: '/*' .*? '*/' -> skip;
+WS: [ \t\r\n]+ -> channel(HIDDEN);
+LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);
+BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
+ANY_OTHER: . ;

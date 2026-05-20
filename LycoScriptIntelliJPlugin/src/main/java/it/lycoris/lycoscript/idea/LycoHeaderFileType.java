@@ -9,30 +9,30 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class LycoScriptFileType extends LanguageFileType {
-    public static final LycoScriptFileType INSTANCE = new LycoScriptFileType();
+public class LycoHeaderFileType extends LanguageFileType {
+    public static final LycoHeaderFileType INSTANCE = new LycoHeaderFileType();
 
-    private LycoScriptFileType() {
+    private LycoHeaderFileType() {
         super(LycoScriptLanguage.INSTANCE);
     }
 
     @Override
     public @NonNls @NotNull String getName() {
-        return "LycoScript File";
+        return "LycoHeader File";
     }
 
     @Override
     public @NlsContexts.Label @NotNull String getDescription() {
-        return "LycoScript source file";
+        return "LycoScript header file";
     }
 
     @Override
     public @NlsSafe @NotNull String getDefaultExtension() {
-        return "ls";
+        return "lh";
     }
 
     @Override
     public @Nullable Icon getIcon() {
-        return LycoScriptIcons.FILE_LS;
+        return LycoScriptIcons.FILE_LH;
     }
 }

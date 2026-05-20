@@ -1,0 +1,21 @@
+// ==========================================
+// Standard Math Library (math.lh)
+// ==========================================
+
+// Returns the absolute (positive) value of an integer
+native int abs(int value);
+
+// Returns the maximum of two integers
+native int max(int a, int b);
+
+// Returns the minimum of two integers
+native int min(int a, int b);
+
+// Multiplies two 16-bit integers and returns the 16-bit result
+native int multiply(int a, int b);
+
+// Seeds the Random Number Generator. Call this once at startup!
+native void srand(int seed);
+
+// Returns a pseudo-random 16-bit integer
+native int rand();

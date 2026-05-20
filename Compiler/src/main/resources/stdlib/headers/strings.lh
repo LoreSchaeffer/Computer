@@ -1,0 +1,15 @@
+// ==========================================
+// String Manipulation Library (strings.lh)
+// ==========================================
+
+// Returns the length of a string
+native byte strLen(string text);
+
+// Copy the string 'src' to 'dest'. 'dest' must be pre-allocated!
+native void strCopy(string src, string dest);
+
+// Concat 'b' at the end of 'a', saving the result to 'dest'
+native void strConcat(string a, string b, string dest);
+
+// Compare two strings. Return 1 if equals, 0 if different
+native boolean strCompare(string a, string b);

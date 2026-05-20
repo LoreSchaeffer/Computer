@@ -1,0 +1,30 @@
+// ==========================================
+// Standard I/O Library (stdio.lh)
+// ==========================================
+
+// Clears the screen and resets the cursor to the top-left corner (0,0)
+native void clearScreen();
+
+// Sets the cursor to a specific X (0-31) and Y (0-23) position
+native void setCursor(byte x, byte y);
+
+// Moves the cursor to the beginning of the next line
+native void printNewLine();
+
+// Prints a null-terminated string at the current cursor position
+native void print(string text);
+
+// Prints a string and moves the cursor to the next line
+native void println(string text);
+
+// Prints a 16-bit integer as a decimal number
+native void printInt(int value);
+
+// Prints an 8-bit unsigned byte (0-255) as a decimal number
+native void printByte(byte value);
+
+// Prints a single ASCII character
+native void printChar(char value);
+
+// Prints "true" or "false" based on the boolean value
+native void printBoolean(boolean value);

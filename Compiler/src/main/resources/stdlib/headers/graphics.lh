@@ -1,0 +1,27 @@
+// ==========================================
+// Standard Graphics Library (graphics.lh)
+// ==========================================
+
+// Halts the CPU until the Picture Processing Unit (PPU) enters the Vertical Blanking interval.
+// Crucial for game loops to run at exactly 60 FPS and prevent screen tearing.
+native void waitForVBlank();
+
+// Draws a 8x8 sprite on the screen.
+// index: Sprite hardware slot (0-63)
+// tileId: The character/tile index from CHR-RAM
+// x: Screen X coordinate (0-255)
+// y: Screen Y coordinate (0-239)
+native void drawSprite(byte index, byte tileId, byte x, byte y);
+
+// Hides a sprite by moving its Y coordinate off-screen (255).
+// index: Sprite hardware slot (0-63)
+native void hideSprite(byte index);
+
+// Clears all 64 sprites from the screen.
+native void clearSprites();
+
+// Sets a specific background tile on the NameTable.
+// x: Tile X coordinate (0-31)
+// y: Tile Y coordinate (0-23)
+// tileId: The character/tile index from CHR-RAM
+native void setTile(byte x, byte y, byte tileId);
